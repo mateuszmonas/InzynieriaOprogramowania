@@ -1,0 +1,10 @@
+version: '3.5'
+
+services:
+  io-backend:
+    container_name: io-backend
+    build:
+      context: .
+    ports:
+      - 8080:8080
+      - 5005:5005

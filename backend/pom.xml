@@ -12,6 +12,7 @@
     <groupId>c.team</groupId>
     <artifactId>backend</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>backend</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -47,6 +48,7 @@
     </dependencies>
 
     <build>
+        <finalName>backend</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
