@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Slf4j
 @SpringBootConfiguration
 @SpringBootApplication
-public class Acation {
+public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
