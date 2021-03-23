@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("ping")
 public class PingController {
     @GetMapping
-    public ResponseEntity<String> ping() {
+    public ResponseEntity<String> ping() {  // Tutaj powinna pojawic sie jaka zmiana
         return ResponseEntity.ok("testowe elo");
         // To jest testowy komentarz
     }
