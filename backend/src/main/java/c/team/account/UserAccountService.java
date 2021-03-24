@@ -1,7 +1,6 @@
 package c.team.account;
 
 import c.team.account.exception.DuplicateUsernameException;
-import c.team.account.exception.UserNotFoundException;
 import c.team.account.model.UserAccount;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +31,14 @@ public class UserAccountService {
     }
 
     public UserAccount findByUsernameAndPassword(String username, String password) {
-        return Optional.ofNullable(userAccountRepository.findAccountByUsername(username)).filter(a -> passwordEncoder.matches(password, a.getPassword())).orElseThrow(UserNotFoundException::new);
+        return Optional.ofNullable(userAccountRepository.findAccountByUsername(username))
+                .filter(account -> passwordEncoder.matches(password, account.getPassword()))
+                .orElseThrow(() -> new UsernameNotFoundException("user does not exist: " + username));
     }
 
     public UserAccount findByUsername(String username) {
-        return Optional.ofNullable(userAccountRepository.findAccountByUsername(username)).orElseThrow(() -> new UsernameNotFoundException(""));
+        return Optional.ofNullable(userAccountRepository.findAccountByUsername(username))
+                .orElseThrow(() -> new UsernameNotFoundException("user does not exist: " + username));
     }
 
 }

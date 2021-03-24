@@ -14,10 +14,11 @@ import java.util.UUID;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class TokenService {
 
-    TokenRepository tokenRepository;
+    private final TokenRepository tokenRepository;
 
     public String getLoginForToken(UUID token) {
-        return Optional.ofNullable(tokenRepository.findTokenByValue(token)).orElseThrow(TokenNotFoundException::new).getUsername();
+        return Optional.ofNullable(tokenRepository.findTokenByValue(token))
+                .orElseThrow(TokenNotFoundException::new).getUsername();
     }
 
     public UUID generateTokenForAccount(UserAccount userAccount) {
