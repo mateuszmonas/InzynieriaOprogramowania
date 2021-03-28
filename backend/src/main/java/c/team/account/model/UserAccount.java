@@ -13,7 +13,7 @@ import java.util.Collections;
 @Data
 @Builder
 @Document
-public class UserAccount extends c.team.account.model.User {
+public class UserAccount {
     @Id
     private String id;
     @Indexed(unique = true)

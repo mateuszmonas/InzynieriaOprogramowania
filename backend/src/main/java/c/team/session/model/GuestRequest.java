@@ -1,4 +1,4 @@
-package c.team.account.model;
+package c.team.session.model;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.Data;
