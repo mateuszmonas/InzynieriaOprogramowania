@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 
 @Data
 @Builder
-public class Guest extends SessionParticipant{
+public class Guest {
     @Id
     private String id;
     private String username;

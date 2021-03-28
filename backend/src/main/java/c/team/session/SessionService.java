@@ -40,4 +40,9 @@ public class SessionService {
         return Optional.ofNullable(sessionRepository.findSessionByPasscode(passcode))
                 .orElseThrow(() -> new SessionNotFoundException("no session with passcode: " + passcode.toString()));
     }
+
+    public Session findBySessionId(String sessionsId){
+        return sessionRepository.findById(UUID.fromString(sessionsId))
+                .orElseThrow(() -> new SessionNotFoundException("no sessions with id: " + sessionsId));
+    }
 }

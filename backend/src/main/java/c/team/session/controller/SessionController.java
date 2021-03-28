@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -38,20 +39,24 @@ public class SessionController {
     public ResponseEntity<GuestResponse> connectToSession(@RequestBody GuestRequest request){
         Session session = sessionsService.findByPasscode(UUID.fromString(request.getPasscode()));
         UUID token = UUID.randomUUID(); // Needs to verify with session
-        GuestResponse response = new GuestResponse(token);
+        GuestResponse response = new GuestResponse(token, session.getId());
         return ResponseEntity.ok(response);
     }
 
-    @MessageMapping("/session/send") // chat.send
-    @SendTo("/topic/sessions/{sessionId}") // topic/public
+    @MessageMapping("/session/{sessionId}/send") // chat.send
+    @SendTo("/topic/session/{sessionId}") // topic/public
     public Message sendMessage(@Payload final Message message){
+        Session session = sessionsService.findBySessionId(message.getSessionId());
+        session.getLog().add(message);
         return message;
     }
 
-    @MessageMapping("/session/newUser") // chat.newUser
-    @SendTo("/topic/sessions/{sessionId}") // topic/public
-    public Message addParticipant(@Payload final Message message, SimpMessageHeaderAccessor headerAccessor){
+    @MessageMapping("/session/{sessionId}/newUser") // chat.newUser
+    @SendTo("/topic/session/{sessionId}") // topic/public
+    public Message addParticipant(@DestinationVariable String sessionId, @Payload final Message message, SimpMessageHeaderAccessor headerAccessor){
         headerAccessor.getSessionAttributes().put("participantName", message.getSender());
+        Session session = sessionsService.findBySessionId(message.getSessionId());
+        session.getLog().add(message);
         return message;
     }
 }
