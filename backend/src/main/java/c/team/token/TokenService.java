@@ -1,6 +1,7 @@
 package c.team.token;
 
 import c.team.account.model.UserAccount;
+import c.team.session.model.Session;
 import c.team.token.exception.InvalidTokenException;
 import c.team.token.model.Token;
 import lombok.AllArgsConstructor;

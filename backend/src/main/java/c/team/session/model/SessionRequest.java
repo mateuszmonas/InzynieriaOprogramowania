@@ -6,14 +6,14 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class GuestRequest {
+public class SessionRequest {
 
     @NotBlank
     @Parameter(required = true)
-    private String guestName;
+    private String username;
 
     @NotBlank
     @Parameter(required = true)
-    private String passcode;
+    private String title;
 
 }

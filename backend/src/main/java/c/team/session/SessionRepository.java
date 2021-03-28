@@ -7,6 +7,6 @@ import java.util.UUID;
 
 public interface SessionRepository extends MongoRepository<Session, UUID> {
 
-    Session findSessionByPasscode(String passcode);
+    Session findSessionByPasscode(UUID passcode);
 
 }
