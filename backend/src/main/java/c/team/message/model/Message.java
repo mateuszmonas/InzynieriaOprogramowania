@@ -18,6 +18,6 @@ public class Message {
     private String sender;
     private String replyingTo;
     private MessageType type;
-    private Instant timestamp;
+    private String timestamp;
     private String content; // Will be changed to Content class when implementing quizzes, etc.
 }

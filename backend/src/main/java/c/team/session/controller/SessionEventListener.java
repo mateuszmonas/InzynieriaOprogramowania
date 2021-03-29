@@ -16,7 +16,9 @@ public class SessionEventListener {
     private SimpMessageSendingOperations sendingOperations;
 
     @EventListener
-    public void handleParticipantConnect(final SessionConnectedEvent event) {}
+    public void handleParticipantConnect(final SessionConnectedEvent event) {
+        SessionController.LOGGER.info("NEW USER!");
+    }
 
     @EventListener
     public void handleParticipantDisconnect(final SessionDisconnectEvent event) {
