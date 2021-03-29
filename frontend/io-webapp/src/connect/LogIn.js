@@ -4,21 +4,43 @@ import "./Start.css";
 
 const LogIn = (props) => {
   // console.log(setStage);
-  const [creds, setCreds] = React.useState({ name: "", password: "" });
+  const [creds, setCreds] = React.useState({ username: "", password: "" });
   const [message, setMessage] = React.useState("");
 
   const submitHandler = (e) => {
     e.preventDefault();
-    /*
-      TODO 
-    */
+
+    console.log(JSON.stringify(creds));
+    (async () => {
+        await fetch("http://localhost:8080/login", {
+        method: "POST",
+        // mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+          // 'Access-Control-Allow-Origin': "*",
+          // "Accept": "application/json, text/plain, */*",
+        },
+        // 'credentials': 'same-origin',
+        body: JSON.stringify(creds),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    })();
+
+    
+
     //placeholder
-    if (creds.name === "admin" && creds.password === "admin") {
-      props.setStage("account");
-    } else {
-      setMessage("Failed to log in");
-      props.setStage("logIn");
-    }
+    // if (creds.name === "admin" && creds.password === "admin") {
+    //   props.setStage("account");
+    // } else {
+    //   setMessage("Failed to log in");
+    //   props.setStage("logIn");
+    // }
     //end placeholder
   };
 
@@ -31,8 +53,8 @@ const LogIn = (props) => {
             type="text"
             id="logInName"
             name="logInName"
-            value={creds.name}
-            onChange={(e) => setCreds({ ...creds, name: e.target.value })}
+            value={creds.username}
+            onChange={(e) => setCreds({ ...creds, username: e.target.value })}
           ></input>
         </div>
         <div>
