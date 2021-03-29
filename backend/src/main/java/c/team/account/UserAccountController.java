@@ -1,6 +1,7 @@
 package c.team.account;
 
 import c.team.account.model.LoginRequest;
+import c.team.account.model.LoginResponse;
 import c.team.account.model.RegisterAccountRequest;
 import c.team.account.model.UserAccount;
 import c.team.token.TokenService;
@@ -8,9 +9,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
@@ -28,13 +30,10 @@ public class UserAccountController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<UUID> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         UserAccount userAccount = userAccountService.findByUsernameAndPassword(request.getUsername(), request.getPassword());
-        return ResponseEntity.ok(tokenService.generateTokenForAccount(userAccount));
-    }
-
-    @GetMapping("user")
-    public User getUser(@AuthenticationPrincipal final User user) {
-        return user;
+        UUID token = tokenService.generateTokenForAccount(userAccount);
+        LoginResponse loginResponse = new LoginResponse(token);
+        return ResponseEntity.ok(loginResponse);
     }
 }

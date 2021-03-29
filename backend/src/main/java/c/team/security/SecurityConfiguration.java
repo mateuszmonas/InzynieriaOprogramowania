@@ -28,8 +28,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/ping", "/register", "/login");
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/ping",
+                "/register",
+                "/login",
+                "/v3/api-docs/**",
+                "/swagger-ui.html",
+                "/swagger-ui/**");
     }
 
     @Override
