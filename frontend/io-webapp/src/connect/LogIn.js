@@ -3,52 +3,38 @@ import React from "react";
 import "./Start.css";
 
 const LogIn = (props) => {
-  // console.log(setStage);
   const [creds, setCreds] = React.useState({ username: "", password: "" });
   const [message, setMessage] = React.useState("");
 
   const submitHandler = (e) => {
     e.preventDefault();
 
-    console.log(JSON.stringify(creds));
     (async () => {
-        await fetch("http://localhost:8080/login", {
+      await fetch("http://localhost:8080/login", {
         method: "POST",
-        // mode: "no-cors",
         headers: {
           "Content-Type": "application/json",
-          // 'Access-Control-Allow-Origin': "*",
-          // "Accept": "application/json, text/plain, */*",
         },
-        // 'credentials': 'same-origin',
         body: JSON.stringify(creds),
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Success:", data);
+          props.setToken(data);
+          props.setStage("account");
         })
         .catch((error) => {
-          console.error("Error:", error);
+          console.error(error);
+          setMessage("Failed to log in");
+          props.setStage("logIn");
         });
     })();
-
-    
-
-    //placeholder
-    // if (creds.name === "admin" && creds.password === "admin") {
-    //   props.setStage("account");
-    // } else {
-    //   setMessage("Failed to log in");
-    //   props.setStage("logIn");
-    // }
-    //end placeholder
   };
 
   return (
     <div className="startSection">
       <form onSubmit={submitHandler}>
         <div>
-          <label htmlFor="guestName">Name</label>
+          <label htmlFor="logInName">Name</label>
           <input
             type="text"
             id="logInName"
@@ -58,7 +44,7 @@ const LogIn = (props) => {
           ></input>
         </div>
         <div>
-          <label htmlFor="sessionCode">Password</label>
+          <label htmlFor="logInPassword">Password</label>
           <input
             type="password"
             id="logInPassword"

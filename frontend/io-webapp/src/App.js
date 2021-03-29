@@ -7,6 +7,8 @@ import Student from "./session/Student";
 
 function App() {
   const [stage, setStage] = React.useState("start");
+  const [token, setToken] = React.useState("");
+
   if (stage === "account") {
     return (
       <div className="App">
@@ -22,7 +24,7 @@ function App() {
   } else {
     return (
       <div className="App">
-        <Start stage={stage} setStage={setStage} />
+        <Start stage={stage} setStage={setStage} setToken={setToken} />
       </div>
     );
   }

@@ -2,7 +2,7 @@ import React from "react";
 
 const SignUp = (props) => {
   const [creds, setCreds] = React.useState({
-    name: "",
+    username: "",
     password: "",
     email: "",
   });
@@ -11,21 +11,36 @@ const SignUp = (props) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    /*
-        TODO 
-    */
-    // placeholder
+
     if (creds.password === passwordCheck) {
-      props.setStage("signedUp");
-      props.setMessage("Signed up successfuly");
-      setTimeout(() => {
-        props.setMessage("");
-      }, 3000);
+      (async () => {
+        await fetch("http://localhost:8080/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: creds.username,
+            password: creds.password,
+          }),
+        })
+          .then((_) => {
+            props.setStage("signedUp");
+            props.setMessage("Signed up successfuly");
+            setTimeout(() => {
+              props.setMessage("");
+            }, 3000);
+          })
+          .catch((error) => {
+            console.error(error);
+            setMessage("Failed to register");
+            props.setStage("signUp");
+          });
+      })();
     } else {
-      setMessage("Passwords do not match");
+      setMessage("Failed to register");
       props.setStage("signUp");
     }
-    // placeholder
   };
 
   return (
@@ -37,8 +52,8 @@ const SignUp = (props) => {
             type="text"
             id="signUpName"
             name="signUpName"
-            value={creds.name}
-            onChange={(e) => setCreds({ ...creds, name: e.target.value })}
+            value={creds.username}
+            onChange={(e) => setCreds({ ...creds, username: e.target.value })}
           ></input>
         </div>
         <div>
