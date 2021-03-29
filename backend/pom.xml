@@ -20,6 +20,7 @@
         <spring.version>2.3.8.RELEASE</spring.version>
         <lombok.version>1.18.12</lombok.version>
         <lombok-mvn.version>1.18.12.0</lombok-mvn.version>
+        <openapi.version>1.5.2</openapi.version>
     </properties>
 
     <dependencies>
@@ -47,9 +48,17 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${openapi.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
