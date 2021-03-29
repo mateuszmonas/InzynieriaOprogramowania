@@ -32,6 +32,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/ping",
                 "/register",
                 "/login",
+                "/session/connect",
+                "/session/create",
+                "/session-handling",
+                "/",
+                "/topic/public",
+                "/app/chat.send",
+                "/app/chat.newUser",
                 "/v3/api-docs/**",
                 "/swagger-ui.html",
                 "/swagger-ui/**");

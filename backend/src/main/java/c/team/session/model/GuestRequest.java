@@ -10,7 +10,7 @@ public class GuestRequest {
 
     @NotBlank
     @Parameter(required = true)
-    private String guestName;
+    private String username;
 
     @NotBlank
     @Parameter(required = true)

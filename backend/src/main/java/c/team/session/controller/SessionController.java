@@ -1,6 +1,7 @@
 package c.team.session.controller;
 
 import c.team.message.model.Message;
+import c.team.session.SessionRepository;
 import c.team.session.SessionService;
 import c.team.session.model.GuestRequest;
 import c.team.session.model.GuestResponse;
@@ -16,18 +17,23 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.UUID;
 
 @Controller
+@RestController
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SessionController {
 
     private final SessionService sessionsService;
+    private final SessionRepository sessionRepository;
+
+    @GetMapping("session-handling")
+    public ModelAndView showChat(){
+        return new ModelAndView("index.html");
+    }
 
     @PostMapping("session/create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -43,17 +49,23 @@ public class SessionController {
         return ResponseEntity.ok(response);
     }
 
-    @MessageMapping("/session/{sessionId}/send") // chat.send
-    @SendTo("/topic/session/{sessionId}") // topic/public
+//    @MessageMapping("/session/{sessionId}/send") // chat.send
+//    @SendTo("/topic/session/{sessionId}") // topic/public
+    @MessageMapping("/chat.send")
+    @SendTo("/topic/public")
     public Message sendMessage(@Payload final Message message){
         Session session = sessionsService.findBySessionId(message.getSessionId());
         session.getLog().add(message);
+        sessionRepository.save(session);
         return message;
     }
 
-    @MessageMapping("/session/{sessionId}/newUser") // chat.newUser
-    @SendTo("/topic/session/{sessionId}") // topic/public
-    public Message addParticipant(@DestinationVariable String sessionId, @Payload final Message message, SimpMessageHeaderAccessor headerAccessor){
+//    @MessageMapping("/session/{sessionId}/newUser") // chat.newUser
+//    @SendTo("/topic/session/{sessionId}") // topic/public
+    @MessageMapping("/chat.newUser")
+    @SendTo("/topic/public")
+    //@DestinationVariable String sessionId, (in args)
+    public Message addParticipant( @Payload final Message message, SimpMessageHeaderAccessor headerAccessor){
         headerAccessor.getSessionAttributes().put("participantName", message.getSender());
         Session session = sessionsService.findBySessionId(message.getSessionId());
         session.getLog().add(message);

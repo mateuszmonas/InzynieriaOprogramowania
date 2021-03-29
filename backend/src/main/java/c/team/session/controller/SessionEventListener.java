@@ -20,9 +20,9 @@ public class SessionEventListener {
 
     @EventListener
     public void handleParticipantDisconnect(final SessionDisconnectEvent event) {
-        final StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        final String participant = (String) headerAccessor.getSessionAttributes().get("participantName");
-        final Message message = Message.builder().build();  // Stuff here
-        sendingOperations.convertAndSend("/???", message);  // topic/public
+//        final StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+//        final String participant = (String) headerAccessor.getSessionAttributes().get("participantName");
+//        final Message message = Message.builder().build();  // Stuff here
+//        sendingOperations.convertAndSend("/???", message);  // topic/public
     }
 }
