@@ -187,8 +187,12 @@
   height: 50%;
 }
 
-.question form button {
+.newquestion button {
   margin: 1vh 0vw 10vh 0vw;
+}
+
+.question form button {
+  margin: 1vh 0vw 1vh 0vw;
 }
 
 .question form div {
@@ -198,3 +202,4 @@
   align-items: center;
   height: 100%;
 }
+

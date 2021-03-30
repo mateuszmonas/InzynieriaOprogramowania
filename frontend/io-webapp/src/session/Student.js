@@ -1,7 +1,7 @@
 import React from "react";
 
 import Chat from "./Chat";
-import Participants from "./Participants"
+import Participants from "./Participants";
 import Question from "./Question";
 
 import "./Session.css";
@@ -23,10 +23,14 @@ const Student = (props) => {
   return (
     <section className="fullsession">
       <Sessionbar
+        sessionID={props.sessionID}
+        setSessionID={props.setSessionID}
+        username={props.username}
         chat={chat}
         toggleChat={setChat}
         participants={participants}
         toggleParticipants={setParticipants}
+        stage={props.stage}
         setStage={props.setStage}
       />
       <div className="session">

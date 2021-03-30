@@ -32,7 +32,7 @@ const Creator = (props) => {
 
   return (
     <div className="question" style={{ width: props.width }}>
-      <form onSubmit={submitHandler}>
+      <form className="newquestion" onSubmit={submitHandler}>
         <div>
           <label htmlFor="questionText">Question: </label>
           <input
@@ -43,7 +43,7 @@ const Creator = (props) => {
             onChange={(e) => setQuestion(e.target.value)}
           ></input>
         </div>
-        <button type="button" onClick={() => setAbcd(!abcd)}>
+        <button type="button" onClick={() => setAbcd(!abcd)} style={{"marginBottom": "10vh"}}>
           {abcd ? "ABCD" : "Open"}
         </button>
         <div>
@@ -123,7 +123,7 @@ const Creator = (props) => {
             </>
           )}
         </div>
-        <button type="submit">Add Question</button>
+        <button type="submit" style={{"marginBottom": "10vh"}}>Add Question</button>
       </form>
     </div>
   );
