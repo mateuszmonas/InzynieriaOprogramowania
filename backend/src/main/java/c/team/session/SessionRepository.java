@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.UUID;
 
 public interface SessionRepository extends MongoRepository<Session, UUID> {
-
     Session findSessionByPasscode(UUID passcode);
 
+    Session findSessionById(String id);
 }

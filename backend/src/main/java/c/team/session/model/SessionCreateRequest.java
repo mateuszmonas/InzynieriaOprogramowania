@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class SessionRequest {
+public class SessionCreateRequest {
 
     @NotBlank
     @Parameter(required = true)

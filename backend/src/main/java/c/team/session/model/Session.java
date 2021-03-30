@@ -18,6 +18,7 @@ public class Session {
     private String title;
     private UserAccount leader;
     private UUID passcode;
+    private boolean active;
     private List<Message> log;
 
 }

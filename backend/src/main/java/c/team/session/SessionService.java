@@ -1,8 +1,8 @@
 package c.team.session;
 
-import c.team.account.UserAccountRepository;
 import c.team.account.UserAccountService;
 import c.team.account.model.UserAccount;
+import c.team.message.model.Message;
 import c.team.session.exception.SessionNotFoundException;
 import c.team.session.model.Session;
 import lombok.AllArgsConstructor;
@@ -30,10 +30,27 @@ public class SessionService {
         Session session = Session.builder()
                 .leader(leaderAccount)
                 .title(title)
+                .active(true)
                 .passcode(UUID.randomUUID())
                 .log(new ArrayList<>())
                 .build();
-        return sessionRepository.save(session).getPasscode();
+
+        UUID passcode = sessionRepository.save(session).getPasscode();
+        LOGGER.info("Opened session: " + session.getId());
+        return passcode;
+    }
+
+    public void closeSession(String sessionId){
+        Session session = this.findBySessionId(sessionId);
+        session.setActive(false);
+        sessionRepository.save(session);
+        LOGGER.info("Closed session: " + sessionId);
+    }
+
+    public void addMessageToSessionLog(String sessionId, Message message){
+        Session session = this.findBySessionId(sessionId);
+        session.getLog().add(message);
+        sessionRepository.save(session);
     }
 
     public Session findByPasscode(UUID passcode){
@@ -42,7 +59,7 @@ public class SessionService {
     }
 
     public Session findBySessionId(String sessionsId){
-        return sessionRepository.findById(UUID.fromString(sessionsId))
+        return Optional.ofNullable(sessionRepository.findSessionById(sessionsId))
                 .orElseThrow(() -> new SessionNotFoundException("no sessions with id: " + sessionsId));
     }
 }

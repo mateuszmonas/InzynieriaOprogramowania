@@ -33,12 +33,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/register",
                 "/login",
                 "/session/connect",
-                "/session/create",
+                "/session/**",  // Debug purpose, because token didn't work - need double check
                 "/session-handling/**",
-                "/css/**",
-                "/js/**",
-                "/img/**",
-                "/index.html",
                 "/topic/**",
                 "/app/**",
                 "/v3/api-docs/**",
