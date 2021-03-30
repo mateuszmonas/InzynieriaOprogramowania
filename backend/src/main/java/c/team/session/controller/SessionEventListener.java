@@ -1,5 +1,6 @@
 package c.team.session.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -8,9 +9,9 @@ import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Component
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SessionEventListener {
 
-    @Autowired
     private SimpMessageSendingOperations sendingOperations;
 
     @EventListener

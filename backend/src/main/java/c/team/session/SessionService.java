@@ -22,13 +22,11 @@ public class SessionService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SessionConnectedEvent.class);
 
-    private final UserAccountService userAccountService;
     private final SessionRepository sessionRepository;
 
-    public UUID createSession(String leaderName, String title){
-        UserAccount leaderAccount = userAccountService.findByUsername(leaderName);
+    public UUID createSession(String leaderUsername, String title){
         Session session = Session.builder()
-                .leader(leaderAccount)
+                .leaderUsername(leaderUsername)
                 .title(title)
                 .active(true)
                 .passcode(UUID.randomUUID())
