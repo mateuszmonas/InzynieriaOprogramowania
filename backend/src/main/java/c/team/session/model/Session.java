@@ -16,9 +16,8 @@ public class Session {
     @Id
     private String id;
     private String title;
-    private String leaderUsername;
+    private String leaderAccountId;
     private UUID passcode;
     private boolean active;
     private List<Message> log;
-
 }
