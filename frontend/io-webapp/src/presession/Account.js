@@ -1,11 +1,19 @@
-import React from 'react'
+import React from "react";
 
-const Account = () => {
-    return (
-        <div>
-            <h1>Here will be account view</h1>
-        </div>
-    )
-}
+import "./Account.css";
 
-export default Account
+const Account = (props) => {
+  return (
+    <div className="account">
+      <h1>Here will be account view</h1>
+      <button type="button" onClick={() => props.setStage("lecturer")}>
+        Go to lecturer view
+      </button>
+      <button type="button" onClick={() => props.setStage("student")}>
+        Go to student view
+      </button>
+    </div>
+  );
+};
+
+export default Account;

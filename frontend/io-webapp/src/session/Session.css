@@ -1,0 +1,200 @@
+.session {
+  margin: auto;
+  padding-top: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 80vh;
+}
+
+.fullsession {
+  margin: auto;
+  padding: 10vh 10vw 10vh 10vw;
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 80vh;
+}
+
+.chat {
+  border-radius: 0.3em;
+  box-shadow: 4px 4px 4px 4px #aaa;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #999;
+  background: #eeeeee;
+  margin: 0.5em;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: left;
+  width: 25%;
+  height: 100%;
+  overflow: scroll;
+}
+
+.chat div {
+  margin: 0.5em;
+  background: #3838ce;
+  border-radius: 0.2em;
+  text-align: justify;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.chat section {
+  /* margin: 0.5em; */
+  background: #abc;
+  border-style: solid;
+  border-width: 0.1rem 0rem 0rem 0rem;
+  width: 100%;
+  /* display: flex;
+  flex-direction: column;
+  align-items: left; */
+}
+
+.chat section form{
+  margin: 0.1rem 0.2rem 0.3rem 0.2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.chat div * {
+  margin: 0.2rem;
+}
+
+.sessionbar {
+  width: 80vw;
+  height: auto;
+  background: rgb(61, 45, 45);
+  border-radius: 0.4em;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: right;
+}
+
+.sessionbar * {
+  margin: 0.5rem;
+}
+
+.sessionbar div {
+  width: 100%;
+  height: auto;
+  margin: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+}
+
+.participants {
+  border-radius: 0.3em;
+  box-shadow: 4px 4px 4px 4px #aaa;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #999;
+  background: #eeeeee;
+  margin: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 25%;
+  height: 100%;
+  overflow: scroll;
+}
+
+.participants div {
+  margin: 0.3rem;
+  background: #3838ce;
+  border-radius: 0.2em;
+  text-align: justify;
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.participants div * {
+  margin: 0.2rem;
+}
+
+.question {
+  width: 75%;
+  height: 100%;
+  background: rgb(170, 231, 170);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.specificQuestion {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.questionProper {
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  height: 50%;
+  width: 100%;
+}
+
+.questionRow {
+  margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+  height: 20%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.answer {
+  width: 30%;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  background: rgb(244, 252, 177);
+  border-radius: 2rem;
+  padding: 1vh 1vw 1vh 1vw;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.answer button {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  padding: 1vh 1vw 1vh 1vw;
+}
+
+.question form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 50%;
+}
+
+.question form button {
+  margin: 1vh 0vw 10vh 0vw;
+}
+
+.question form div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
