@@ -1,0 +1,9 @@
+POST http://localhost:8080/session/connect
+Content-Type: application/json
+
+{
+  "guestName": "guestName",
+  "passcode": "passcode"
+}
+
+###
