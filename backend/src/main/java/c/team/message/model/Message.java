@@ -7,8 +7,9 @@ import lombok.Data;
 @Builder
 public class Message {
     private String sender;
-    private String replyingTo;
+    private String replyMsgId;  // Id of msg when replying, if not replying than it's null
     private MessageType type;
     private String timestamp;
+    private String sessionId;
     private String content; // TODO:  Change to Content class when implementing quizzes, etc.
 }

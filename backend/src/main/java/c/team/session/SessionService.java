@@ -4,6 +4,7 @@ import c.team.account.UserAccountService;
 import c.team.account.model.UserAccount;
 import c.team.message.model.Message;
 import c.team.session.exception.SessionNotFoundException;
+import c.team.session.model.Guest;
 import c.team.session.model.Session;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +27,7 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final UserAccountService accountService;
 
-    public UUID createSession(String leaderUsername, String title){
+    public Session createSession(String leaderUsername, String title){
         UserAccount account = accountService.findByUsername(leaderUsername);
         Session session = Session.builder()
                 .leaderAccountId(account.getId())
@@ -33,11 +35,12 @@ public class SessionService {
                 .active(true)
                 .passcode(UUID.randomUUID())
                 .log(new ArrayList<>())
+                .guests(new HashSet<>())
                 .build();
 
         UUID passcode = sessionRepository.save(session).getPasscode();
         LOGGER.info("Opened session: " + session.getId());
-        return passcode;
+        return session;
     }
 
     public void closeSession(String sessionId){
@@ -50,6 +53,20 @@ public class SessionService {
     public void addMessageToSessionLog(String sessionId, Message message){
         Session session = this.findBySessionId(sessionId);
         session.getLog().add(message);
+        sessionRepository.save(session);
+    }
+
+    public void addGuestToSession(String sessionId, String guestName){
+        Session session = this.findBySessionId(sessionId);
+        Guest guest = Guest.builder().username(guestName).build();
+        session.getGuests().add(guest);
+        sessionRepository.save(session);
+    }
+
+    public void removeGuestFromSession(String sessionId, String guestName){
+        Session session = this.findBySessionId(sessionId);
+        Guest guest = Guest.builder().username(guestName).build();
+        session.getGuests().remove(guest);
         sessionRepository.save(session);
     }
 
