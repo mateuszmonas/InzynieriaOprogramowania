@@ -4,7 +4,6 @@ import c.team.session.SessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
@@ -14,7 +13,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SessionEventListener {
 
-    private SimpMessageSendingOperations sendingOperations;
     private SessionService sessionService;
 
     @EventListener

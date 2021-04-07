@@ -52,6 +52,7 @@ public class SessionService {
 
     public void addMessageToSessionLog(String sessionId, Message message){
         Session session = this.findBySessionId(sessionId);
+        message.setId(session.getLog().size());
         session.getLog().add(message);
         sessionRepository.save(session);
     }

@@ -5,9 +5,11 @@ import lombok.Data;
 
 @Data
 @Builder
+
 public class Message {
+    private int id; // Unique in session, frontend sends empty
     private String sender;
-    private String replyMsgId;  // Id of msg when replying, if not replying than it's null
+    private int replyMsgId;  // Id of msg when replying, if not replying than it's -1
     private MessageType type;
     private String timestamp;
     private String sessionId;
