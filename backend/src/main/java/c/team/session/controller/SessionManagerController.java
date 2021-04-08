@@ -1,6 +1,8 @@
 package c.team.session.controller;
 
 import c.team.session.SessionService;
+import c.team.session.exception.SessionClosedException;
+import c.team.session.exception.SessionNotFoundException;
 import c.team.session.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,19 +21,35 @@ public class SessionManagerController {
 
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public UUID createSession(@RequestBody SessionCreateRequest request){
-        return sessionsService.createSession(request.getUsername(), request.getSessionTitle());
+    public ResponseEntity<SessionCreateResponse> createSession(@RequestBody SessionCreateRequest request){
+        Session session = sessionsService.createSession(request.getUsername(), request.getSessionTitle());
+        SessionCreateResponse response = new SessionCreateResponse(session.getId(), session.getPasscode().toString());
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("connect")
     public ResponseEntity<GuestResponse> connectToSession(@RequestBody GuestRequest request){
         Session session = sessionsService.findByPasscode(UUID.fromString(request.getPasscode()));
-        GuestResponse response = new GuestResponse(session.getId(), session.getTitle());
-        return ResponseEntity.ok(response);
+        if(session.isActive()) {
+            GuestResponse response = new GuestResponse(session.getId(), session.getTitle());
+            return ResponseEntity.ok(response);
+        }
+        throw new SessionClosedException();
     }
 
     @PostMapping("close")
     public void closeSession(@RequestBody SessionCloseRequest request){
         sessionsService.closeSession(request.getSessionId());
+    }
+
+    // Every exception that goes back to frontend requires such handler
+    @ExceptionHandler(SessionClosedException.class)
+    public final ResponseEntity<Error> handleException(SessionClosedException ex){
+        return ResponseEntity.status(HttpStatus.GONE).build();
+    }
+
+    @ExceptionHandler(SessionNotFoundException.class)
+    public final ResponseEntity<Error> handleException(SessionNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }
