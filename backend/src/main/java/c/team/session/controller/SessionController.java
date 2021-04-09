@@ -21,6 +21,7 @@ public class SessionController {
     @SendTo("/topic/session/{sessionId}")
     public Message sendMessage(@DestinationVariable String sessionId, @Payload final Message message){
         sessionsService.addMessageToSessionLog(sessionId, message);
+        // Possibly some validation whether sender is in this session
         return message;
     }
 
@@ -28,7 +29,8 @@ public class SessionController {
     @SendTo("/topic/session/{sessionId}")
     public Message addParticipant(@DestinationVariable String sessionId, @Payload final Message message, SimpMessageHeaderAccessor headerAccessor){
         headerAccessor.getSessionAttributes().put("username", message.getSender());
-        // TODO: Add user to particular session
+        headerAccessor.getSessionAttributes().put("sessionId", message.getSessionId());
+        sessionsService.addGuestToSession(message.getSessionId(), message.getSender());
         return message;
     }
 }

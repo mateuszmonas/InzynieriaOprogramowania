@@ -1,5 +1,7 @@
 package c.team.account;
 
+import c.team.account.exception.DuplicateUsernameException;
+import c.team.account.exception.UserNotFoundException;
 import c.team.account.model.LoginRequest;
 import c.team.account.model.LoginResponse;
 import c.team.account.model.RegisterAccountRequest;
@@ -9,10 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -35,5 +35,15 @@ public class UserAccountController {
         UUID token = tokenService.generateTokenForAccount(userAccount);
         LoginResponse loginResponse = new LoginResponse(token);
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public final ResponseEntity<Error> handleException(UsernameNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @ExceptionHandler(DuplicateUsernameException.class)
+    public final ResponseEntity<Error> handleException(DuplicateUsernameException ex){
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 }

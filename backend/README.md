@@ -9,8 +9,8 @@ Swagger api documentation can be accessed on url `/swagger-ui.html`
 
 ## Session handling quick view
 #### Creating, joining and closing:
-* Creating session: /session/create -> returns passcode (active session created in DB)
-* Connecting to session: /session/connect -> returns session ID (used to find session websocket endpoint when sending a message - /app/session/{sessionId}/send)
+* Creating session: /session/create -> returns session ID and passcode (active session created in DB)
+* Connecting to session: /session/connect -> returns session ID and session title (used to find session websocket endpoint when sending a message - /app/session/{sessionId}/send)
 * Closing session: /session/close -> session with given ID is now closed (still in DB)
 #### Websocket communication in one session:
 * Creating websocket: /session-handling (websocket connection address)
