@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 @Builder
-
 public class Message {
     private int id; // Unique in session, frontend sends empty
     private String sender;

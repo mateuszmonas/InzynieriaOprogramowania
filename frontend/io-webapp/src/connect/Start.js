@@ -6,7 +6,7 @@ import SignUp from "./SignUp";
 import "./Start.css";
 
 const Start = (props) => {
-  const {stage, setStage, setToken} = props;
+  const { stage, setStage, setToken, setUsername } = props;
   const [message, setMessage] = React.useState("");
   const [creds, setCreds] = React.useState({ name: "", sessionCode: "" });
 
@@ -29,7 +29,13 @@ const Start = (props) => {
   };
 
   if (stage === "logIn") {
-    return <LogIn setStage={setStage} setToken={setToken}/>;
+    return (
+      <LogIn
+        setStage={setStage}
+        setToken={setToken}
+        setUsername={setUsername}
+      />
+    );
   } else if (stage === "signUp") {
     return <SignUp setStage={setStage} setMessage={setMessage} />;
   } else {

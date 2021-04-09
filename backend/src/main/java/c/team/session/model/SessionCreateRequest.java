@@ -15,5 +15,4 @@ public class SessionCreateRequest {
     @NotBlank
     @Parameter(required = true)
     private String sessionTitle;
-
 }

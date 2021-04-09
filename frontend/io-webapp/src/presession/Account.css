@@ -1,0 +1,12 @@
+.account {
+  margin: auto;
+  padding: 10vh 10vw 10vh 10vw;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.account * {
+  margin: 0.5em;
+}

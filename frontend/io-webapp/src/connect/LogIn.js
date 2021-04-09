@@ -20,6 +20,7 @@ const LogIn = (props) => {
         .then((response) => response.json())
         .then((data) => {
           props.setToken(data);
+          props.setUsername(creds.username);
           props.setStage("account");
         })
         .catch((error) => {
