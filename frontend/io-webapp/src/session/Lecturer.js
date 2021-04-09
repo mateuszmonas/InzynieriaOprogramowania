@@ -36,7 +36,7 @@ const Lecturer = (props) => {
         <div className="session">
           <Creator width={questionWidth} />
           {chat && <Chat />}
-          {participants && <Participants />}
+          {participants && <Participants stage={props.stage}/>}
         </div>
       </section>
     );

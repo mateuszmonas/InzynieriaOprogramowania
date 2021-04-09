@@ -108,7 +108,19 @@
   overflow: scroll;
 }
 
-.participants div {
+.waiting {
+  background: #5555ce;
+  flex-direction: row;
+  margin: 0.3rem;
+  border-radius: 0.2em;
+  text-align: justify;
+  width: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.accepted {
   margin: 0.3rem;
   background: #3838ce;
   border-radius: 0.2em;
@@ -119,6 +131,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
 }
+
 
 .participants div * {
   margin: 0.2rem;

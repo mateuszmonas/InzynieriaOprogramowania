@@ -36,7 +36,7 @@ const Student = (props) => {
       <div className="session">
         <Question width={questionWidth} />
         {chat && <Chat />}
-        {participants && <Participants />}
+        {participants && <Participants stage={props.stage}/>}
       </div>
     </section>
   );
