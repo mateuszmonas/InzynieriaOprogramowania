@@ -27,18 +27,22 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final UserAccountService accountService;
 
-    public Session createSession(String leaderUsername, String title){
+    public Session createSession(String leaderUsername, String title, boolean guestApproval){
         UserAccount account = accountService.findByUsername(leaderUsername);
         Session session = Session.builder()
                 .leaderAccountId(account.getId())
                 .title(title)
                 .active(true)
                 .passcode(UUID.randomUUID())
+                .guestApproval(guestApproval)
                 .log(new ArrayList<>())
                 .guests(new HashSet<>())
                 .build();
 
-        UUID passcode = sessionRepository.save(session).getPasscode();
+        if (guestApproval)
+            session.setGuestApprovalRoomId(UUID.randomUUID());
+
+        sessionRepository.save(session);
         LOGGER.info("Opened session: " + session.getId());
         return session;
     }

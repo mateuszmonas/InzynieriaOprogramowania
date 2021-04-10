@@ -3,7 +3,8 @@ Content-Type: application/json
 
 {
   "username": "username",
-  "sessionTitle": "sessionTitle"
+  "sessionTitle": "sessionTitle",
+  "guestApproval": false
 }
 
 ###

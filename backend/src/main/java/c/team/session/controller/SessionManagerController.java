@@ -22,7 +22,11 @@ public class SessionManagerController {
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<SessionCreateResponse> createSession(@RequestBody SessionCreateRequest request){
-        Session session = sessionsService.createSession(request.getUsername(), request.getSessionTitle());
+        Session session = sessionsService.createSession(
+                request.getUsername(),
+                request.getSessionTitle(),
+                request.isGuestApproval()
+        );
         SessionCreateResponse response = new SessionCreateResponse(session.getId(), session.getPasscode().toString());
         return ResponseEntity.ok(response);
     }
@@ -31,7 +35,13 @@ public class SessionManagerController {
     public ResponseEntity<GuestResponse> connectToSession(@RequestBody GuestRequest request){
         Session session = sessionsService.findByPasscode(UUID.fromString(request.getPasscode()));
         if(session.isActive()) {
-            GuestResponse response = new GuestResponse(session.getId(), session.getTitle());
+            GuestResponse response = new GuestResponse(
+                    session.isGuestApproval() ? "" : session.getId(),
+                    session.getTitle(),
+                    session.isGuestApproval(),
+                    session.getGuestApprovalRoomId().toString(),
+                    UUID.randomUUID().toString()
+            );
             return ResponseEntity.ok(response);
         }
         throw new SessionClosedException();

@@ -15,4 +15,8 @@ public class SessionCreateRequest {
     @NotBlank
     @Parameter(required = true)
     private String sessionTitle;
+
+    @NotBlank
+    @Parameter(required = true)
+    private boolean guestApproval;
 }
