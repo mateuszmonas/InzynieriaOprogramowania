@@ -27,7 +27,11 @@ public class SessionManagerController {
                 request.getSessionTitle(),
                 request.isGuestApproval()
         );
-        SessionCreateResponse response = new SessionCreateResponse(session.getId(), session.getPasscode().toString());
+        SessionCreateResponse response = new SessionCreateResponse(
+                session.getId(),
+                session.getPasscode().toString(),
+                session.getGuestApprovalRoomId().toString()
+        );
         return ResponseEntity.ok(response);
     }
 

@@ -8,4 +8,5 @@ import lombok.Data;
 public class SessionCreateResponse {
     String sessionId;
     String passcode;
+    String approvalRoomId;
 }
