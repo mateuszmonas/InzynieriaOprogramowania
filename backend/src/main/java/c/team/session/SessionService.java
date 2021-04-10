@@ -4,6 +4,7 @@ import c.team.account.UserAccountService;
 import c.team.account.model.UserAccount;
 import c.team.message.model.Message;
 import c.team.session.exception.SessionNotFoundException;
+import c.team.session.exception.SessionNotOwnedException;
 import c.team.session.model.Guest;
 import c.team.session.model.Session;
 import lombok.AllArgsConstructor;
@@ -47,8 +48,13 @@ public class SessionService {
         return session;
     }
 
-    public void closeSession(String sessionId){
+    public void closeSession(String sessionId, String leaderUsername){
+        UserAccount account = accountService.findByUsername(leaderUsername);
         Session session = this.findBySessionId(sessionId);
+
+        if (!account.getId().equals(session.getLeaderAccountId()))
+            throw new SessionNotOwnedException();
+
         session.setActive(false);
         sessionRepository.save(session);
         LOGGER.info("Closed session: " + sessionId);
