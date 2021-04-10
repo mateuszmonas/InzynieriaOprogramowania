@@ -12,6 +12,7 @@ function App() {
   const [token, setToken] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [sessionID, setSessionID] = React.useState("");
+  const [sessionTitle, setSessionTitle] = React.useState("");
 
   if (stage === "account") {
     return (
@@ -28,6 +29,7 @@ function App() {
           sessionID={sessionID}
           setSessionID={setSessionID}
           username={username}
+          setSessionTitle={setSessionTitle}
         />
       </div>
     );
@@ -47,6 +49,7 @@ function App() {
           setStage={setStage}
           sessionID={sessionID}
           setSessionID={setSessionID}
+          sessionTitle={sessionTitle}
         />
       </div>
     );
@@ -66,6 +69,7 @@ function App() {
           setStage={setStage}
           sessionID={sessionID}
           setSessionID={setSessionID}
+          sessionTitle={sessionTitle}
         />
       </div>
     );

@@ -32,6 +32,7 @@ const Student = (props) => {
         toggleParticipants={setParticipants}
         stage={props.stage}
         setStage={props.setStage}
+        sessionTitle={props.sessionTitle}
       />
       <div className="session">
         <Question width={questionWidth} />
