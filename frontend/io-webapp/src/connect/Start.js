@@ -34,6 +34,8 @@ const Start = (props) => {
         setStage={setStage}
         setToken={setToken}
         setUsername={setUsername}
+        socket={props.socket}
+        setSocket={props.setSocket}
       />
     );
   } else if (stage === "signUp") {

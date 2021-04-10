@@ -1,5 +1,6 @@
 import "./App.css";
 import React from "react";
+import Socket from "./socket";
 
 import Start from "./connect/Start";
 import Account from "./presession/Account";
@@ -13,6 +14,7 @@ function App() {
   const [username, setUsername] = React.useState("");
   const [sessionID, setSessionID] = React.useState("");
   const [sessionTitle, setSessionTitle] = React.useState("");
+  const [socket, setSocket] = React.useState(new Socket("","",""));
 
   if (stage === "account") {
     return (
@@ -30,6 +32,8 @@ function App() {
           setSessionID={setSessionID}
           username={username}
           setSessionTitle={setSessionTitle}
+          socket={socket}
+          setSocket={setSocket}
         />
       </div>
     );
@@ -50,6 +54,8 @@ function App() {
           sessionID={sessionID}
           setSessionID={setSessionID}
           sessionTitle={sessionTitle}
+          socket={socket}
+          setSocket={setSocket}
         />
       </div>
     );
@@ -70,6 +76,8 @@ function App() {
           sessionID={sessionID}
           setSessionID={setSessionID}
           sessionTitle={sessionTitle}
+          socket={socket}
+          setSocket={setSocket}
         />
       </div>
     );
@@ -88,6 +96,8 @@ function App() {
           setStage={setStage}
           setToken={setToken}
           setUsername={setUsername}
+          socket={socket}
+          setSocket={setSocket}
         />
       </div>
     );
