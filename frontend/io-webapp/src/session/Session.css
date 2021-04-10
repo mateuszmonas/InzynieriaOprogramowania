@@ -92,6 +92,11 @@
   align-items: left;
 }
 
+.sessionbar div h3 {
+  color: rgb(194, 210, 210);
+  align-self: center;
+}
+
 .participants {
   border-radius: 0.3em;
   box-shadow: 4px 4px 4px 4px #aaa;

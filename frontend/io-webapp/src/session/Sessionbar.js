@@ -4,12 +4,12 @@ const Sessionbar = (props) => {
   const toggleChat = () => {
     props.toggleChat(!props.chat);
     props.toggleParticipants(false);
-  }
+  };
 
   const toggleParticipants = () => {
     props.toggleChat(false);
     props.toggleParticipants(!props.participants);
-  }
+  };
 
   const handleClose = (e) => {
     e.preventDefault();
@@ -20,34 +20,43 @@ const Sessionbar = (props) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({username: props.username, sessionId: props.sessionID}),
+        body: JSON.stringify({
+          username: props.username,
+          sessionId: props.sessionID,
+        }),
       })
         .then((_) => {
-          props.setSessionID("")
-          props.setStage("account")
+          props.setSessionID("");
+          props.setStage("account");
         })
         .catch((error) => {
           console.error(error);
         });
     })();
-  }
+  };
 
   const leaveSessionHandler = (e) => {
     if (props.stage === "lecturer") {
       handleClose(e);
+    } else {
+      props.setStage("account");
     }
-    else {
-      props.setStage("account")
-    }
-  }
+  };
 
   return (
     <div className="sessionbar">
       <div>
-          <button type="button" onClick={leaveSessionHandler}>Leave Session</button>
+        <h3>{props.sessionTitle}</h3>
+        <button type="button" onClick={leaveSessionHandler}>
+          Leave Session
+        </button>
       </div>
-      <button type="button" onClick={() => toggleChat()}>Chat</button>
-      <button type="button" onClick={() => toggleParticipants()}>Participants</button>
+      <button type="button" onClick={() => toggleChat()}>
+        Chat
+      </button>
+      <button type="button" onClick={() => toggleParticipants()}>
+        Participants
+      </button>
     </div>
   );
 };

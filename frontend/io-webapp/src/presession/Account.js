@@ -25,6 +25,7 @@ const Account = (props) => {
         .then((data) => {
           console.log(data);
           props.setSessionID(data.sessionId);
+          props.setSessionTitle(data.sessionTitle);
           if (isOwner) {
             props.setStage("lecturer");
           } else {
@@ -47,13 +48,13 @@ const Account = (props) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: props.username, title: title }),
+        body: JSON.stringify({ username: props.username, sessionTitle: title }),
       })
         .then((response) => response.json())
         .then((data) => {
           setIsOwner(true);
-          setPasscode(data);
-          setMessage("Your session passcode is " + data);
+          setPasscode(data.passcode);
+          setMessage("Your session passcode is " + data.passcode);
         })
         .catch((error) => {
           console.error(error);
