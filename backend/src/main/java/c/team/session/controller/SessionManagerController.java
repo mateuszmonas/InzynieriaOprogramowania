@@ -77,6 +77,6 @@ public class SessionManagerController {
     // Duplicate from UserAccountController, probably a universal exception handler can be created
     @ExceptionHandler(UsernameNotFoundException.class)
     public final ResponseEntity<Error> handleException(UsernameNotFoundException ex){
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }
