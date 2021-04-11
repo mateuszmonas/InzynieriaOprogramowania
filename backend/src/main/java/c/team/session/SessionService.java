@@ -4,6 +4,7 @@ import c.team.account.UserAccountService;
 import c.team.account.model.UserAccount;
 import c.team.message.model.Message;
 import c.team.session.exception.SessionNotFoundException;
+import c.team.session.exception.SessionNotOwnedException;
 import c.team.session.model.Guest;
 import c.team.session.model.Session;
 import lombok.AllArgsConstructor;
@@ -27,24 +28,33 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final UserAccountService accountService;
 
-    public Session createSession(String leaderUsername, String title){
+    public Session createSession(String leaderUsername, String title, boolean guestApproval){
         UserAccount account = accountService.findByUsername(leaderUsername);
         Session session = Session.builder()
                 .leaderAccountId(account.getId())
                 .title(title)
                 .active(true)
                 .passcode(UUID.randomUUID())
+                .guestApproval(guestApproval)
                 .log(new ArrayList<>())
                 .guests(new HashSet<>())
                 .build();
 
-        UUID passcode = sessionRepository.save(session).getPasscode();
+        if (guestApproval)
+            session.setGuestApprovalRoomId(UUID.randomUUID());
+
+        sessionRepository.save(session);
         LOGGER.info("Opened session: " + session.getId());
         return session;
     }
 
-    public void closeSession(String sessionId){
+    public void closeSession(String sessionId, String leaderUsername){
+        UserAccount account = accountService.findByUsername(leaderUsername);
         Session session = this.findBySessionId(sessionId);
+
+        if (!account.getId().equals(session.getLeaderAccountId()))
+            throw new SessionNotOwnedException();
+
         session.setActive(false);
         sessionRepository.save(session);
         LOGGER.info("Closed session: " + sessionId);

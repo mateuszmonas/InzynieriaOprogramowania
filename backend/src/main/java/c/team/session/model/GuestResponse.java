@@ -8,4 +8,7 @@ import lombok.Data;
 public class GuestResponse {
     String sessionId;
     String sessionTitle;
+    boolean guestApproval;
+    String guestApprovalRoomId;
+    String guestId;
 }
