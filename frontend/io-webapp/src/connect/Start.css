@@ -10,3 +10,32 @@
 .startSection * {
     margin: 0.5em;
 }
+
+.login {
+  background: #FFE;
+  margin: 10% 30% 0% 30%;
+  padding: 1% 1% 1% 1%;
+  width: 40%;
+  border-radius: 1rem;
+  /* border: 1px;
+  border-style: solid; */
+  box-shadow: 0px 0px 2px 0px;
+}
+
+.login * {
+  margin: 0.5em;
+}
+
+.submit {
+  background: rgb(75, 75, 179);
+  padding: 0.5rem;
+  box-shadow: none;
+  outline:none;
+}
+
+.submit:hover {
+  background: rgb(55, 55, 179);
+  padding: 0.5rem;
+  box-shadow: none;
+  outline:none;
+}
