@@ -43,18 +43,18 @@ public class SessionService {
         if (guestApproval)
             session.setGuestApprovalRoomId(UUID.randomUUID());
 
-        sessionRepository.save(session);
         LOGGER.info("Opened session: " + session.getId());
+        sessionRepository.save(session);
+
+        // Add empty message so that messageId = 0 is neutral
+        Message msg = Message.builder().build();
+        addMessageToSessionLog(session.getId(), msg);
         return session;
     }
 
-    public void closeSession(String sessionId, String leaderUsername){
-        UserAccount account = accountService.findByUsername(leaderUsername);
+    public void closeSession(String sessionId, String potentialLeaderUsername){
         Session session = this.findBySessionId(sessionId);
-
-        if (!account.getId().equals(session.getLeaderAccountId()))
-            throw new SessionNotOwnedException();
-
+        validateOwner(sessionId, potentialLeaderUsername);
         session.setActive(false);
         sessionRepository.save(session);
         LOGGER.info("Closed session: " + sessionId);
@@ -79,6 +79,13 @@ public class SessionService {
         Guest guest = Guest.builder().username(guestName).build();
         session.getGuests().remove(guest);
         sessionRepository.save(session);
+    }
+
+    public void validateOwner(String sessionId, String potentialOwner){
+        Session session = this.findBySessionId(sessionId);
+        UserAccount account = accountService.findByUsername(potentialOwner);
+        if(!account.getId().equals(session.getLeaderAccountId()))
+            throw new SessionNotOwnedException();
     }
 
     public Session findByPasscode(UUID passcode){

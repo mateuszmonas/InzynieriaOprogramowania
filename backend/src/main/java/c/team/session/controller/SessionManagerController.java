@@ -1,10 +1,14 @@
 package c.team.session.controller;
 
+import c.team.message.model.Message;
+import c.team.message.model.MessageType;
 import c.team.session.SessionService;
 import c.team.session.exception.SessionClosedException;
 import c.team.session.exception.SessionNotFoundException;
 import c.team.session.exception.SessionNotOwnedException;
 import c.team.session.model.*;
+import c.team.timeline.model.TimelineRequest;
+import c.team.timeline.model.TimelineResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,6 +60,17 @@ public class SessionManagerController {
     @PostMapping("close")
     public void closeSession(@RequestBody SessionCloseRequest request){
         sessionsService.closeSession(request.getSessionId(), request.getUsername());
+    }
+
+    // Test session ID: 6074cc8fffe6d61ae3952eb6
+    // Test session name: TimelineTest
+    // Test session passcode: 9c07fca0-58af-46d9-add9-86efc6681e4a
+    @PostMapping("timeline")
+    public ResponseEntity<TimelineResponse> getTimeline(@RequestBody TimelineRequest request){
+        Session session = sessionsService.findBySessionId(request.getSessionId());
+        sessionsService.validateOwner(session.getId(), request.getUsername());
+        TimelineResponse response = new TimelineResponse(session.getLog());
+        return ResponseEntity.ok(response);
     }
 
     // Every exception that goes back to frontend requires such handler
