@@ -20,6 +20,8 @@ public class Session {
     private String leaderAccountId;
     private UUID passcode;
     private boolean active;
+    private boolean guestApproval;
+    private UUID guestApprovalRoomId;
     private List<Message> log;
     private Set<Guest> guests;
 }
