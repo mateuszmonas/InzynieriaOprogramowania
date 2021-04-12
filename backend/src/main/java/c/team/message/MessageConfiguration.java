@@ -12,7 +12,7 @@ public class MessageConfiguration implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(final StompEndpointRegistry registry){
-        registry.addEndpoint("/session-handling").withSockJS();
+        registry.addEndpoint("/session-handling").setAllowedOrigins("*").withSockJS();
     }
 
     @Override
