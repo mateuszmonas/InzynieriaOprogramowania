@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Data
@@ -19,5 +20,8 @@ public class Session {
     private String leaderAccountId;
     private UUID passcode;
     private boolean active;
+    private boolean guestApproval;
+    private UUID guestApprovalRoomId;
     private List<Message> log;
+    private Map<String, Guest> guests;
 }

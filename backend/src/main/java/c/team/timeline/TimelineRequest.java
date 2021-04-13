@@ -1,4 +1,4 @@
-package c.team.session.model;
+package c.team.timeline;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class SessionCreateRequest {
+public class TimelineRequest {
 
     @NotBlank
     @Parameter(required = true)
@@ -14,9 +14,5 @@ public class SessionCreateRequest {
 
     @NotBlank
     @Parameter(required = true)
-    private String sessionTitle;
-
-    @NotBlank
-    @Parameter(required = true)
-    private boolean guestApproval;
+    private String sessionId;
 }

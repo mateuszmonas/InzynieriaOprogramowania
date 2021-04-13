@@ -1,11 +1,46 @@
-import React from 'react'
+import React from "react";
 
-const Student = () => {
-    return (
-        <div>
-            <h1>Here will be student view</h1>
-        </div>
-    )
-}
+import Chat from "./Chat";
+import Participants from "./Participants";
+import Question from "./Question";
 
-export default Student
+import "./Session.css";
+import Sessionbar from "./Sessionbar";
+
+const Student = (props) => {
+  const [chat, setChat] = React.useState(false);
+  const [participants, setParticipants] = React.useState(false);
+  const [questionWidth, setQuestionWidth] = React.useState("100%");
+
+  React.useEffect(() => {
+    if (!chat && !participants) {
+      setQuestionWidth("100%");
+    } else {
+      setQuestionWidth("75%");
+    }
+  }, [chat, participants]);
+
+  return (
+    <section className="fullsession">
+      <Sessionbar
+        sessionID={props.sessionID}
+        setSessionID={props.setSessionID}
+        username={props.username}
+        chat={chat}
+        toggleChat={setChat}
+        participants={participants}
+        toggleParticipants={setParticipants}
+        stage={props.stage}
+        setStage={props.setStage}
+        sessionTitle={props.sessionTitle}
+      />
+      <div className="session">
+        <Question width={questionWidth} />
+        {chat && <Chat />}
+        {participants && <Participants stage={props.stage}/>}
+      </div>
+    </section>
+  );
+};
+
+export default Student;

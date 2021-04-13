@@ -1,0 +1,27 @@
+.navbar {
+  background: #333333;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 1vh;
+  display: flex;
+  flex-direction: row-reverse;
+  box-shadow: 0px 0px 5px 0px;
+  align-items: baseline;
+}
+
+.navbar button {
+  margin-right: 20px;
+  padding: 1vh;
+  background-color: #555555;
+  box-shadow: none;
+  outline:none;
+}
+
+.navbar button:hover {
+  background: #444444;
+}
+
+.username {
+  margin: 0px 20px 0px 0px;
+}
