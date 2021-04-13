@@ -26,7 +26,7 @@ const SignUp = (props) => {
         })
           .then((_) => {
             props.setStage("signedUp");
-            props.setMessage("Signed up successfuly");
+            props.setMessage("Signed up successfully");
             setTimeout(() => {
               props.setMessage("");
             }, 3000);
@@ -44,7 +44,8 @@ const SignUp = (props) => {
   };
 
   return (
-    <div className="startSection">
+    <div className="login">
+      <h2>Sign Up</h2>
       <form onSubmit={submitHandler}>
         <div>
           <label htmlFor="guestName">Name</label>
@@ -86,7 +87,18 @@ const SignUp = (props) => {
             onChange={(e) => setPasswordCheck(e.target.value)}
           ></input>
         </div>
-        <button type="submit">Sign up</button>
+        <div>
+          <button
+            type="button"
+            className="submit"
+            onClick={() => props.setStage("")}
+          >
+            Back
+          </button>
+          <button type="submit" className="submit">
+            Sign up
+          </button>
+        </div>
       </form>
       <h1>{message}</h1>
     </div>

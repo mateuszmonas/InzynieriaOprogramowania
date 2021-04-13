@@ -56,7 +56,7 @@ const Account = (props) => {
         .then((data) => {
           setIsOwner(true);
           setPasscode(data.passcode);
-          setMessage("Your session passcode is " + data.passcode);
+          setMessage("Your session passcode is:\n" + data.passcode);
         })
         .catch((error) => {
           console.error(error);
@@ -67,19 +67,31 @@ const Account = (props) => {
 
   return (
     <div className="account">
-      <label htmlFor="sessionTitle">Session Title: </label>
-      <input
-        type="input"
-        id="sessionTitle"
-        name="sessionTitle"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      ></input>
-      <button type="button" onClick={handleCreate}>
-        Create new session
-      </button>
-      {!isOwner ? (
-        <div>
+      <div className="login">
+        <h2>If you are a lecturer...</h2>
+        <label htmlFor="sessionTitle">Session Title: </label>
+        <input
+          type="input"
+          id="sessionTitle"
+          name="sessionTitle"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        ></input>
+        <button type="button" className="submit" onClick={handleCreate}>
+          Create new session
+        </button>
+        {isOwner && (
+          <>
+            <h4>{message}</h4>
+            <button type="button" className="submit" onClick={handleJoin}>
+              Join this session
+            </button>
+          </>
+        )}
+      </div>
+      {!isOwner && (
+        <div className="login">
+          <h2>If you are a student...</h2>
           <label htmlFor="sessionPasscode">Session Passcode: </label>
           <input
             type="input"
@@ -88,18 +100,12 @@ const Account = (props) => {
             value={passcode}
             onChange={(e) => setPasscode(e.target.value)}
           ></input>
-          <button type="button" onClick={handleJoin}>
+          <button type="button" className="submit" onClick={handleJoin}>
             Join session
           </button>
-        </div>
-      ) : (
-        <div>
-          <button type="button" onClick={handleJoin}>
-            Join this session
-          </button>
+          <h4>{message}</h4>
         </div>
       )}
-      <h1>{message}</h1>
     </div>
   );
 };

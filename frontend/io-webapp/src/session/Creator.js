@@ -43,7 +43,7 @@ const Creator = (props) => {
             onChange={(e) => setQuestion(e.target.value)}
           ></input>
         </div>
-        <button type="button" onClick={() => setAbcd(!abcd)} style={{"marginBottom": "10vh"}}>
+        <button type="button" className="answerButton" onClick={() => setAbcd(!abcd)} style={{"marginBottom": "10vh"}}>
           {abcd ? "ABCD" : "Open"}
         </button>
         <div>
@@ -123,7 +123,7 @@ const Creator = (props) => {
             </>
           )}
         </div>
-        <button type="submit" style={{"marginBottom": "10vh"}}>Add Question</button>
+        <button type="submit" className="answerButton" style={{"marginBottom": "10vh"}}>Add Question</button>
       </form>
     </div>
   );
