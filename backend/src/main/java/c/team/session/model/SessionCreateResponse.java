@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class SessionCreateResponse {
-    String sessionId;
-    String passcode;
-    String approvalRoomId;
+    private String sessionId;
+    private String passcode;
+    private String approvalRoomId;
 }

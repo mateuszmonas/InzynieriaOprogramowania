@@ -22,6 +22,8 @@ Swagger api documentation can be accessed on url `/swagger-ui.html`
   guest ID and whether guests require approval (used to find session websocket endpoint when sending a message - 
   /app/session/{sessionId}/send or where to ask for an approval for joining)
 * **Closing session:** /session/close -> session with given ID is now closed (still in DB)
+* **Getting participant list:** /session/participant-list -> returns list of participants (their ID and name)
+* **Getting timeline:** /session/timeline -> returns list of all messages sent in session
 #### Websocket communication in one session:
 * **Creating websocket:** /session-handling (websocket connection address)
 * **Subscribtion:** /topic/session/{sessionId} (receiving all messages, requires getting session ID from connect request)

@@ -1,0 +1,10 @@
+POST http://localhost:8080/session/participant-list
+Content-Type: application/json
+
+{
+  "guestId": "guestId",
+  "accountUsername": "accountUsername",
+  "sessionId": "sessionId"
+}
+
+###
