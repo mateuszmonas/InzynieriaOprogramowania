@@ -1,4 +1,5 @@
 import React from "react";
+import Socket from "../socket";
 
 import "./Account.css";
 
@@ -26,6 +27,7 @@ const Account = (props) => {
           console.log(data);
           props.setSessionID(data.sessionId);
           props.setSessionTitle(data.sessionTitle);
+          props.setSocket(Socket.connect(props.username, data.sessionId));
           if (isOwner) {
             props.setStage("lecturer");
           } else {

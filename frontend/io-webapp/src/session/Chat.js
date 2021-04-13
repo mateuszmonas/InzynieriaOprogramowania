@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const Chat = (props) => {
+const Chat = ({ socket }) => {
+  const [message, setMessage] = useState();
+  const [messages, setMessages] = useState([]);
+
   const sampleChat = [
     {
       id: 1,
@@ -16,16 +19,37 @@ const Chat = (props) => {
     },
   ];
 
+  const parseMessage = (message) => {
+    setMessages((messages) => [ ...messages, {
+      id: message.id,
+      username: message.sender,
+      message: message.content,
+      time: message.timestamp,
+    } ]);
+  }
+
+  useEffect(() => {
+    socket.addMessageListener(parseMessage);
+    return () => socket.removeMessageListener(parseMessage);
+  }, [])
+
+  const send = async (e) => {
+    e.preventDefault();
+
+    socket.sendMessage(message);
+    setMessage('');
+  };
+
   return (
     <div className="chat">
       <section>
         <h3>Here be reactions</h3>
-        <form>
-          <input type="text" id="chatMessage" name="chatMessage" />
+        <form onSubmit={send}>
+          <input type="text" id="chatMessage" name="chatMessage" value={message} onChange={(e) => setMessage(e.target.value)} />
           <button type="submit">Send</button>
         </form>
       </section>
-      {sampleChat.reverse().map((msg) => {
+      {messages.reverse().map((msg) => {
         return (
           <div key={msg.id}>
             <h6>[{msg.time}]</h6>
