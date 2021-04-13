@@ -32,7 +32,8 @@ const LogIn = (props) => {
   };
 
   return (
-    <div className="startSection">
+    <div className="login">
+      <h2>Log In</h2>
       <form onSubmit={submitHandler}>
         <div>
           <label htmlFor="logInName">Name</label>
@@ -54,7 +55,18 @@ const LogIn = (props) => {
             onChange={(e) => setCreds({ ...creds, password: e.target.value })}
           ></input>
         </div>
-        <button type="submit">Log in</button>
+        <div>
+          <button
+            type="button"
+            className="submit"
+            onClick={() => props.setStage("")}
+          >
+            Back
+          </button>
+          <button type="submit" className="submit">
+            Log in
+          </button>
+        </div>
       </form>
       <h1>{message}</h1>
     </div>
