@@ -3,11 +3,12 @@ package c.team.token;
 import c.team.token.model.Token;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 
 public interface TokenRepository extends MongoRepository<Token, String> {
-    Token findTokenByValue(UUID value);
+    Optional<Token> findTokenByValue(UUID value);
 
-    Token findTokenByUsername(String username);
+    Optional<Token> findTokenByUsername(String username);
 }

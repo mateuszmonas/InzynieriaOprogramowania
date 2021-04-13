@@ -3,10 +3,10 @@ package c.team.account;
 import c.team.account.model.UserAccount;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.UUID;
+import java.util.Optional;
 
-public interface UserAccountRepository extends MongoRepository<UserAccount, UUID> {
+public interface UserAccountRepository extends MongoRepository<UserAccount, String> {
 
-    UserAccount findAccountByUsername(String username);
+    Optional<UserAccount> findAccountByUsername(String username);
 
 }

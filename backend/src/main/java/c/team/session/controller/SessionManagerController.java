@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -23,7 +24,7 @@ public class SessionManagerController {
 
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<SessionCreateResponse> createSession(@RequestBody SessionCreateRequest request){
+    public ResponseEntity<SessionCreateResponse> createSession(@RequestBody @Valid SessionCreateRequest request) {
         Session session = sessionsService.createSession(
                 request.getUsername(),
                 request.getSessionTitle(),
@@ -38,9 +39,9 @@ public class SessionManagerController {
     }
 
     @PostMapping("connect")
-    public ResponseEntity<GuestResponse> connectToSession(@RequestBody GuestRequest request){
+    public ResponseEntity<GuestResponse> connectToSession(@RequestBody @Valid GuestRequest request) {
         Session session = sessionsService.findByPasscode(UUID.fromString(request.getPasscode()));
-        if(session.isActive()) {
+        if (session.isActive()) {
             GuestResponse response = new GuestResponse(
                     session.isGuestApproval() ? "" : session.getId(),
                     session.getTitle(),
@@ -54,7 +55,7 @@ public class SessionManagerController {
     }
 
     @PostMapping("close")
-    public void closeSession(@RequestBody SessionCloseRequest request){
+    public void closeSession(@RequestBody @Valid SessionCloseRequest request) {
         sessionsService.closeSession(request.getSessionId(), request.getUsername());
     }
 
