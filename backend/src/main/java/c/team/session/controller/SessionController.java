@@ -59,6 +59,7 @@ public class SessionController {
     public Message guestApprovalResponse(@DestinationVariable String sessionApprovalId, @DestinationVariable String guestId, @Payload final Message message){
         if(message.getType() != MessageType.GUEST_APPROVAL)
             throw new InvalidMessageTypeException();
+        // TODO: If session leader rejects - delete from session guests
         return message;
     }
 
