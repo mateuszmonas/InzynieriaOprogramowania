@@ -9,6 +9,6 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 public class ParticipantListResponse {
-    String leaderAccountName;
-    Collection<Guest> participants;
+    private String leaderAccountName;
+    private Collection<Guest> participants;
 }

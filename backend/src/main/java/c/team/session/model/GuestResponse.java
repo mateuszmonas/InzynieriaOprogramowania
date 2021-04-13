@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class GuestResponse {
-    String sessionId;
-    String sessionTitle;
-    boolean guestApproval;
-    String guestApprovalRoomId;
-    String guestId;
+    private String sessionId;
+    private String sessionTitle;
+    private boolean guestApproval;
+    private String guestApprovalRoomId;
+    private String guestId;
 }
