@@ -41,6 +41,10 @@ public class SessionService {
             session.setGuestApprovalRoomId(UUID.randomUUID());
 
         sessionRepository.save(session);
+        session.getGuests().put("123", Guest.builder().id("123").username("test user").build());
+        sessionRepository.save(session);
+        addGuestToSession(session.getId(), "Persistent User 1");
+        addGuestToSession(session.getId(), "Persistent User 2");
         LOGGER.info("Opened session: " + session.getId());
         return session;
     }
@@ -66,15 +70,17 @@ public class SessionService {
 
     public void addGuestToSession(String sessionId, String guestName){
         Session session = this.findBySessionId(sessionId);
-        Guest guest = Guest.builder().username(guestName).build();
+        Guest guest = Guest.builder()
+                .id(UUID.randomUUID().toString())
+                .username(guestName)
+                .build();
         session.getGuests().put(guest.getId(), guest);
         sessionRepository.save(session);
     }
 
-    public void removeGuestFromSession(String sessionId, String guestName){
+    public void removeGuestFromSession(String sessionId, String guestId){
         Session session = this.findBySessionId(sessionId);
-        Guest guest = Guest.builder().username(guestName).build();
-        session.getGuests().remove(guest.getId());
+        session.getGuests().remove(guestId);
         sessionRepository.save(session);
     }
 

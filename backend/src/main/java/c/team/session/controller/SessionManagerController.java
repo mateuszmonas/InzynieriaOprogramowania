@@ -58,6 +58,9 @@ public class SessionManagerController {
         throw new SessionClosedException();
     }
 
+    // Test session ID: 6075aa1270cdc94a69b24c33
+    // Test session title: ParticipantListTest
+    // Test session passcode: 13024218-87fb-4b66-b39b-8f0bb329d40a
     @PostMapping("participant-list")
     public ResponseEntity<ParticipantListResponse> getParticipantsList(@RequestBody ParticipantListRequest request){
         Session session = sessionsService.findBySessionId(request.getSessionId());
