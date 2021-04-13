@@ -37,8 +37,8 @@ public class SessionController {
         if(message.getType() != MessageType.CONNECT)
             throw new InvalidMessageTypeException();
         headerAccessor.getSessionAttributes().put("guestId", message.getSender());
-        headerAccessor.getSessionAttributes().put("sessionId", message.getSessionId());
-        sessionsService.addGuestToSession(message.getSessionId(), message.getSender());
+        headerAccessor.getSessionAttributes().put("sessionId", sessionId);
+        sessionsService.addGuestToSession(sessionId, message.getSender());
         return message;
     }
 
