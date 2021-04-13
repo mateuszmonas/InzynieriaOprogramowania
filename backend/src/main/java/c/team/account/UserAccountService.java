@@ -40,7 +40,7 @@ public class UserAccountService {
     }
 
     public UserAccount findByUserId(String id){
-        return Optional.ofNullable(userAccountRepository.findAccountById(id))
+        return userAccountRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("user with id: " + id + " not exist"));
     }
 }
