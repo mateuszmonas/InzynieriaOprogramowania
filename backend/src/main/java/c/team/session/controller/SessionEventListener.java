@@ -23,8 +23,8 @@ public class SessionEventListener {
     @EventListener
     public void handleParticipantDisconnect(final SessionDisconnectEvent event) {
         final StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        final String guestName = (String) headerAccessor.getSessionAttributes().get("username");
+        final String guestId = (String) headerAccessor.getSessionAttributes().get("guestId");
         final String sessionId = (String) headerAccessor.getSessionAttributes().get("sessionId");
-        sessionService.removeGuestFromSession(sessionId, guestName);
+        sessionService.removeGuestFromSession(sessionId, guestId);
     }
 }

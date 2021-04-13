@@ -47,14 +47,14 @@ const Sessionbar = (props) => {
     <div className="sessionbar">
       <div>
         <h3>{props.sessionTitle}</h3>
-        <button type="button" onClick={leaveSessionHandler}>
+        <button type="button" className="leave" onClick={leaveSessionHandler}>
           Leave Session
         </button>
       </div>
-      <button type="button" onClick={() => toggleChat()}>
+      <button type="button" className="view" onClick={() => toggleChat()}>
         Chat
       </button>
-      <button type="button" onClick={() => toggleParticipants()}>
+      <button type="button" className="view" onClick={() => toggleParticipants()}>
         Participants
       </button>
     </div>

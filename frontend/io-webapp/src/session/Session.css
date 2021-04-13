@@ -57,7 +57,7 @@
   align-items: left; */
 }
 
-.chat section form{
+.chat section form {
   margin: 0.1rem 0.2rem 0.3rem 0.2rem;
   display: flex;
   flex-direction: row;
@@ -137,7 +137,6 @@
   justify-content: space-between;
 }
 
-
 .participants div * {
   margin: 0.2rem;
 }
@@ -162,7 +161,7 @@
 .questionProper {
   display: flex;
   flex-direction: column;
-  justify-content:center;
+  justify-content: center;
   height: 50%;
   width: 100%;
 }
@@ -179,22 +178,14 @@
 .answer {
   width: 30%;
   display: flex;
-  flex-direction: row;
-  justify-content: left;
-  align-items: center;
+  justify-content: center;
+  text-align: center;
+  align-items:center;
   background: rgb(244, 252, 177);
   border-radius: 2rem;
   padding: 1vh 1vw 1vh 1vw;
-  flex-wrap: wrap;
   overflow: hidden;
-}
-
-.answer button {
-  margin-left: 10%;
-  margin-right: 10%;
-  margin-top: 10%;
-  margin-bottom: 10%;
-  padding: 1vh 1vw 1vh 1vw;
+  box-shadow: 0px 0px 4px 0px;
 }
 
 .question form {
@@ -221,3 +212,41 @@
   height: 100%;
 }
 
+button.leave {
+  background-color: #b64b4b;
+  border-color: #b63333;
+  padding: 0.5% 0.5% 0.5% 0.5%;
+  border-radius: 0.3rem;
+  box-shadow: none;
+  outline:none;
+}
+
+button.leave:hover {
+  background-color: #b64141;
+}
+
+button.view {
+  background-color: #6666b6;
+  border-color: #5555b6;
+  padding: 0.5% 0.5% 0.5% 0.5%;
+  border-radius: 0.3rem;
+  box-shadow: none;
+  outline:none;
+}
+
+button.view:hover {
+  background-color: #5555b6;
+}
+
+button.answerButton {
+  background-color: #777777;
+  border-color: #666666;
+  padding: 0.5% 0.5% 0.5% 0.5%;
+  border-radius: 0.3rem;
+  box-shadow: none;
+  outline:none;
+}
+
+button.answerButton:hover {
+  background-color: #666666;
+}
