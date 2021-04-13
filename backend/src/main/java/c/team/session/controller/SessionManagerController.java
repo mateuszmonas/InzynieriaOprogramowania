@@ -1,14 +1,12 @@
 package c.team.session.controller;
 
-import c.team.message.model.Message;
-import c.team.message.model.MessageType;
 import c.team.session.SessionService;
 import c.team.session.exception.SessionClosedException;
 import c.team.session.exception.SessionNotFoundException;
 import c.team.session.exception.SessionNotOwnedException;
 import c.team.session.model.*;
-import c.team.timeline.model.TimelineRequest;
-import c.team.timeline.model.TimelineResponse;
+import c.team.timeline.TimelineRequest;
+import c.team.timeline.TimelineResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

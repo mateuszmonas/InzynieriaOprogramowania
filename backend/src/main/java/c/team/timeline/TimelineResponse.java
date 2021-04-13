@@ -1,4 +1,4 @@
-package c.team.timeline.model;
+package c.team.timeline;
 
 import c.team.message.model.Message;
 import lombok.AllArgsConstructor;
