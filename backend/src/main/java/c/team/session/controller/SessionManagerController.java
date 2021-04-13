@@ -1,9 +1,13 @@
 package c.team.session.controller;
 
+import c.team.account.UserAccountService;
+import c.team.account.model.UserAccount;
+import c.team.participants.list.ParticipantListRequest;
+import c.team.participants.list.ParticipantListResponse;
 import c.team.session.SessionService;
 import c.team.session.exception.SessionClosedException;
 import c.team.session.exception.SessionNotFoundException;
-import c.team.session.exception.SessionNotOwnedException;
+import c.team.session.exception.SessionUnauthorizedAccessException;
 import c.team.session.model.*;
 import c.team.timeline.TimelineRequest;
 import c.team.timeline.TimelineResponse;
@@ -22,6 +26,7 @@ import java.util.UUID;
 public class SessionManagerController {
 
     private final SessionService sessionsService;
+    private final UserAccountService accountService;
 
     @PostMapping("create")
     @ResponseStatus(HttpStatus.CREATED)
@@ -55,6 +60,24 @@ public class SessionManagerController {
         throw new SessionClosedException();
     }
 
+    // Test session ID: 6075aa1270cdc94a69b24c33
+    // Test session title: ParticipantListTest
+    // Test session passcode: 13024218-87fb-4b66-b39b-8f0bb329d40a
+    @PostMapping("participant-list")
+    public ResponseEntity<ParticipantListResponse> getParticipantsList(@RequestBody ParticipantListRequest request){
+        Session session = sessionsService.findBySessionId(request.getSessionId());
+        UserAccount sessionLeader = accountService.findByUserId(session.getLeaderAccountId());
+        if(!( request.getAccountUsername().equals(sessionLeader.getUsername())
+                || session.getGuests().containsKey(request.getGuestId()) ))
+            throw new SessionUnauthorizedAccessException();
+
+        ParticipantListResponse response = new ParticipantListResponse(
+                sessionLeader.getUsername(),
+                session.getGuests().values()
+        );
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("close")
     public void closeSession(@RequestBody SessionCloseRequest request){
         sessionsService.closeSession(request.getSessionId(), request.getUsername());
@@ -82,8 +105,8 @@ public class SessionManagerController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @ExceptionHandler(SessionNotOwnedException.class)
-    public final ResponseEntity<Error> handleException(SessionNotOwnedException ex){
+    @ExceptionHandler(SessionUnauthorizedAccessException.class)
+    public final ResponseEntity<Error> handleException(SessionUnauthorizedAccessException ex){
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 

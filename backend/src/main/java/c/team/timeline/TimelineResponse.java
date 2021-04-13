@@ -9,5 +9,5 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class TimelineResponse {
-    List<Message> timeline;
+    private List<Message> timeline;
 }

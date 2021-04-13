@@ -41,4 +41,8 @@ public class UserAccountService {
                 .orElseThrow(() -> new UsernameNotFoundException("user does not exist: " + username));
     }
 
+    public UserAccount findByUserId(String id){
+        return Optional.ofNullable(userAccountRepository.findAccountById(id))
+                .orElseThrow(() -> new UsernameNotFoundException("user with id: " + id + " not exist"));
+    }
 }
