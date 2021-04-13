@@ -34,58 +34,43 @@ const Start = (props) => {
         setStage={setStage}
         setToken={setToken}
         setUsername={setUsername}
+        socket={props.socket}
+        setSocket={props.setSocket}
       />
     );
   } else if (stage === "signUp") {
     return <SignUp setStage={setStage} setMessage={setMessage} />;
   } else {
     return (
-      <section className="startSection">
-        <button
-          type="button"
-          onClick={() => {
-            setStage("logIn");
-          }}
-        >
-          Log in
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setStage("signUp");
-          }}
-        >
-          Sign up
-        </button>
-        <h3>or</h3>
-        <h2>Join as a guest</h2>
-        <form onSubmit={submitHandler}>
-          <div>
-            <label htmlFor="guestName">Name:</label>
-            <input
-              type="text"
-              id="guestName"
-              name="guestName"
-              value={creds.name}
-              onChange={(e) => setCreds({ ...creds, name: e.target.value })}
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="sessionCode">Enter session code here:</label>
-            <input
-              type="text"
-              id="sessionCode"
-              name="sessionCode"
-              value={creds.sessionCode}
-              onChange={(e) =>
-                setCreds({ ...creds, sessionCode: e.target.value })
-              }
-            ></input>
-          </div>
-          <button type="submit">Join</button>
-        </form>
+        <div className="login">
+          <h2>Join as a guest</h2>
+          <form onSubmit={submitHandler}>
+            <div>
+              <label htmlFor="guestName">Name:</label>
+              <input
+                type="text"
+                id="guestName"
+                name="guestName"
+                value={creds.name}
+                onChange={(e) => setCreds({ ...creds, name: e.target.value })}
+              ></input>
+            </div>
+            <div>
+              <label htmlFor="sessionCode">Enter session code here:</label>
+              <input
+                type="text"
+                id="sessionCode"
+                name="sessionCode"
+                value={creds.sessionCode}
+                onChange={(e) =>
+                  setCreds({ ...creds, sessionCode: e.target.value })
+                }
+              ></input>
+            </div>
+            <button type="submit" className="submit">Join</button>
+          </form>
         <h1>{message}</h1>
-      </section>
+        </div>
     );
   }
 };

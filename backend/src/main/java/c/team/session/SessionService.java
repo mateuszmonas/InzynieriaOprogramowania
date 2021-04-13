@@ -4,7 +4,7 @@ import c.team.account.UserAccountService;
 import c.team.account.model.UserAccount;
 import c.team.message.model.Message;
 import c.team.session.exception.SessionNotFoundException;
-import c.team.session.exception.SessionNotOwnedException;
+import c.team.session.exception.SessionUnauthorizedAccessException;
 import c.team.session.model.Guest;
 import c.team.session.model.Session;
 import lombok.AllArgsConstructor;
@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -36,24 +34,24 @@ public class SessionService {
                 .passcode(UUID.randomUUID())
                 .guestApproval(guestApproval)
                 .log(new ArrayList<>())
-                .guests(new HashSet<>())
+                .guests(new HashMap<>())
                 .build();
 
         if (guestApproval)
             session.setGuestApprovalRoomId(UUID.randomUUID());
 
-        sessionRepository.save(session);
         LOGGER.info("Opened session: " + session.getId());
+        sessionRepository.save(session);
+
+        // Add empty message so that messageId = 0 is neutral
+        Message msg = Message.builder().build();
+        addMessageToSessionLog(session.getId(), msg);
         return session;
     }
 
-    public void closeSession(String sessionId, String leaderUsername){
-        UserAccount account = accountService.findByUsername(leaderUsername);
+    public void closeSession(String sessionId, String potentialLeaderUsername){
         Session session = this.findBySessionId(sessionId);
-
-        if (!account.getId().equals(session.getLeaderAccountId()))
-            throw new SessionNotOwnedException();
-
+        validateOwner(sessionId, potentialLeaderUsername);
         session.setActive(false);
         sessionRepository.save(session);
         LOGGER.info("Closed session: " + sessionId);
@@ -68,16 +66,25 @@ public class SessionService {
 
     public void addGuestToSession(String sessionId, String guestName){
         Session session = this.findBySessionId(sessionId);
-        Guest guest = Guest.builder().username(guestName).build();
-        session.getGuests().add(guest);
+        Guest guest = Guest.builder()
+                .id(UUID.randomUUID().toString())
+                .username(guestName)
+                .build();
+        session.getGuests().put(guest.getId(), guest);
         sessionRepository.save(session);
     }
 
-    public void removeGuestFromSession(String sessionId, String guestName){
+    public void removeGuestFromSession(String sessionId, String guestId){
         Session session = this.findBySessionId(sessionId);
-        Guest guest = Guest.builder().username(guestName).build();
-        session.getGuests().remove(guest);
+        session.getGuests().remove(guestId);
         sessionRepository.save(session);
+    }
+
+    public void validateOwner(String sessionId, String potentialOwner){
+        Session session = this.findBySessionId(sessionId);
+        UserAccount account = accountService.findByUsername(potentialOwner);
+        if(!account.getId().equals(session.getLeaderAccountId()))
+            throw new SessionUnauthorizedAccessException();
     }
 
     public Session findByPasscode(UUID passcode){

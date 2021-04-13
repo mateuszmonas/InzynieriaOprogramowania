@@ -8,5 +8,5 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class LoginResponse {
-    UUID token;
+    private UUID token;
 }
