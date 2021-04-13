@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-const Chat = ({socket}) => {
-  const [message, setMessage] = useState()
+const Chat = ({ socket }) => {
+  const [message, setMessage] = useState();
+  const [messages, setMessages] = useState([]);
+
   const sampleChat = [
     {
       id: 1,
@@ -9,41 +11,48 @@ const Chat = ({socket}) => {
       message: "Hello",
       time: "21:37",
     },
+    {
+      id: 2,
+      username: "Bob",
+      message: "Hi",
+      time: "21:38",
+    },
   ];
-  
-  useEffect(()=>{
-    let oldMessages = [...messages]
-    oldMessages.push({
-        id: 1,
-        username: socket.newMessage?.sender,
-        message: socket.newMessage?.content,
-        time: socket.newMessage?.timestamp,
-    })
-    setMessages(oldMessages)
-   },[socket])
 
-  const [messages, setMessages] = useState(sampleChat)
+  const parseMessage = (message) => {
+    setMessages((messages) => [ ...messages, {
+      id: message.id,
+      username: message.sender,
+      message: message.content,
+      time: message.timestamp,
+    } ]);
+  }
+
+  useEffect(() => {
+    socket.addMessageListener(parseMessage);
+    return () => socket.removeMessageListener(parseMessage);
+  }, [])
+
+  const send = async (e) => {
+    e.preventDefault();
+
+    socket.sendMessage(message);
+    setMessage('');
+  };
 
   return (
     <div className="chat">
       <section>
         <h3>Here be reactions</h3>
-        <form>
-          <input type="text" id="chatMessage" name="chatMessage" value={message} onChange={(e)=>{setMessage(e.target.value)}}/>
-          <button 
-            type="button"
-            onClick={() => {
-              socket.sendMessage(message);
-            }}
-          >
-            Send
-          </button>
+        <form onSubmit={send}>
+          <input type="text" id="chatMessage" name="chatMessage" value={message} onChange={(e) => setMessage(e.target.value)} />
+          <button type="submit">Send</button>
         </form>
       </section>
-      {messages && messages.map((msg) => {
+      {messages.reverse().map((msg) => {
         return (
           <div key={msg.id}>
-            <h6>{msg.time}</h6>
+            <h6>[{msg.time}]</h6>
             <h4>{msg.username}:</h4>
             <p>{msg.message}</p>
           </div>

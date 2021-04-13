@@ -16,6 +16,7 @@ function App() {
   const [sessionTitle, setSessionTitle] = React.useState("");
   const [socket, setSocket] = React.useState(new Socket("","",""));
 
+
   if (stage === "account") {
     return (
       <div className="App">

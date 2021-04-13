@@ -3,12 +3,20 @@ import Stomp from 'stompjs';
 import moment from "moment";
 
 class Socket {
-  constructor(socket, stompClient, username, sessionID, newMessage) {
+  constructor(socket, stompClient, username, sessionID) {
     this.socket = socket;
     this.stompClient = stompClient;
     this.username = username;
     this.sessionID = sessionID;
-    this.newMessage = newMessage;
+    this.messageListeners = [];
+  }
+
+  addMessageListener(listener) {
+    this.messageListeners.push(listener);
+  }
+
+  removeMessageListener(listener) {
+    this.messageListeners = this.messageListeners.filter((l) => l !== listener);
   }
 
   static connect = (name, sessionID) => {
@@ -25,7 +33,6 @@ class Socket {
   };
 
   onConnected = () => {
-    console.log('xd')
     this.stompClient.subscribe(`/topic/session/${this.sessionID}`, this.onMessageReceived);
     // stompClient.send("/app/session/123/new-user",
     //     {},
@@ -46,7 +53,6 @@ class Socket {
         type: "COMMENT",
         timestamp: moment().calendar(),
       };
-      this.newMessage = chatMessage;
       this.stompClient.send(
         `/app/session/${this.sessionID}/send`,
         {},
@@ -63,7 +69,9 @@ class Socket {
     } else if (message.type === "DISCONNECT") {
       console.log(message);
     } else {
-      console.log(message);
+      for(const listener of this.messageListeners) {
+        listener(message);
+      }
 
       // messageElement.classList.add('chat-message')
 
