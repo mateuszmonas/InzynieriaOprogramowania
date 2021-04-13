@@ -64,14 +64,17 @@ public class SessionService {
         sessionRepository.save(session);
     }
 
-    public void addGuestToSession(String sessionId, String guestName){
+    public String addGuestToSession(String sessionId, String guestName){
         Session session = this.findBySessionId(sessionId);
+        String guestId = UUID.randomUUID().toString();
         Guest guest = Guest.builder()
-                .id(UUID.randomUUID().toString())
+                .id(guestId)
                 .username(guestName)
+                .approved(false)
                 .build();
         session.getGuests().put(guest.getId(), guest);
         sessionRepository.save(session);
+        return guestId;
     }
 
     public void removeGuestFromSession(String sessionId, String guestId){

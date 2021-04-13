@@ -8,4 +8,5 @@ import lombok.Data;
 public class Guest {
     private String id;
     private String username;
+    private boolean approved;
 }

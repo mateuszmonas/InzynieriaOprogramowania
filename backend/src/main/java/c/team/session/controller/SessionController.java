@@ -4,6 +4,7 @@ import c.team.message.exception.InvalidMessageTypeException;
 import c.team.message.model.Message;
 import c.team.message.model.MessageType;
 import c.team.session.SessionService;
+import c.team.session.model.Session;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,9 @@ public class SessionController {
         if(message.getType() != MessageType.CONNECT)
             throw new InvalidMessageTypeException();
         headerAccessor.getSessionAttributes().put("guestId", message.getSender());
-        headerAccessor.getSessionAttributes().put("sessionId", message.getSessionId());
-        sessionsService.addGuestToSession(message.getSessionId(), message.getSender());
+        headerAccessor.getSessionAttributes().put("sessionId", sessionId);
+        Session session = sessionsService.findBySessionId(sessionId);
+        session.getGuests().get(message.getSender()).setApproved(true);
         return message;
     }
 
