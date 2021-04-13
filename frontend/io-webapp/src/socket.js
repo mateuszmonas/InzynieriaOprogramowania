@@ -3,11 +3,12 @@ import Stomp from 'stompjs';
 import moment from "moment";
 
 class Socket {
-  constructor(socket, stompClient, username, sessionID) {
+  constructor(socket, stompClient, username, sessionID, newMessage) {
     this.socket = socket;
     this.stompClient = stompClient;
     this.username = username;
     this.sessionID = sessionID;
+    this.newMessage = newMessage;
   }
 
   static connect = (name, sessionID) => {
@@ -24,6 +25,7 @@ class Socket {
   };
 
   onConnected = () => {
+    console.log('xd')
     this.stompClient.subscribe(`/topic/session/${this.sessionID}`, this.onMessageReceived);
     // stompClient.send("/app/session/123/new-user",
     //     {},
@@ -44,6 +46,7 @@ class Socket {
         type: "COMMENT",
         timestamp: moment().calendar(),
       };
+      this.newMessage = chatMessage;
       this.stompClient.send(
         `/app/session/${this.sessionID}/send`,
         {},
@@ -61,6 +64,7 @@ class Socket {
       console.log(message);
     } else {
       console.log(message);
+
       // messageElement.classList.add('chat-message')
 
       // const avatarContainer = document.createElement('div')

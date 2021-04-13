@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-const Chat = (props) => {
+const Chat = ({socket}) => {
+  const [message, setMessage] = useState()
   const sampleChat = [
     {
       id: 1,
@@ -8,27 +9,41 @@ const Chat = (props) => {
       message: "Hello",
       time: "21:37",
     },
-    {
-      id: 2,
-      username: "Bob",
-      message: "Hi",
-      time: "21:38",
-    },
   ];
+  
+  useEffect(()=>{
+    let oldMessages = [...messages]
+    oldMessages.push({
+        id: 1,
+        username: socket.newMessage?.sender,
+        message: socket.newMessage?.content,
+        time: socket.newMessage?.timestamp,
+    })
+    setMessages(oldMessages)
+   },[socket])
+
+  const [messages, setMessages] = useState(sampleChat)
 
   return (
     <div className="chat">
       <section>
         <h3>Here be reactions</h3>
         <form>
-          <input type="text" id="chatMessage" name="chatMessage" />
-          <button type="submit">Send</button>
+          <input type="text" id="chatMessage" name="chatMessage" value={message} onChange={(e)=>{setMessage(e.target.value)}}/>
+          <button 
+            type="button"
+            onClick={() => {
+              socket.sendMessage(message);
+            }}
+          >
+            Send
+          </button>
         </form>
       </section>
-      {sampleChat.reverse().map((msg) => {
+      {messages && messages.map((msg) => {
         return (
           <div key={msg.id}>
-            <h6>[{msg.time}]</h6>
+            <h6>{msg.time}</h6>
             <h4>{msg.username}:</h4>
             <p>{msg.message}</p>
           </div>
