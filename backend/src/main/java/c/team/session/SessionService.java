@@ -64,13 +64,22 @@ public class SessionService {
         sessionRepository.save(session);
     }
 
-    public void addGuestToSession(String sessionId, String guestName){
+    public String addGuestToSession(String sessionId, String guestName){
         Session session = this.findBySessionId(sessionId);
+        String guestId = UUID.randomUUID().toString();
         Guest guest = Guest.builder()
-                .id(UUID.randomUUID().toString())
+                .id(guestId)
                 .username(guestName)
+                .approved(false)
                 .build();
         session.getGuests().put(guest.getId(), guest);
+        sessionRepository.save(session);
+        return guestId;
+    }
+
+    public void approveGuest(String sessionId, String guestId){
+        Session session = this.findBySessionId(sessionId);
+        session.getGuests().get(guestId).setApproved(true);
         sessionRepository.save(session);
     }
 
@@ -95,5 +104,10 @@ public class SessionService {
     public Session findBySessionId(String sessionsId){
         return Optional.ofNullable(sessionRepository.findSessionById(sessionsId))
                 .orElseThrow(() -> new SessionNotFoundException("no sessions with id: " + sessionsId));
+    }
+
+    public Session findByGuestApprovalRoomId(UUID guestApprovalRoomId){
+        return sessionRepository.findSessionByGuestApprovalRoomId(guestApprovalRoomId)
+                .orElseThrow(() -> new SessionNotFoundException("no session with approval room: " + guestApprovalRoomId));
     }
 }
