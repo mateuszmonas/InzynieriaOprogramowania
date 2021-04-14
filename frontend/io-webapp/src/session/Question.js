@@ -27,7 +27,9 @@ const Question = (props) => {
 
   return (
     <div className="question" style={{ width: props.width }}>
-      {questions.length ? (
+      {props.stage === "awaitsApproval" ? (
+        <h1>Waiting for permission from room owner</h1>
+      ) : questions.length ? (
         current.hasOwnProperty("answers") ? (
           <div key={current.id} className="specificQuestion">
             <h1 className="questionProper">{current.question}</h1>
@@ -52,9 +54,16 @@ const Question = (props) => {
           <div key={current.id} className="specificQuestion">
             <h1 className="questionProper">{current.question}</h1>
             <div className="questionRow">
-              <form className="answer" style={{"justify-content":"center", "width":"50%"}}>
+              <form
+                className="answer"
+                style={{ "justify-content": "center", width: "50%" }}
+              >
                 <input type="text" id="answer" name="answer"></input>
-                <button type="submit" className="answerButton" onClick={() => submitHandler()}>
+                <button
+                  type="submit"
+                  className="answerButton"
+                  onClick={() => submitHandler()}
+                >
                   Submit
                 </button>
               </form>

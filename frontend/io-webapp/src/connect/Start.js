@@ -1,4 +1,5 @@
 import React from "react";
+import Socket from "../socket";
 
 import LogIn from "./LogIn";
 import SignUp from "./SignUp";
@@ -12,20 +13,40 @@ const Start = (props) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    /*
-      TODO 
-    */
-    //placeholder
-    if (creds.name === "") {
-      setMessage("You need to choose a name");
-      props.setStage("start");
-    } else if (creds.sessionCode == 123456) {
-      props.setStage("student");
-    } else {
-      setMessage("Session with this code does not exist");
-      props.setStage("start");
-    }
-    //end placeholder
+    const username = creds.name;
+
+    (async () => {
+      await fetch("http://localhost:8080/session/connect", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: username, passcode: creds.sessionCode }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          const gotPermission = !data.guestApproval;
+          props.setSessionID(data.sessionId);
+          props.setSessionTitle(data.sessionTitle);
+          props.setGuestID(data.guestId);
+          props.setUsername(username);
+          if (!gotPermission) {
+            props.setStage("awaitsApproval");
+            console.log("awaitsApproval");
+            props.setSocket(Socket.connect(username, data.sessionId, data.guestId, "approval", true, props.setStage, props.setSocket));
+            props.socket.sendRequest();
+          } else {
+            props.setStage("guest");
+            console.log("guest");
+            props.setSocket(Socket.connect(username, data.sessionId, data.guestId, "session", true, props.setStage, props.setSocket));
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setMessage("Failed to join session");
+        });
+    })();
   };
 
   if (stage === "logIn") {
