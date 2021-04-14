@@ -5,14 +5,14 @@ import {
 import {Text, View, TextInput, TouchableOpacity} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {BASE_URL} from "../../App";
+import {BASE_URL} from "../networking/config";
 
 
-function HomeScreen() {
+function HomeScreen({ navigation }) {
     const [username, setUsername] = useState('studenciak');
     const [isUsernameHighlighted, setUserNameHighlighted] = useState(false);
 
-    const [sessionId, setSessionId] = useState('de36f961-80a2-4beb-971c-cc068e758db6')
+    const [sessionId, setSessionId] = useState('985385f2-6020-4378-b501-bb4fa2a47e0f')
     const [isSessionIdHighlighted, setSessionIdHighlighted] = useState(false);
 
     const [isJoinSessionButtonEnabled, setJoinSessionButtonEnabled] = useState(true);
@@ -34,13 +34,13 @@ function HomeScreen() {
             },
             body: JSON.stringify({
                 username: username,
-                passcode: "de36f961-80a2-4beb-971c-cc068e758db6"
+                passcode: sessionId
             })
         })
-            .then((response) => response.json())
+            .then((response) => {console.log(response); return response.json();})
             .then((json) => {
                 console.log(json)
-                json.sessionId //&& TODO launch SessionScreen
+                json.sessionId && navigation.navigate('Session', { sessionId: json.sessionId, username })
             })
             .catch((error) => console.error(error))
             .finally(() => setJoinSessionButtonEnabled(true))
@@ -91,7 +91,10 @@ function HomeScreen() {
                 </TouchableOpacity>
             </View>
             <Text style={styles.inputLabel}>Zeskanuj QR kod sesji</Text>
-            <TouchableOpacity style={styles.joinByQrCodeButton} onPress={() => console.log('QR')}>
+            <TouchableOpacity style={styles.joinByQrCodeButton} onPress={() => {
+                // Just for testing purposes
+                navigation.navigate('Session', { username })
+            }}>
                 <Text style={styles.joinByQrCodeText}>Skanuj kod QR</Text>
             </TouchableOpacity>
             <StatusBar style={"auto"} />
