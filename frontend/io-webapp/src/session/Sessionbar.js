@@ -6,11 +6,6 @@ const Sessionbar = (props) => {
     props.toggleParticipants(false);
   };
 
-  const toggleParticipants = () => {
-    props.toggleChat(false);
-    props.toggleParticipants(!props.participants);
-  };
-
   const handleClose = (e) => {
     e.preventDefault();
 
@@ -38,6 +33,8 @@ const Sessionbar = (props) => {
   const leaveSessionHandler = (e) => {
     if (props.stage === "lecturer") {
       handleClose(e);
+    } else if (props.stage === "guest") {
+      props.setStage("");
     } else {
       props.setStage("account");
     }
@@ -51,12 +48,20 @@ const Sessionbar = (props) => {
           Leave Session
         </button>
       </div>
-      <button type="button" className="view" onClick={() => toggleChat()}>
-        Chat
-      </button>
-      <button type="button" className="view" onClick={() => toggleParticipants()}>
-        Participants
-      </button>
+      {!(props.stage === "awaitsApproval") && (
+        <>
+          <button type="button" className="view" onClick={() => toggleChat()}>
+            Chat
+          </button>
+          <button
+            type="button"
+            className="view"
+            onClick={props.participantsHandler}
+          >
+            Participants
+          </button>
+        </>
+      )}
     </div>
   );
 };
