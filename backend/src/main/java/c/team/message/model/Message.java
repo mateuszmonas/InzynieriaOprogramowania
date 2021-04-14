@@ -12,5 +12,5 @@ public class Message {
     private MessageType type;
     private String timestamp;
     private String sessionId;
-    private String content; // TODO:  Change to Content class when implementing quizzes, etc.
+    private Object content; // TODO:  Change to Content class when implementing quizzes, etc.
 }
