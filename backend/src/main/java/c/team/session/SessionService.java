@@ -40,8 +40,8 @@ public class SessionService {
         if (guestApproval)
             session.setGuestApprovalRoomId(UUID.randomUUID());
 
-        LOGGER.info("Opened session: " + session.getId());
         sessionRepository.save(session);
+        LOGGER.info("Opened session: " + session.getId());
 
         // Add empty message so that messageId = 0 is neutral
         Message msg = Message.builder().build();
