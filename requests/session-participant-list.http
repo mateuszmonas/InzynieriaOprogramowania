@@ -2,8 +2,7 @@ POST http://localhost:8080/session/participant-list
 Content-Type: application/json
 
 {
-  "guestId": "guestId",
-  "accountUsername": "accountUsername",
+  "identification": "guestId or account_username"
   "sessionId": "sessionId"
 }
 
