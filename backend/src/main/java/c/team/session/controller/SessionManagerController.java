@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/session")
@@ -48,12 +49,13 @@ public class SessionManagerController {
     public ResponseEntity<GuestResponse> connectToSession(@RequestBody GuestRequest request){
         Session session = sessionsService.findByPasscode(UUID.fromString(request.getPasscode()));
         if(session.isActive()) {
+            String guestId =  sessionsService.addGuestToSession(session.getId(), request.getUsername());
             GuestResponse response = new GuestResponse(
                     session.isGuestApproval() ? "" : session.getId(),
                     session.getTitle(),
                     session.isGuestApproval(),
                     session.getGuestApprovalRoomId() == null ? "" : session.getGuestApprovalRoomId().toString(),
-                    UUID.randomUUID().toString()
+                    guestId
             );
             return ResponseEntity.ok(response);
         }
@@ -67,13 +69,15 @@ public class SessionManagerController {
     public ResponseEntity<ParticipantListResponse> getParticipantsList(@RequestBody ParticipantListRequest request){
         Session session = sessionsService.findBySessionId(request.getSessionId());
         UserAccount sessionLeader = accountService.findByUserId(session.getLeaderAccountId());
-        if(!( request.getAccountUsername().equals(sessionLeader.getUsername())
-                || session.getGuests().containsKey(request.getGuestId()) ))
+        if(!( request.getIdentification().equals(sessionLeader.getUsername())
+                || session.getGuests().containsKey(request.getIdentification()) ))
             throw new SessionUnauthorizedAccessException();
 
         ParticipantListResponse response = new ParticipantListResponse(
                 sessionLeader.getUsername(),
-                session.getGuests().values()
+                session.getGuests().values().stream()
+                        .filter(Guest::isApproved)
+                        .collect(Collectors.toList())
         );
         return ResponseEntity.ok(response);
     }
