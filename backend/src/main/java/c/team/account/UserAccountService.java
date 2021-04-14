@@ -9,8 +9,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class UserAccountService {
@@ -31,18 +29,18 @@ public class UserAccountService {
     }
 
     public UserAccount findByUsernameAndPassword(String username, String password) {
-        return Optional.ofNullable(userAccountRepository.findAccountByUsername(username))
+        return userAccountRepository.findAccountByUsername(username)
                 .filter(account -> passwordEncoder.matches(password, account.getPassword()))
                 .orElseThrow(() -> new UsernameNotFoundException("user does not exist: " + username));
     }
 
     public UserAccount findByUsername(String username) {
-        return Optional.ofNullable(userAccountRepository.findAccountByUsername(username))
+        return userAccountRepository.findAccountByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("user does not exist: " + username));
     }
 
     public UserAccount findByUserId(String id){
-        return Optional.ofNullable(userAccountRepository.findAccountById(id))
+        return userAccountRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("user with id: " + id + " not exist"));
     }
 }

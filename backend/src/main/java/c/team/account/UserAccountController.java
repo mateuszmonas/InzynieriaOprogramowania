@@ -1,7 +1,6 @@
 package c.team.account;
 
 import c.team.account.exception.DuplicateUsernameException;
-import c.team.account.exception.UserNotFoundException;
 import c.team.account.model.LoginRequest;
 import c.team.account.model.LoginResponse;
 import c.team.account.model.RegisterAccountRequest;
@@ -14,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -25,12 +25,12 @@ public class UserAccountController {
 
     @PostMapping("register")
     @ResponseStatus(HttpStatus.CREATED)
-    public void register(@RequestBody RegisterAccountRequest request) {
+    public void register(@RequestBody @Valid RegisterAccountRequest request) {
         userAccountService.createAccount(request.getUsername(), request.getPassword());
     }
 
     @PostMapping("login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
         UserAccount userAccount = userAccountService.findByUsernameAndPassword(request.getUsername(), request.getPassword());
         UUID token = tokenService.generateTokenForAccount(userAccount);
         LoginResponse loginResponse = new LoginResponse(token);

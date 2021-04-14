@@ -1,14 +1,12 @@
 package c.team.account.model;
 
 
+import c.team.security.model.UserPrincipal;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.security.core.userdetails.User;
-
-import java.util.Collections;
 
 @Data
 @Builder
@@ -20,7 +18,7 @@ public class UserAccount {
     private String username;
     private String password;
 
-    public User toUser() {
-        return new User(username, password, Collections.emptyList());
+    public UserPrincipal toUserPrincipal() {
+        return new UserPrincipal(id, username, password);
     }
 }

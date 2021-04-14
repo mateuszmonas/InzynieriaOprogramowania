@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,7 +18,7 @@ public class TokenService {
     private final TokenRepository tokenRepository;
 
     public String getLoginForToken(UUID tokenValue) {
-        Token token = Optional.ofNullable(tokenRepository.findTokenByValue(tokenValue))
+        Token token = tokenRepository.findTokenByValue(tokenValue)
                 .filter(t -> Instant.now().isBefore(t.getExpirationDate()))
                 .orElseThrow(InvalidTokenException::new);
         token.setExpirationDate(Instant.now().plus(1, ChronoUnit.HOURS));
@@ -28,7 +27,7 @@ public class TokenService {
     }
 
     public UUID generateTokenForAccount(UserAccount userAccount) {
-        Token token = Optional.ofNullable(tokenRepository.findTokenByUsername(userAccount.getUsername()))
+        Token token = tokenRepository.findTokenByUsername(userAccount.getUsername())
                 .orElse(new Token(userAccount.getUsername()));
         token.setValue(UUID.randomUUID());
         token.setExpirationDate(Instant.now().plus(1, ChronoUnit.HOURS));

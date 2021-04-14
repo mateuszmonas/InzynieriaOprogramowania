@@ -97,12 +97,12 @@ public class SessionService {
     }
 
     public Session findByPasscode(UUID passcode){
-        return Optional.ofNullable(sessionRepository.findSessionByPasscode(passcode))
+        return sessionRepository.findSessionByPasscode(passcode)
                 .orElseThrow(() -> new SessionNotFoundException("no session with passcode: " + passcode.toString()));
     }
 
     public Session findBySessionId(String sessionsId){
-        return Optional.ofNullable(sessionRepository.findSessionById(sessionsId))
+        return sessionRepository.findSessionById(sessionsId)
                 .orElseThrow(() -> new SessionNotFoundException("no sessions with id: " + sessionsId));
     }
 
