@@ -40,8 +40,8 @@ public class SessionService {
         if (guestApproval)
             session.setGuestApprovalRoomId(UUID.randomUUID());
 
-        LOGGER.info("Opened session: " + session.getId());
         sessionRepository.save(session);
+        LOGGER.info("Opened session: " + session.getId());
 
         // Add empty message so that messageId = 0 is neutral
         Message msg = Message.builder().build();
@@ -75,6 +75,12 @@ public class SessionService {
         session.getGuests().put(guest.getId(), guest);
         sessionRepository.save(session);
         return guestId;
+    }
+
+    public void approveGuest(String sessionId, String guestId){
+        Session session = this.findBySessionId(sessionId);
+        session.getGuests().get(guestId).setApproved(true);
+        sessionRepository.save(session);
     }
 
     public void removeGuestFromSession(String sessionId, String guestId){
