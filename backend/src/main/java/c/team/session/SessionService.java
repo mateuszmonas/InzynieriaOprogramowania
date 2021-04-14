@@ -99,4 +99,9 @@ public class SessionService {
         return Optional.ofNullable(sessionRepository.findSessionById(sessionsId))
                 .orElseThrow(() -> new SessionNotFoundException("no sessions with id: " + sessionsId));
     }
+
+    public Session findByGuestApprovalRoomId(UUID guestApprovalRoomId){
+        return sessionRepository.findSessionByGuestApprovalRoomId(guestApprovalRoomId)
+                .orElseThrow(() -> new SessionNotFoundException("no session with approval room: " + guestApprovalRoomId));
+    }
 }

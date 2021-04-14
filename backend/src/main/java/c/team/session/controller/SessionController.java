@@ -17,6 +17,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.UUID;
+
 @Controller
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SessionController {
@@ -60,7 +62,14 @@ public class SessionController {
         if(message.getType() != MessageType.GUEST_APPROVAL)
             throw new InvalidMessageTypeException();
         // TODO: If session leader rejects - delete from session guests
-        return message;
+        Message updatedResponse = Message.builder()
+                .sender(message.getSender())
+                .timestamp(message.getTimestamp())
+                .content(message.getContent())
+                .sessionId((boolean) message.getContent() ? sessionsService.findByGuestApprovalRoomId(  // this can explode
+                        UUID.fromString(sessionApprovalId)).getId() : "")
+                .build();
+        return updatedResponse;
     }
 
     @ExceptionHandler(InvalidMessageTypeException.class)
