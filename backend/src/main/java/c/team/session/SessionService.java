@@ -40,8 +40,8 @@ public class SessionService {
         if (guestApproval)
             session.setGuestApprovalRoomId(UUID.randomUUID());
 
-        LOGGER.info("Opened session: " + session.getId());
         sessionRepository.save(session);
+        LOGGER.info("Opened session: " + session.getId());
 
         // Add empty message so that messageId = 0 is neutral
         Message msg = Message.builder().build();
@@ -97,12 +97,12 @@ public class SessionService {
     }
 
     public Session findByPasscode(UUID passcode){
-        return Optional.ofNullable(sessionRepository.findSessionByPasscode(passcode))
+        return sessionRepository.findSessionByPasscode(passcode)
                 .orElseThrow(() -> new SessionNotFoundException("no session with passcode: " + passcode.toString()));
     }
 
     public Session findBySessionId(String sessionsId){
-        return Optional.ofNullable(sessionRepository.findSessionById(sessionsId))
+        return sessionRepository.findSessionById(sessionsId)
                 .orElseThrow(() -> new SessionNotFoundException("no sessions with id: " + sessionsId));
     }
 

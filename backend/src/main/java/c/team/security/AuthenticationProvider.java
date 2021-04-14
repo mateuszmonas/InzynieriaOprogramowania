@@ -22,6 +22,6 @@ public class AuthenticationProvider extends AbstractUserDetailsAuthenticationPro
 
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-        return userAccountService.findByUsername(username).toUser();
+        return userAccountService.findByUsername(username).toUserPrincipal();
     }
 }

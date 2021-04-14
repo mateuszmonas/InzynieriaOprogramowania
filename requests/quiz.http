@@ -1,0 +1,31 @@
+POST http://localhost:8080/quiz
+Content-Type: application/json
+
+{
+  "questions": [
+    {
+      "content": "pytanie pierwsze",
+      "correctAnswerIds": [
+        0,
+        2
+      ],
+      "answers": [
+        "dobra",
+        "zła",
+        "dobra"
+      ]
+    },
+    {
+      "content": "pytanie drugie",
+      "correctAnswerIds": [
+        0
+      ],
+      "answers": [
+        "dobra",
+        "zła"
+      ]
+    }
+  ]
+}
+
+###
