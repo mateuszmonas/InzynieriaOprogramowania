@@ -1,54 +1,64 @@
 import React from "react";
 
 const Participants = (props) => {
-  const sampleParticipants = [
-    {
-      id: 1,
-      username: "Alice",
-    },
-    {
-      id: 2,
-      username: "Bob",
-    },
-  ];
+  const [waiting, setWaiting] = React.useState([]);
 
-  const sampleWaiting = [
-    {
-      id: 3,
-      username: "Charlie",
-    },
-    {
-      id: 4,
-      username: "Dave",
-    },
-  ];
+  const addWaiting = (newWaiting) => {
+    setWaiting((waiting) => [
+      ...waiting,
+      newWaiting
+    ]);
+  };
 
-  return (
-    <div className="participants">
-      {sampleParticipants.map((msg) => {
-        return (
-          <div className="accepted" key={msg.id}>
-            <h4>{msg.username}</h4>
-            <button type="button">Message</button>
-          </div>
-        );
-      })}
+  // React.useEffect(() => {
+  //   props.socket.addMessageListener(addWaiting);
+  //   return () => props.socket.removeMessageListener(addWaiting);
+  // }, []);
 
-      {sampleWaiting.map((msg) => {
-        if (props.stage === "lecturer") {
+  // const acceptHandler = (guestId) => {
+  //   const newWaiting = waiting.filter((item) => item.guestId !== guestId);
+  //   setWaiting(newWaiting);
+  //   props.socket.sendApproval(guestId, true);
+  // }
+  
+  // const rejectHandler = (guestId) => {
+  //   const newWaiting = waiting.filter((item) => item.guestId !== guestId);
+  //   setWaiting(newWaiting);
+  //   props.socket.sendApproval(guestId, false);
+  // }
+
+
+  if (props.visible) {
+    return (
+      <div className="participants">
+        {props.participants.map((msg) => {
           return (
-            <div className="waiting" key={msg.id}>
+            <div className="accepted" key={msg.id}>
               <h4>{msg.username}</h4>
-              <div>
-                <button type="button">Accept</button>
-                <button type="button">Reject</button>
-              </div>
+              <button type="button">Message</button>
             </div>
           );
-        } else return <></>;
-      })}
-    </div>
-  );
+        })}
+
+        {waiting.map((msg) => {
+          if (props.stage === "lecturer") {
+            return (
+              <div className="waiting" key={msg.guestId}>
+                <h4>{msg.username}</h4>
+                <div>
+                  <button type="button">Accept</button>
+                  <button type="button">Reject</button>
+                </div>
+              </div>
+            );
+          } else return <></>;
+        })}
+      </div>
+    );
+  }
+  else {
+    return <></>
+  }
 };
 
 export default Participants;

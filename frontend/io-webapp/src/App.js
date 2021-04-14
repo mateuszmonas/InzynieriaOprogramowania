@@ -14,7 +14,9 @@ function App() {
   const [username, setUsername] = React.useState("");
   const [sessionID, setSessionID] = React.useState("");
   const [sessionTitle, setSessionTitle] = React.useState("");
+  const [guestID, setGuestID] = React.useState("");
   const [socket, setSocket] = React.useState(new Socket("","",""));
+  const [approvalRoomID, setApprovalRoomID] = React.useState("");
 
 
   if (stage === "account") {
@@ -33,12 +35,15 @@ function App() {
           setSessionID={setSessionID}
           username={username}
           setSessionTitle={setSessionTitle}
+          setGuestID={setGuestID}
           socket={socket}
           setSocket={setSocket}
+          approvalRoomID={approvalRoomID}
+          setApprovalRoomID={setApprovalRoomID}
         />
       </div>
     );
-  } else if (stage === "student") {
+  } else if (stage === "student" || stage === "guest" || stage === "awaitsApproval") {
     return (
       <div className="App">
         <Navbar
@@ -55,6 +60,7 @@ function App() {
           sessionID={sessionID}
           setSessionID={setSessionID}
           sessionTitle={sessionTitle}
+          guestID={guestID}
           socket={socket}
           setSocket={setSocket}
         />
@@ -77,8 +83,10 @@ function App() {
           sessionID={sessionID}
           setSessionID={setSessionID}
           sessionTitle={sessionTitle}
+          guestID={guestID}
           socket={socket}
           setSocket={setSocket}
+          approvalRoomID={approvalRoomID}
         />
       </div>
     );
@@ -95,7 +103,12 @@ function App() {
         <Start
           stage={stage}
           setStage={setStage}
+          sessionID={sessionID}
+          setSessionID={setSessionID}
           setToken={setToken}
+          setSessionTitle={setSessionTitle}
+          setGuestID={setGuestID}
+          username={username}
           setUsername={setUsername}
           socket={socket}
           setSocket={setSocket}
