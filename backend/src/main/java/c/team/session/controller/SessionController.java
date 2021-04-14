@@ -39,10 +39,9 @@ public class SessionController {
     public Message addParticipant(@DestinationVariable String sessionId, @Payload final Message message, SimpMessageHeaderAccessor headerAccessor){
         if(message.getType() != MessageType.CONNECT)
             throw new InvalidMessageTypeException();
-        headerAccessor.getSessionAttributes().put("guestId", message.getSender());
+        headerAccessor.getSessionAttributes().put("guestId", message.getSender());  // sender == guestId
         headerAccessor.getSessionAttributes().put("sessionId", sessionId);
-        Session session = sessionsService.findBySessionId(sessionId);
-        session.getGuests().get(message.getSender()).setApproved(true);
+        sessionsService.approveGuest(sessionId, message.getSender());
         return message;
     }
 

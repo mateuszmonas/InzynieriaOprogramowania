@@ -77,6 +77,12 @@ public class SessionService {
         return guestId;
     }
 
+    public void approveGuest(String sessionId, String guestId){
+        Session session = this.findBySessionId(sessionId);
+        session.getGuests().get(guestId).setApproved(true);
+        sessionRepository.save(session);
+    }
+
     public void removeGuestFromSession(String sessionId, String guestId){
         Session session = this.findBySessionId(sessionId);
         session.getGuests().remove(guestId);
