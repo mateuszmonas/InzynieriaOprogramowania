@@ -25,24 +25,58 @@ const Account = (props) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           const gotPermission = !data.guestApproval;
-          props.setSessionID(data.sessionId);
+          if (data.sessionId && !isOwner) {
+            props.setSessionID(data.sessionId);
+          }
           props.setSessionTitle(data.sessionTitle);
           props.setGuestID(data.guestId);
           if (isOwner) {
             props.setStage("lecturer");
-            console.log("lecturer");
-            props.setSocket(Socket.connect(props.username, data.sessionId, data.guestId, "session", false, props.setStage, props.setSocket));
+            props.setSocket(
+              Socket.connect(
+                props.username,
+                props.sessionID,
+                data.guestId,
+                "session",
+                true,
+                false,
+                props.setStage,
+                props.setSocket, 
+                props.setSessionID
+              )
+            );
           } else if (!gotPermission) {
-            props.setStage("awaitsApproval");
-            console.log("awaitsApproval");
-            props.setSocket(Socket.connect(props.username, data.sessionId, data.guestId, "approval", false, props.setStage, props.setSocket));
+            props.setStage("awaitsApprovalAccount");
+            props.setSocket(
+              Socket.connect(
+                props.username,
+                data.guestApprovalRoomId,
+                data.guestId,
+                "approval",
+                false,
+                false,
+                props.setStage,
+                props.setSocket, 
+                props.setSessionID
+              )
+            );
             props.socket.sendRequest();
           } else {
             props.setStage("student");
-            console.log("student");
-            props.setSocket(Socket.connect(props.username, data.sessionId, data.guestId, "session", false, props.setStage, props.setSocket));
+            props.setSocket(
+              Socket.connect(
+                props.username,
+                data.sessionId,
+                data.guestId,
+                "session",
+                false,
+                false,
+                props.setStage,
+                props.setSocket, 
+                props.setSessionID
+              )
+            );
           }
         })
         .catch((error) => {
@@ -54,8 +88,6 @@ const Account = (props) => {
 
   const handleCreate = (e) => {
     e.preventDefault();
-    console.log("creating");
-    console.log({ username: props.username, sessionTitle: title, guestApproval: needsApproval });
 
     (async () => {
       await fetch("http://localhost:8080/session/create", {
@@ -63,12 +95,17 @@ const Account = (props) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: props.username, sessionTitle: title, guestApproval: needsApproval }),
+        body: JSON.stringify({
+          username: props.username,
+          sessionTitle: title,
+          guestApproval: needsApproval,
+        }),
       })
         .then((response) => response.json())
         .then((data) => {
           setIsOwner(true);
           setPasscode(data.passcode);
+          props.setSessionID(data.sessionId);
           props.setApprovalRoomID(data.approvalRoomId);
           setMessage("Your session passcode is:\n" + data.passcode);
         })
@@ -91,7 +128,9 @@ const Account = (props) => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         ></input>
-        <label htmlFor="sessionTitle">Do you want students to be manually approved before joining?</label>
+        <label htmlFor="sessionTitle">
+          Do you want students to be manually approved before joining?
+        </label>
         <input
           type="checkbox"
           id="needsApproval"

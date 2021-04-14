@@ -10,9 +10,11 @@ class Socket {
     sessionID,
     guestID,
     type,
+    isLeader,
     isGuest,
     setStage,
     setSocket,
+    setSessionID,
   ) {
     this.socket = socket;
     this.stompClient = stompClient;
@@ -20,9 +22,11 @@ class Socket {
     this.sessionID = sessionID;
     this.guestID = guestID;
     this.type = type;
+    this.isLeader = isLeader;
     this.isGuest = isGuest;
     this.setStage = setStage;
     this.setSocket = setSocket;
+    this.setSessionID = setSessionID;
     this.messageListeners = [];
   }
 
@@ -34,7 +38,17 @@ class Socket {
     this.messageListeners = this.messageListeners.filter((l) => l !== listener);
   }
 
-  static connect = (name, sessionID, guestID, type, isGuest, setStage, setSocket) => {
+  static connect = (
+    name,
+    sessionID,
+    guestID,
+    type,
+    isLeader,
+    isGuest,
+    setStage,
+    setSocket,
+    setSessionID
+  ) => {
     if (name) {
       const socket = new SockJS("http://localhost:8080/session-handling");
       const stompClient = Stomp.over(socket);
@@ -46,9 +60,11 @@ class Socket {
         sessionID,
         guestID,
         type,
+        isLeader,
         isGuest,
         setStage,
         setSocket,
+        setSessionID
       );
       stompClient.connect({}, sock.onConnected, sock.onError);
 
@@ -63,20 +79,23 @@ class Socket {
         this.onMessageReceived
       );
       const msg = { sender: this.guestID, type: "CONNECT" };
-      console.log(msg);
-      this.stompClient.send(
-        `/app/session/${this.sessionID}/new-user`,
-        {},
-        JSON.stringify(msg)
-      );
+
+      if (!this.isLeader) {
+        this.stompClient.send(
+          `/app/session/${this.sessionID}/new-user`,
+          {},
+          JSON.stringify(msg)
+        );
+      }
     } else if (this.type === "approval") {
       this.stompClient.subscribe(
-        `/topic/session/${this.sessionID}`,
+        `/topic/session/${this.sessionID}/guest-approval-response/guest-${this.guestID}`,
         this.onApprovalReceived
       );
+      this.sendRequest();
     } else {
       this.stompClient.subscribe(
-        `/topic/session/${this.sessionId}/guest-approval-request`,
+        `/topic/session/${this.sessionID}/guest-approval-request`,
         this.onRequestReceived
       );
     }
@@ -106,9 +125,9 @@ class Socket {
   sendRequest = () => {
     if (this.stompClient) {
       const chatMessage = {
-        sender: this.name,
+        sender: this.username,
         content: this.guestID,
-        type: "GUEST_APPROVAL"
+        type: "GUEST_APPROVAL",
       };
       this.stompClient.send(
         `/app/session/${this.sessionID}/guest-approval-request`,
@@ -117,13 +136,14 @@ class Socket {
       );
     }
   };
-  
+
   sendApproval = (guestID, isApproved) => {
     if (this.stompClient) {
       const chatMessage = {
         content: isApproved,
         type: "GUEST_APPROVAL",
       };
+      console.log(chatMessage);
       this.stompClient.send(
         `/app/session/${this.sessionID}/guest-approval-response/${guestID}`,
         {},
@@ -173,33 +193,38 @@ class Socket {
   onApprovalReceived = (payload) => {
     const message = JSON.parse(payload.body);
 
-    if (message.type === "GUEST_APPROVAL") {
-      if (message.content === true) {
-        this.setStage("student");
-        this.setSocket(
-          Socket.connect(
-            this.name,
-            message.sessionId,
-            this.guestID,
-            "session",
-            this.setStage,
-            this.setSocket
-          )
-        );
+    // if (message.type === "GUEST_APPROVAL") {
+    if (message.content === true) {
+      const newSocket = Socket.connect(
+        this.username,
+        message.sessionId,
+        this.guestID,
+        "session",
+        this.isLeader,
+        this.isGuest,
+        this.setStage,
+        this.setSocket,
+        this.setSessionID
+      );
+      this.setSocket(newSocket);
+      this.setStage("student");
+      this.setSessionID(message.sessionId);
+    } else {
+      if (this.isGuest) {
+        this.setStage("");
       } else {
-        if (this.isGuest) {
-          this.setStage("");
-        } else {
-          this.setStage("student");
-        }
-        this.setSocket(new Socket());
+        this.setStage("account");
       }
+      this.setSocket(new Socket("","","",""));
     }
+    // }
   };
 
   onRequestReceived = (payload) => {
     const message = JSON.parse(payload.body);
-  
+    console.log("onRequestReceived");
+    console.log(message);
+
     if (message.type === "GUEST_APPROVAL") {
       for (const listener of this.messageListeners) {
         listener(message);

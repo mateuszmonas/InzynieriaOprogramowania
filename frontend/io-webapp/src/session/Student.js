@@ -25,11 +25,6 @@ const Student = (props) => {
 
   const participantsHandler = (e) => {
     e.preventDefault();
-    console.log({
-      guestId: props.guestID,
-      accountUsername: "",
-      sessionId: props.sessionID
-    });
 
     (async () => {
       await fetch("http://localhost:8080/session/participant-list", {
@@ -39,16 +34,18 @@ const Student = (props) => {
         },
         body: JSON.stringify({
           identification: props.guestID,
-          sessionId: props.sessionID
+          sessionId: props.sessionID,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
           setOwner(data.leaderAccountName);
-          setParticipants(data.participants);
+          setParticipants([
+            { id: "", username: data.leaderAccountName, approved: true },
+            ...data.participants,
+          ]);
           setChat(false);
           setIsParticipants(!isParticipants);
-          console.log(data);
         })
         .catch((error) => {
           console.error(error);
@@ -73,14 +70,15 @@ const Student = (props) => {
       />
       <div className="session">
         <Question width={questionWidth} stage={props.stage} />
-        {<Chat visible={chat} socket={props.socket}/>}
+        {<Chat visible={chat} socket={props.socket} />}
         {
           <Participants
             visible={isParticipants}
             stage={props.stage}
             owner={owner}
             participants={participants}
-            // socket={new Socket()}
+            socket={new Socket()}
+            participantsHandler={participantsHandler}
           />
         }
       </div>

@@ -43,7 +43,7 @@ function App() {
         />
       </div>
     );
-  } else if (stage === "student" || stage === "guest" || stage === "awaitsApproval") {
+  } else if (stage === "student" || stage === "guest" || stage === "awaitsApprovalGuest" || stage === "awaitsApprovalAccount") {
     return (
       <div className="App">
         <Navbar

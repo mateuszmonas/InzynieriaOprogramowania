@@ -10,22 +10,28 @@ const Participants = (props) => {
     ]);
   };
 
-  // React.useEffect(() => {
-  //   props.socket.addMessageListener(addWaiting);
-  //   return () => props.socket.removeMessageListener(addWaiting);
-  // }, []);
+  React.useEffect(() => {
+    if (props.socket && props.socket.messageListeners.length < 1) {
+      props.socket.addMessageListener(addWaiting);
+    }
+    return () => {
+      if (props.socket && props.socket.messageListeners.length > 1) {
+        props.socket.removeMessageListener(addWaiting);
+      }
+    };
+  }, [props.visible, props.participants]);
 
-  // const acceptHandler = (guestId) => {
-  //   const newWaiting = waiting.filter((item) => item.guestId !== guestId);
-  //   setWaiting(newWaiting);
-  //   props.socket.sendApproval(guestId, true);
-  // }
+  const acceptHandler = (event, guestId) => {
+    const newWaiting = waiting.filter((item) => item.content !== guestId);
+    setWaiting(newWaiting);
+    props.socket.sendApproval(guestId, true);
+  }
   
-  // const rejectHandler = (guestId) => {
-  //   const newWaiting = waiting.filter((item) => item.guestId !== guestId);
-  //   setWaiting(newWaiting);
-  //   props.socket.sendApproval(guestId, false);
-  // }
+  const rejectHandler = (event, guestId) => {
+    const newWaiting = waiting.filter((item) => item.content !== guestId);
+    setWaiting(newWaiting);
+    props.socket.sendApproval(guestId, false);
+  }
 
 
   if (props.visible) {
@@ -43,11 +49,11 @@ const Participants = (props) => {
         {waiting.map((msg) => {
           if (props.stage === "lecturer") {
             return (
-              <div className="waiting" key={msg.guestId}>
-                <h4>{msg.username}</h4>
+              <div className="waiting" key={msg.content}>
+                <h4>{msg.sender}</h4>
                 <div>
-                  <button type="button">Accept</button>
-                  <button type="button">Reject</button>
+                  <button type="button" onClick={(e) => {acceptHandler(e, msg.content)}}>Accept</button>
+                  <button type="button" onClick={(e) => {rejectHandler(e, msg.content)}}>Reject</button>
                 </div>
               </div>
             );
