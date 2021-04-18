@@ -10,5 +10,5 @@ public class Answer {
     @Parameter(required = true)
     private String text;
     @Parameter(required = true)
-    private boolean isCorrect;
+    private boolean correct;
 }
