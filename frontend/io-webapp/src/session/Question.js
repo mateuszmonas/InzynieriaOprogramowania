@@ -27,7 +27,7 @@ const Question = (props) => {
 
   return (
     <div className="question" style={{ width: props.width }}>
-      {props.stage === "awaitsApproval" ? (
+      {(props.stage === "awaitsApprovalAccount" || props.stage === "awaitsApprovalGuest") ? (
         <h1>Waiting for permission from room owner</h1>
       ) : questions.length ? (
         current.hasOwnProperty("answers") ? (
