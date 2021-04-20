@@ -1,6 +1,5 @@
 package c.team.quiz;
 
-import c.team.account.UserAccountService;
 import c.team.quiz.exception.QuizNotFoundException;
 import c.team.quiz.model.CreateQuizRequest;
 import c.team.quiz.model.CreateQuizResponse;
@@ -22,7 +21,6 @@ import java.util.List;
 @AllArgsConstructor
 public class QuizController {
 
-    private final UserAccountService userAccountService;
     private final QuizService quizService;
 
     @PostMapping
