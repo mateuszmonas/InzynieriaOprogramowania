@@ -71,6 +71,23 @@ public class SessionController {
         return updatedResponse;
     }
 
+    @MessageMapping("/session/{sessionId}/quiz")    // Here leader sends a quiz
+    @SendTo("/topic/session/{sessionId}/quiz")      // Here participants subscribe to receive quiz
+    public Message sendQuizToParticipants(@DestinationVariable String sessionId, @Payload final Message message){
+        if(message.getType() != MessageType.QUIZ)
+            throw new InvalidMessageTypeException();
+        return message;
+    }
+
+    // Might require additional security
+    @MessageMapping("/session/{sessionId}/quiz-answers")    // Here participants send quiz answers
+    @SendTo("/topic/session/{sessionId}/quiz-answers")      // Here leader subscribes to receive quiz answers
+    public Message sendQuizAnswersToLeader(@DestinationVariable String sessionId, @Payload final Message message){
+        if(message.getType() != MessageType.QUIZ_ANSWERS)
+            throw new InvalidMessageTypeException();
+        return message;
+    }
+
     @ExceptionHandler(InvalidMessageTypeException.class)
     public final ResponseEntity<Error> handleException(InvalidMessageTypeException ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
