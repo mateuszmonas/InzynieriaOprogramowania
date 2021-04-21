@@ -4,7 +4,6 @@ import c.team.message.exception.InvalidMessageTypeException;
 import c.team.message.model.Message;
 import c.team.message.model.MessageType;
 import c.team.session.SessionService;
-import c.team.session.model.Session;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,14 +59,21 @@ public class SessionController {
     public Message guestApprovalResponse(@DestinationVariable String sessionApprovalId, @DestinationVariable String guestId, @Payload final Message message){
         if(message.getType() != MessageType.GUEST_APPROVAL)
             throw new InvalidMessageTypeException();
-        // TODO: If session leader rejects - delete from session guests
+        boolean leaderApproval = (boolean) message.getContent();
+
+        String sessionId = sessionsService
+                .findByGuestApprovalRoomId(UUID.fromString(sessionApprovalId))
+                .getId();
+
         Message updatedResponse = Message.builder()
                 .sender(message.getSender())
                 .timestamp(message.getTimestamp())
                 .content(message.getContent())
-                .sessionId((boolean) message.getContent() ? sessionsService.findByGuestApprovalRoomId(  // this can explode
-                        UUID.fromString(sessionApprovalId)).getId() : "")
+                .sessionId(leaderApproval ? sessionId : "")
                 .build();
+
+        if(!leaderApproval)
+            sessionsService.removeGuestFromSession(sessionId, guestId);
         return updatedResponse;
     }
 
