@@ -21,7 +21,10 @@ const Start = (props) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: username, passcode: creds.sessionCode }),
+        body: JSON.stringify({
+          username: username,
+          passcode: creds.sessionCode,
+        }),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -32,14 +35,36 @@ const Start = (props) => {
           props.setGuestID(data.guestId);
           props.setUsername(username);
           if (!gotPermission) {
-            props.setStage("awaitsApproval");
-            console.log("awaitsApproval");
-            props.setSocket(Socket.connect(username, data.sessionId, data.guestId, "approval", true, props.setStage, props.setSocket));
+            props.setStage("awaitsApprovalGuest");
+            props.setSocket(
+              Socket.connect(
+                username,
+                data.guestApprovalRoomId,
+                data.guestId,
+                "approval",
+                false,
+                true,
+                props.setStage,
+                props.setSocket,
+                props.setSessionID
+              )
+            );
             props.socket.sendRequest();
           } else {
             props.setStage("guest");
-            console.log("guest");
-            props.setSocket(Socket.connect(username, data.sessionId, data.guestId, "session", true, props.setStage, props.setSocket));
+            props.setSocket(
+              Socket.connect(
+                username,
+                data.sessionId,
+                data.guestId,
+                "session",
+                false,
+                true,
+                props.setStage,
+                props.setSocket,
+                props.setSessionID
+              )
+            );
           }
         })
         .catch((error) => {
@@ -63,35 +88,37 @@ const Start = (props) => {
     return <SignUp setStage={setStage} setMessage={setMessage} />;
   } else {
     return (
-        <div className="login">
-          <h2>Join as a guest</h2>
-          <form onSubmit={submitHandler}>
-            <div>
-              <label htmlFor="guestName">Name:</label>
-              <input
-                type="text"
-                id="guestName"
-                name="guestName"
-                value={creds.name}
-                onChange={(e) => setCreds({ ...creds, name: e.target.value })}
-              ></input>
-            </div>
-            <div>
-              <label htmlFor="sessionCode">Enter session code here:</label>
-              <input
-                type="text"
-                id="sessionCode"
-                name="sessionCode"
-                value={creds.sessionCode}
-                onChange={(e) =>
-                  setCreds({ ...creds, sessionCode: e.target.value })
-                }
-              ></input>
-            </div>
-            <button type="submit" className="submit">Join</button>
-          </form>
+      <div className="login">
+        <h2>Join as a guest</h2>
+        <form onSubmit={submitHandler}>
+          <div>
+            <label htmlFor="guestName">Name:</label>
+            <input
+              type="text"
+              id="guestName"
+              name="guestName"
+              value={creds.name}
+              onChange={(e) => setCreds({ ...creds, name: e.target.value })}
+            ></input>
+          </div>
+          <div>
+            <label htmlFor="sessionCode">Enter session code here:</label>
+            <input
+              type="text"
+              id="sessionCode"
+              name="sessionCode"
+              value={creds.sessionCode}
+              onChange={(e) =>
+                setCreds({ ...creds, sessionCode: e.target.value })
+              }
+            ></input>
+          </div>
+          <button type="submit" className="submit">
+            Join
+          </button>
+        </form>
         <h1>{message}</h1>
-        </div>
+      </div>
     );
   }
 };

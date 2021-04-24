@@ -4,25 +4,19 @@ Content-Type: application/json
 {
   "questions": [
     {
-      "content": "pytanie pierwsze",
-      "correctAnswerIds": [
-        0,
-        2
-      ],
-      "answers": [
-        "dobra",
-        "zła",
-        "dobra"
-      ]
+      "content": "pytanie otwarte"
     },
     {
-      "content": "pytanie drugie",
-      "correctAnswerIds": [
-        0
-      ],
+      "content": "pytanie zamknięte",
       "answers": [
-        "dobra",
-        "zła"
+        {
+          "text": "dobra",
+          "correct": true
+        },
+        {
+          "text": "zła",
+          "correct": false
+        }
       ]
     }
   ]

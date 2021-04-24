@@ -24,11 +24,11 @@ const Chat = ({ visible, socket }) => {
   };
 
   useEffect(() => {
-    if (socket.messageListeners.length < 1) {
+    if (socket && socket.messageListeners.length < 1) {
       socket.addMessageListener(parseMessage);
     }
     return () => {
-      if (socket.messageListeners.length > 1) {
+      if (socket && socket.messageListeners.length > 1) {
         socket.removeMessageListener(parseMessage);
       }
     };

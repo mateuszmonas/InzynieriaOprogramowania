@@ -31,9 +31,10 @@ const Sessionbar = (props) => {
   };
 
   const leaveSessionHandler = (e) => {
+    console.log(props.stage);
     if (props.stage === "lecturer") {
       handleClose(e);
-    } else if (props.stage === "guest") {
+    } else if (props.stage === "guest" || props.stage === "awaitsApprovalGuest") {
       props.setStage("");
     } else {
       props.setStage("account");
