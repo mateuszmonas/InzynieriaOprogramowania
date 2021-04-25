@@ -76,6 +76,7 @@ public class SessionController {
     public Message sendQuizToParticipants(@DestinationVariable String sessionId, @Payload final Message message){
         if(message.getType() != MessageType.QUIZ)
             throw new InvalidMessageTypeException();
+        sessionsService.addMessageToSessionLog(sessionId, message);
         return message;
     }
 
@@ -85,6 +86,7 @@ public class SessionController {
     public Message sendQuizAnswersToLeader(@DestinationVariable String sessionId, @Payload final Message message){
         if(message.getType() != MessageType.QUIZ_ANSWERS)
             throw new InvalidMessageTypeException();
+        sessionsService.addMessageToSessionLog(sessionId, message);
         return message;
     }
 

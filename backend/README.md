@@ -29,3 +29,21 @@ Swagger api documentation can be accessed on url `/swagger-ui.html`
 * **Subscribtion:** /topic/session/{sessionId} (receiving all messages, requires getting session ID from connect request)
 * **Sending message:** /app/session/{sessionId}/send (requires getting session ID from connect request)
 * **Registering as a new guest:** /app/session/{sessionId}/new-user (potentially a welcoming message, requires getting session ID from connect request)
+* **Quizzes:**
+  * Quiz is retrieved from quiz repository with quiz request or created - it has following fields:
+    * id - ID of quiz (String)
+    * userId - ID of user creating quiz (String)
+    * questions - list of Questions (List<Questions>)
+  * Question:
+    * content - question itself (String)
+    * answers - list of Answers (List<Answer>)
+  * Answer:
+    * text - text for answer, a letter if it's a closed question (String)
+    * correct - information whether chosen answer is correct (Bool) // perhaps checking answer might be backend responsibility
+  * QuizAnswers:
+    * quizId - ID of quiz (String)
+    * quizAnswers - list of Answers to quiz (List<Answer>)
+  * ***Leader sends a quiz***: /app/session/{sessionId}/quiz - here leader sends a message with quiz (content field of message is Quiz)
+  * ***Guests receive a quiz***: /topic/session/{sessionId}/quiz - here guests subscribe to receive a quiz
+  * ***Guests send answers***: /app/session/{sessionId}/quiz-answers - here guests send a message with answers to quiz (content field of message is QuizAnswers)
+  * ***Leader receives answers***: /topic/session/{sessionId}/quiz-answers - here leader subscribes to receive quiz answers
