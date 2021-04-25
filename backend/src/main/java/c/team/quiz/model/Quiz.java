@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Builder
 @Document
-public class Quiz {
+public class Quiz {     // Can be used as 'content' field of message (QUIZ message)
     @Id
     String id;
     String userId;
