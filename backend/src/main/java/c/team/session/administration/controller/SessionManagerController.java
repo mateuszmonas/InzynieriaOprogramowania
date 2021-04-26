@@ -1,14 +1,14 @@
-package c.team.session.controller;
+package c.team.session.administration.controller;
 
 import c.team.account.UserAccountService;
 import c.team.account.model.UserAccount;
 import c.team.participants.list.ParticipantListRequest;
 import c.team.participants.list.ParticipantListResponse;
-import c.team.session.SessionService;
-import c.team.session.exception.SessionClosedException;
-import c.team.session.exception.SessionNotFoundException;
-import c.team.session.exception.SessionUnauthorizedAccessException;
-import c.team.session.model.*;
+import c.team.session.administration.SessionService;
+import c.team.session.administration.exception.SessionClosedException;
+import c.team.session.administration.exception.SessionNotFoundException;
+import c.team.session.administration.exception.SessionUnauthorizedAccessException;
+import c.team.session.administration.model.*;
 import c.team.timeline.TimelineRequest;
 import c.team.timeline.TimelineResponse;
 import lombok.AllArgsConstructor;

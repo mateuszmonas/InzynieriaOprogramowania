@@ -1,9 +1,9 @@
-package c.team.session.model;
+package c.team.session.administration.model;
 
 import c.team.message.model.Message;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.Id;;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;

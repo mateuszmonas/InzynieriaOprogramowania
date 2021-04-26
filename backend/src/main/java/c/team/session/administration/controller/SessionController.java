@@ -1,9 +1,9 @@
-package c.team.session.controller;
+package c.team.session.administration.controller;
 
 import c.team.message.exception.InvalidMessageTypeException;
 import c.team.message.model.Message;
 import c.team.message.model.MessageType;
-import c.team.session.SessionService;
+import c.team.session.administration.SessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

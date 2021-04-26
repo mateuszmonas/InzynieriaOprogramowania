@@ -1,4 +1,4 @@
-package c.team.session.exception;
+package c.team.session.administration.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

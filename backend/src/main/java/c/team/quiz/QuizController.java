@@ -4,7 +4,7 @@ import c.team.quiz.exception.QuizNotFoundException;
 import c.team.quiz.model.CreateQuizRequest;
 import c.team.quiz.model.CreateQuizResponse;
 import c.team.quiz.model.GetQuizzesResponse;
-import c.team.quiz.model.Quiz;
+import c.team.quiz.model.QuizDto;
 import c.team.security.model.UserPrincipal;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,14 +32,14 @@ public class QuizController {
 
     @GetMapping
     public ResponseEntity<GetQuizzesResponse> getQuizzes(@AuthenticationPrincipal UserPrincipal user) {
-        List<Quiz> quizzes = quizService.getUserQuizzes(user.getId());
+        List<QuizDto> quizzes = quizService.getUserQuizzes(user.getId());
         GetQuizzesResponse response = new GetQuizzesResponse(quizzes);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("{quizId}")
-    public ResponseEntity<Quiz> getQuiz(@AuthenticationPrincipal UserPrincipal user, @PathVariable String quizId) {
-        Quiz quiz = quizService.findQuiz(user.getId(), quizId).orElseThrow();
+    public ResponseEntity<QuizDto> getQuiz(@AuthenticationPrincipal UserPrincipal user, @PathVariable String quizId) {
+        QuizDto quiz = quizService.findQuiz(user.getId(), quizId).orElseThrow();
         return ResponseEntity.ok(quiz);
     }
 
