@@ -8,7 +8,6 @@ import c.team.session.statistics.model.SessionAnswersDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +19,8 @@ public class SessionAnswersService {
     private final SessionAnswersRepository sessionAnswersRepository;
 
     public synchronized void addAnswers(String sessionId, String questionId, List<Integer> answers) {
-        SessionAnswers sessionAnswers = sessionAnswersRepository.findBySessionIdAndQuestionId(sessionId, questionId).orElseGet(() -> new SessionAnswers(sessionId, questionId, new HashMap<>()));
+        SessionAnswers sessionAnswers = sessionAnswersRepository.findBySessionIdAndQuestionId(sessionId, questionId)
+                .orElseGet(() -> new SessionAnswers(sessionId, questionId));
         answers.forEach(a -> sessionAnswers.getAnswerCounts().merge(a, 1, Integer::sum));
         sessionAnswersRepository.save(sessionAnswers);
     }

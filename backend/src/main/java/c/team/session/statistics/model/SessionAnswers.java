@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -22,9 +23,9 @@ public class SessionAnswers {
     private String questionId;
     private Map<Integer, Integer> answerCounts;
 
-    public SessionAnswers(String sessionId, String questionId, Map<Integer, Integer> answerCounts) {
+    public SessionAnswers(String sessionId, String questionId) {
         this.sessionId = sessionId;
         this.questionId = questionId;
-        this.answerCounts = answerCounts;
+        this.answerCounts = new HashMap<>();
     }
 }
