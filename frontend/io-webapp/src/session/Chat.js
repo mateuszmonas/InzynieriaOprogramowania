@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-const Chat = ({ visible, socket }) => {
-  const [message, setMessage] = useState();
+const Chat = ({ state, dispatch }) => {
+  const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
   const parseMessage = (message) => {
@@ -19,23 +19,27 @@ const Chat = ({ visible, socket }) => {
   const send = async (e) => {
     e.preventDefault();
 
-    socket.sendMessage(message);
+    state.socket.sendMessage(message);
     setMessage("");
   };
 
   useEffect(() => {
-    if (socket && socket.messageListeners.length < 1) {
-      socket.addMessageListener(parseMessage);
+    console.log("1");
+    console.log(state.socket);
+    if (state.socket && state.socket.messageListeners.length < 1) {
+      console.log("2");
+      state.socket.addMessageListener(parseMessage);
     }
     return () => {
-      if (socket && socket.messageListeners.length > 1) {
-        socket.removeMessageListener(parseMessage);
+      if (state.socket && state.socket.messageListeners.length > 1) {
+        console.log("3");
+        state.socket.removeMessageListener(parseMessage);
       }
     };
-  }, [visible, send]);
+  }, [state.isChatVisible, send]);
 
 
-  if (visible) {
+  if (state.isChatVisible) {
     return (
       <div className="chat">
         <section>

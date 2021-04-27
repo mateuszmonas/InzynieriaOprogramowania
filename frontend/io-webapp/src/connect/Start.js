@@ -6,9 +6,7 @@ import SignUp from "./SignUp";
 
 import "./Start.css";
 
-const Start = (props) => {
-  const { stage, setStage, setToken, setUsername } = props;
-  const [message, setMessage] = React.useState("");
+const Start = ({ state, dispatch }) => {
   const [creds, setCreds] = React.useState({ name: "", sessionCode: "" });
 
   const submitHandler = (e) => {
@@ -30,62 +28,28 @@ const Start = (props) => {
         .then((data) => {
           console.log(data);
           const gotPermission = !data.guestApproval;
-          props.setSessionID(data.sessionId);
-          props.setSessionTitle(data.sessionTitle);
-          props.setGuestID(data.guestId);
-          props.setUsername(username);
+          dispatch({ type: "SET_SESSION_ID", payload: data.sessionId });
+          dispatch({ type: "SET_APPROVAL_ROOM_ID", payload: data.guestApprovalRoomId });
+          dispatch({ type: "SET_SESSION_TITLE", payload: data.sessionTitle });
+          dispatch({ type: "SET_GUEST_ID", payload: data.guestId });
+          dispatch({ type: "SET_USERNAME", payload: username });
           if (!gotPermission) {
-            props.setStage("awaitsApprovalGuest");
-            props.setSocket(
-              Socket.connect(
-                username,
-                data.guestApprovalRoomId,
-                data.guestId,
-                "approval",
-                false,
-                true,
-                props.setStage,
-                props.setSocket,
-                props.setSessionID
-              )
-            );
-            props.socket.sendRequest();
+            dispatch({ type: "SET_STAGE_GUEST_NEEDS_APPROVAL" });
           } else {
-            props.setStage("guest");
-            props.setSocket(
-              Socket.connect(
-                username,
-                data.sessionId,
-                data.guestId,
-                "session",
-                false,
-                true,
-                props.setStage,
-                props.setSocket,
-                props.setSessionID
-              )
-            );
+            dispatch({ type: "SET_STAGE_GUEST" });
           }
         })
         .catch((error) => {
           console.error(error);
-          setMessage("Failed to join session");
+          dispatch({ type: "SET_MESSAGE", payload: "Failed to join session" });
         });
     })();
   };
 
-  if (stage === "logIn") {
-    return (
-      <LogIn
-        setStage={setStage}
-        setToken={setToken}
-        setUsername={setUsername}
-        socket={props.socket}
-        setSocket={props.setSocket}
-      />
-    );
-  } else if (stage === "signUp") {
-    return <SignUp setStage={setStage} setMessage={setMessage} />;
+  if (state.stage === "login") {
+    return <LogIn state={state} dispatch={dispatch} />;
+  } else if (state.stage === "signUp") {
+    return <SignUp state={state} dispatch={dispatch} />;
   } else {
     return (
       <div className="login">
@@ -117,7 +81,7 @@ const Start = (props) => {
             Join
           </button>
         </form>
-        <h1>{message}</h1>
+        <h1>{state.message}</h1>
       </div>
     );
   }

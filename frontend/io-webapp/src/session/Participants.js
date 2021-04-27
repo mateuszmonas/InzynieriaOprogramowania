@@ -1,6 +1,6 @@
 import React from "react";
 
-const Participants = (props) => {
+const Participants = ({ state, dispatch }) => {
   const [waiting, setWaiting] = React.useState([]);
 
   const addWaiting = (newWaiting) => {
@@ -9,35 +9,35 @@ const Participants = (props) => {
       newWaiting
     ]);
   };
-
+  
   React.useEffect(() => {
-    if (props.socket && props.socket.messageListeners.length < 1) {
-      props.socket.addMessageListener(addWaiting);
+    if (state.approvalSocket && state.approvalSocket.messageListeners.length < 1) {
+      state.approvalSocket.addMessageListener(addWaiting);
     }
     return () => {
-      if (props.socket && props.socket.messageListeners.length > 1) {
-        props.socket.removeMessageListener(addWaiting);
+      if (state.approvalSocket && state.approvalSocket.messageListeners.length > 1) {
+        state.approvalSocket.removeMessageListener(addWaiting);
       }
     };
-  }, [props.visible, props.participants]);
+  }, [state.visible, state.participants]);
 
   const acceptHandler = (event, guestId) => {
     const newWaiting = waiting.filter((item) => item.content !== guestId);
     setWaiting(newWaiting);
-    props.socket.sendApproval(guestId, true);
+    state.socket.sendApproval(guestId, true);
   }
   
   const rejectHandler = (event, guestId) => {
     const newWaiting = waiting.filter((item) => item.content !== guestId);
     setWaiting(newWaiting);
-    props.socket.sendApproval(guestId, false);
+    state.socket.sendApproval(guestId, false);
   }
 
 
-  if (props.visible) {
+  if (state.isParticipantsVisible) {
     return (
       <div className="participants">
-        {props.participants.map((msg) => {
+        {state.participants.map((msg) => {
           return (
             <div className="accepted" key={msg.id}>
               <h4>{msg.username}</h4>
@@ -47,7 +47,7 @@ const Participants = (props) => {
         })}
 
         {waiting.map((msg) => {
-          if (props.stage === "lecturer") {
+          if (state.stage === "lecturer") {
             return (
               <div className="waiting" key={msg.content}>
                 <h4>{msg.sender}</h4>

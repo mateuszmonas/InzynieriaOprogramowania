@@ -1,6 +1,6 @@
 import React from "react";
 
-const Question = (props) => {
+const Question = ({ state, dispatch }) => {
   const sampleQuestions = [
     {
       id: 1,
@@ -20,14 +20,13 @@ const Question = (props) => {
     /* TODO */
     const newQuestions = questions;
     newQuestions.shift();
-    console.log(newQuestions);
     setQuestions(newQuestions);
     setCurrent(questions[0]);
   };
 
   return (
-    <div className="question" style={{ width: props.width }}>
-      {(props.stage === "awaitsApprovalAccount" || props.stage === "awaitsApprovalGuest") ? (
+    <div className="question" style={{ width: state.questionWidth }}>
+      {state.awaitsApproval ? (
         <h1>Waiting for permission from room owner</h1>
       ) : questions.length ? (
         current.hasOwnProperty("answers") ? (

@@ -6,27 +6,18 @@ class Socket {
   constructor(
     socket,
     stompClient,
-    username,
-    sessionID,
-    guestID,
+    state,
+    dispatch,
     type,
-    isLeader,
-    isGuest,
-    setStage,
-    setSocket,
-    setSessionID,
+    isLeader
   ) {
+    console.log(state.sessionId)
     this.socket = socket;
     this.stompClient = stompClient;
-    this.username = username;
-    this.sessionID = sessionID;
-    this.guestID = guestID;
+    this.state = state;
+    this.dispatch = dispatch;
     this.type = type;
     this.isLeader = isLeader;
-    this.isGuest = isGuest;
-    this.setStage = setStage;
-    this.setSocket = setSocket;
-    this.setSessionID = setSessionID;
     this.messageListeners = [];
   }
 
@@ -39,32 +30,21 @@ class Socket {
   }
 
   static connect = (
-    name,
-    sessionID,
-    guestID,
+    state,
+    dispatch,
     type,
-    isLeader,
-    isGuest,
-    setStage,
-    setSocket,
-    setSessionID
+    isLeader = false,
   ) => {
-    if (name) {
+    if (state) {
       const socket = new SockJS("http://localhost:8080/session-handling");
       const stompClient = Stomp.over(socket);
-      const username = name;
       const sock = new Socket(
         socket,
         stompClient,
-        username,
-        sessionID,
-        guestID,
+        state,
+        dispatch,
         type,
-        isLeader,
-        isGuest,
-        setStage,
-        setSocket,
-        setSessionID
+        isLeader
       );
       stompClient.connect({}, sock.onConnected, sock.onError);
 
@@ -75,27 +55,28 @@ class Socket {
   onConnected = () => {
     if (this.type === "session") {
       this.stompClient.subscribe(
-        `/topic/session/${this.sessionID}`,
+        `/topic/session/${this.state.sessionId}`,
         this.onMessageReceived
       );
-      const msg = { sender: this.guestID, type: "CONNECT" };
+      const msg = { sender: this.state.guestId, type: "CONNECT" };
 
       if (!this.isLeader) {
         this.stompClient.send(
-          `/app/session/${this.sessionID}/new-user`,
+          `/app/session/${this.state.sessionId}/new-user`,
           {},
           JSON.stringify(msg)
         );
       }
     } else if (this.type === "approval") {
       this.stompClient.subscribe(
-        `/topic/session/${this.sessionID}/guest-approval-response/guest-${this.guestID}`,
+        `/topic/session/${this.state.approvalRoomId}/guest-approval-response/guest-${this.state.guestId}`,
         this.onApprovalReceived
       );
       this.sendRequest();
+
     } else {
       this.stompClient.subscribe(
-        `/topic/session/${this.sessionID}/guest-approval-request`,
+        `/topic/session/${this.state.approvalRoomId}/guest-approval-request`,
         this.onRequestReceived
       );
     }
@@ -109,13 +90,13 @@ class Socket {
   sendMessage = (message) => {
     if (message && this.stompClient) {
       const chatMessage = {
-        sender: this.username,
+        sender: this.state.username,
         content: message,
         type: "COMMENT",
         timestamp: moment().calendar(),
       };
       this.stompClient.send(
-        `/app/session/${this.sessionID}/send`,
+        `/app/session/${this.state.sessionId}/send`,
         {},
         JSON.stringify(chatMessage)
       );
@@ -125,19 +106,19 @@ class Socket {
   sendRequest = () => {
     if (this.stompClient) {
       const chatMessage = {
-        sender: this.username,
-        content: this.guestID,
+        sender: this.state.username,
+        content: this.state.guestId,
         type: "GUEST_APPROVAL",
       };
       this.stompClient.send(
-        `/app/session/${this.sessionID}/guest-approval-request`,
+        `/app/session/${this.state.approvalRoomId}/guest-approval-request`,
         {},
         JSON.stringify(chatMessage)
       );
     }
   };
 
-  sendApproval = (guestID, isApproved) => {
+  sendApproval = (guestId, isApproved) => {
     if (this.stompClient) {
       const chatMessage = {
         content: isApproved,
@@ -145,7 +126,7 @@ class Socket {
       };
       console.log(chatMessage);
       this.stompClient.send(
-        `/app/session/${this.sessionID}/guest-approval-response/${guestID}`,
+        `/app/session/${this.state.approvalRoomId}/guest-approval-response/${guestId}`,
         {},
         JSON.stringify(chatMessage)
       );
@@ -154,14 +135,14 @@ class Socket {
 
   onMessageReceived = (payload) => {
     const message = JSON.parse(payload.body);
+    console.log(this.messageListeners);
+    console.log(message);
 
     if (message.type === "CONNECT") {
       console.log(message);
     } else if (message.type === "DISCONNECT") {
       console.log(message);
     } else {
-      console.log("COMMENT MOMENT");
-      console.log(this.messageListeners);
       for (const listener of this.messageListeners) {
         console.log(listener);
         console.log(message);
@@ -195,37 +176,38 @@ class Socket {
 
     // if (message.type === "GUEST_APPROVAL") {
     if (message.content === true) {
-      const newSocket = Socket.connect(
-        this.username,
-        message.sessionId,
-        this.guestID,
-        "session",
-        this.isLeader,
-        this.isGuest,
-        this.setStage,
-        this.setSocket,
-        this.setSessionID
-      );
-      this.setSocket(newSocket);
-      this.setStage("student");
-      this.setSessionID(message.sessionId);
-    } else {
-      if (this.isGuest) {
-        this.setStage("");
+      // const newSocket = Socket.connect(
+      //   this.state,
+      //   this.dispatch,
+      //   "session",
+      //   this.isLeader,
+      // );
+      if (this.state.stage === "guest") {
+        this.dispatch({type: "SET_STAGE_GUEST"})
       } else {
-        this.setStage("account");
+        this.dispatch({type: "SET_STAGE_STUDENT"})
       }
-      this.setSocket(new Socket("","","",""));
+      this.dispatch({type: "SET_SESSION_ID", payload: message.sessionId})
+      // this.setSocket(newSocket);
+      // this.setStage("student");
+      // this.setSessionID(message.sessionId);
+    } else {
+      if (this.state.stage === "guest") {
+        this.dispatch({type: "SET_STAGE_START"})
+      } else {
+        this.dispatch({type: "SET_STAGE_ACCOUNT"})
+      }
+      // this.setSocket(new Socket("","","",""));
     }
     // }
   };
-
+  
   onRequestReceived = (payload) => {
     const message = JSON.parse(payload.body);
-    console.log("onRequestReceived");
-    console.log(message);
 
     if (message.type === "GUEST_APPROVAL") {
+      console.log(this.state);
+      console.log(this.messageListeners);
       for (const listener of this.messageListeners) {
         listener(message);
       }

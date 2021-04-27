@@ -1,11 +1,6 @@
 import React from "react";
 
-const Sessionbar = (props) => {
-  const toggleChat = () => {
-    props.toggleChat(!props.chat);
-    props.toggleParticipants(false);
-  };
-
+const Sessionbar = ({ state, dispatch }) => {
   const handleClose = (e) => {
     e.preventDefault();
 
@@ -16,13 +11,13 @@ const Sessionbar = (props) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: props.username,
-          sessionId: props.sessionID,
+          username: state.username,
+          sessionId: state.sessionId,
         }),
       })
         .then((_) => {
-          props.setSessionID("");
-          props.setStage("account");
+          dispatch({type: "SET_SESSION_ID", payload: ""})
+          dispatch({type: "SET_STAGE_ACCOUNT"})
         })
         .catch((error) => {
           console.error(error);
@@ -31,33 +26,52 @@ const Sessionbar = (props) => {
   };
 
   const leaveSessionHandler = (e) => {
-    console.log(props.stage);
-    if (props.stage === "lecturer") {
+    dispatch({type: "SET_MESSAGE", payload: ""})
+    if (state.stage === "lecturer") {
       handleClose(e);
-    } else if (props.stage === "guest" || props.stage === "awaitsApprovalGuest") {
-      props.setStage("");
+    } else if (
+      state.stage === "guest"
+    ) {
+      dispatch({type: "SET_STAGE_START"})
     } else {
-      props.setStage("account");
+      dispatch({type: "SET_STAGE_ACCOUNT"})
     }
   };
 
   return (
     <div className="sessionbar">
       <div>
-        <h3>{props.sessionTitle}</h3>
+        <h3>{state.sessionTitle}</h3>
         <button type="button" className="leave" onClick={leaveSessionHandler}>
           Leave Session
         </button>
       </div>
-      {!(props.stage === "awaitsApproval") && (
+      {!state.awaitsApproval && (
         <>
-          <button type="button" className="view" onClick={() => toggleChat()}>
+          <button
+            type="button"
+            className="view"
+            onClick={(e) => dispatch(
+              state.isChatVisible
+                ? { type: "NOTHING_VISIBLE" }
+                : { type: "CHAT_VISIBLE" }
+            )}
+          >
             Chat
           </button>
           <button
             type="button"
             className="view"
-            onClick={props.participantsHandler}
+            onClick={(e) =>
+              dispatch(
+                state.isParticipantsVisible
+                  ? { type: "NOTHING_VISIBLE" }
+                  : {
+                      type: "PARTICIPANTS_VISIBLE",
+                      payload: { e, state, dispatch },
+                    }
+              )
+            }
           >
             Participants
           </button>

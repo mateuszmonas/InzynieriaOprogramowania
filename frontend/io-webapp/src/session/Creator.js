@@ -1,6 +1,6 @@
 import React from "react";
 
-const Creator = (props) => {
+const Creator = ({ state, dispatch }) => {
   const [abcd, setAbcd] = React.useState(false);
   const [question, setQuestion] = React.useState("");
   const [answer, setAnswer] = React.useState("");
@@ -13,7 +13,6 @@ const Creator = (props) => {
       const newQuestion = { question };
       if (answer !== "") {
         newQuestion.answer = { answer };
-        console.log(newQuestion);
       } else if (
         answers.length === 4 &&
         answers[0] !== "" &&
@@ -22,7 +21,6 @@ const Creator = (props) => {
         answers[3] !== ""
       ) {
         newQuestion.answers = { answers };
-        console.log(newQuestion);
       }
     }
     setQuestion("");
@@ -31,7 +29,7 @@ const Creator = (props) => {
   };
 
   return (
-    <div className="question" style={{ width: props.width }}>
+    <div className="question" style={{ width: state.questionWidth }}>
       <form className="newquestion" onSubmit={submitHandler}>
         <div>
           <label htmlFor="questionText">Question: </label>
