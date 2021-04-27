@@ -22,6 +22,11 @@ const Creator = ({ state, dispatch }) => {
       ) {
         newQuestion.answers = { answers };
       }
+      const msg = {
+        type : "quiz",
+        content: newQuestion,
+      };
+      state.socket.sendMessage(msg);
     }
     setQuestion("");
     setAnswer("");

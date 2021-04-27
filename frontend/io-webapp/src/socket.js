@@ -89,16 +89,16 @@ class Socket {
 
   sendMessage = (message) => {
     if (message && this.stompClient) {
-      const chatMessage = {
+      const messageToSend = {
         sender: this.state.username,
-        content: message,
+        content: message.connect,
         type: "COMMENT",
         timestamp: moment().calendar(),
       };
       this.stompClient.send(
-        `/app/session/${this.state.sessionId}/send`,
+        `/app/session/${this.state.sessionId}/${message.type}`,
         {},
-        JSON.stringify(chatMessage)
+        JSON.stringify(messageToSend)
       );
     }
   };

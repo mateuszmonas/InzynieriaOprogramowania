@@ -17,7 +17,13 @@ const Question = ({ state, dispatch }) => {
   const [current, setCurrent] = React.useState(questions[0]);
 
   const submitHandler = (id) => {
-    /* TODO */
+    const msg = {
+      type : "quiz-answer",
+      content: current,
+    };
+    state.socket.sendMessage(msg);
+
+
     const newQuestions = questions;
     newQuestions.shift();
     setQuestions(newQuestions);

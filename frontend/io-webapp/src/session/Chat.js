@@ -5,6 +5,7 @@ const Chat = ({ state, dispatch }) => {
   const [messages, setMessages] = useState([]);
 
   const parseMessage = (message) => {
+    console.log(message);
     setMessages((messages) => [
       {
         id: message.id,
@@ -18,8 +19,13 @@ const Chat = ({ state, dispatch }) => {
 
   const send = async (e) => {
     e.preventDefault();
-
     state.socket.sendMessage(message);
+    const msg = {
+      type : "send",
+      content: message,
+    };
+
+    state.socket.sendMessage(msg);
     setMessage("");
   };
 
