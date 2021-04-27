@@ -1,4 +1,4 @@
-package c.team.session.model;
+package c.team.session.administration.model;
 
 import lombok.Builder;
 import lombok.Data;

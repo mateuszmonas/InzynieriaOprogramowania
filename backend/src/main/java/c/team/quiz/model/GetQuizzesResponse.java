@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetQuizzesResponse {
-    private List<Quiz> quizzes;
+    private List<QuizDto> quizzes;
 }

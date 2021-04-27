@@ -1,4 +1,4 @@
-package c.team.session.exception;
+package c.team.session.administration.exception;
 
 public class SessionUnauthorizedAccessException extends RuntimeException {
 }

@@ -1,12 +1,12 @@
-package c.team.session;
+package c.team.session.administration;
 
 import c.team.account.UserAccountService;
 import c.team.account.model.UserAccount;
 import c.team.message.model.Message;
-import c.team.session.exception.SessionNotFoundException;
-import c.team.session.exception.SessionUnauthorizedAccessException;
-import c.team.session.model.Guest;
-import c.team.session.model.Session;
+import c.team.session.administration.exception.SessionNotFoundException;
+import c.team.session.administration.exception.SessionUnauthorizedAccessException;
+import c.team.session.administration.model.Guest;
+import c.team.session.administration.model.Session;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -89,19 +91,25 @@ public class SessionService {
         sessionRepository.save(session);
     }
 
-    public void validateOwner(String sessionId, String potentialOwner){
+    public void validateOwner(String sessionId, String potentialOwner) {
         Session session = this.findBySessionId(sessionId);
         UserAccount account = accountService.findByUsername(potentialOwner);
-        if(!account.getId().equals(session.getLeaderAccountId()))
+        if (!account.getId().equals(session.getLeaderAccountId()))
             throw new SessionUnauthorizedAccessException();
     }
 
-    public Session findByPasscode(UUID passcode){
+    public void validateOwnerById(String sessionId, String ownerId) {
+        Session session = this.findBySessionId(sessionId);
+        if (!ownerId.equals(session.getLeaderAccountId()))
+            throw new SessionUnauthorizedAccessException();
+    }
+
+    public Session findByPasscode(UUID passcode) {
         return sessionRepository.findSessionByPasscode(passcode)
                 .orElseThrow(() -> new SessionNotFoundException("no session with passcode: " + passcode.toString()));
     }
 
-    public Session findBySessionId(String sessionsId){
+    public Session findBySessionId(String sessionsId) {
         return sessionRepository.findSessionById(sessionsId)
                 .orElseThrow(() -> new SessionNotFoundException("no sessions with id: " + sessionsId));
     }

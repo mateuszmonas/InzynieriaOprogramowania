@@ -1,6 +1,6 @@
-package c.team.session.controller;
+package c.team.session.administration.controller;
 
-import c.team.session.SessionService;
+import c.team.session.administration.SessionService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -13,7 +13,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SessionEventListener {
 
-    private SessionService sessionService;
+    private final SessionService sessionService;
 
     @EventListener
     public void handleParticipantConnect(final SessionConnectedEvent event) {

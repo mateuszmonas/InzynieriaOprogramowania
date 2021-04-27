@@ -1,6 +1,6 @@
 package c.team.participants.list;
 
-import c.team.session.model.Guest;
+import c.team.session.administration.model.Guest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
