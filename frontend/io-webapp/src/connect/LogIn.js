@@ -1,11 +1,9 @@
 import React from "react";
-import Socket from "../socket";
 
 import "./Start.css";
 
-const LogIn = (props) => {
+const LogIn = ({ state, dispatch }) => {
   const [creds, setCreds] = React.useState({ username: "", password: "" });
-  const [message, setMessage] = React.useState("");
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -20,14 +18,15 @@ const LogIn = (props) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          props.setToken(data);
-          props.setUsername(creds.username);
-          props.setStage("account");
+          dispatch({ type: "SET_TOKEN", payload: data });
+          dispatch({ type: "SET_USERNAME", payload: creds.username });
+          dispatch({ type: "SET_STAGE_ACCOUNT" });
+          dispatch({ type: "SET_MESSAGE", payload: "" });
         })
         .catch((error) => {
           console.error(error);
-          setMessage("Failed to log in");
-          props.setStage("logIn");
+          dispatch({ type: "SET_MESSAGE", payload: "Failed to log in" });
+          dispatch({ type: "SET_STAGE_LOGIN" });
         });
     })();
   };
@@ -60,7 +59,10 @@ const LogIn = (props) => {
           <button
             type="button"
             className="submit"
-            onClick={() => props.setStage("")}
+            onClick={() => {
+              dispatch({ type: "SET_STAGE_START" });
+              dispatch({ type: "SET_MESSAGE", payload: "" });
+            }}
           >
             Back
           </button>
@@ -69,7 +71,7 @@ const LogIn = (props) => {
           </button>
         </div>
       </form>
-      <h1>{message}</h1>
+      <h1>{state.message}</h1>
     </div>
   );
 };
