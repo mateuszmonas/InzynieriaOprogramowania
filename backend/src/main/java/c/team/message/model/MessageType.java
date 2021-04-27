@@ -6,7 +6,8 @@ public enum MessageType {
     REPLY,
     CONNECT,
     DISCONNECT,
-    GUEST_APPROVAL
+    GUEST_APPROVAL,
+    QUIZ,
+    QUIZ_ANSWERS
     // QUIZ, different types of it
-
 }
