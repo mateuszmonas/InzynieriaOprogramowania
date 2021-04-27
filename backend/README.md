@@ -33,16 +33,17 @@ Swagger api documentation can be accessed on url `/swagger-ui.html`
   * Quiz is retrieved from quiz repository with quiz request or created - it has following fields:
     * id - ID of quiz (String)
     * userId - ID of user creating quiz (String)
-    * questions - list of Questions (List<Questions>)
+    * questionIds - list of Questions IDs (List<String>)
+    * (has Dto version, where questionIds are replaced with questions - List<Question>)
   * Question:
+    * id - ID of question (String)
     * content - question itself (String)
     * answers - list of Answers (List<Answer>)
   * Answer:
     * text - text for answer, a letter if it's a closed question (String)
     * correct - information whether chosen answer is correct (Bool) // perhaps checking answer might be backend responsibility
   * QuizAnswers:
-    * quizId - ID of quiz (String)
-    * quizAnswers - list of Answers to quiz (List<Answer>)
+    * quizAnswers - dictionary questionId -> list of Answers for to this question (String -> List<Answer>)
   * ***Leader sends a quiz***: /app/session/{sessionId}/quiz - here leader sends a message with quiz (content field of message is Quiz)
   * ***Guests receive a quiz***: /topic/session/{sessionId}/quiz - here guests subscribe to receive a quiz
   * ***Guests send answers***: /app/session/{sessionId}/quiz-answers - here guests send a message with answers to quiz (content field of message is QuizAnswers)

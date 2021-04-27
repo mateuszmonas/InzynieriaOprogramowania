@@ -3,7 +3,12 @@ package c.team.session.administration.controller;
 import c.team.message.exception.InvalidMessageTypeException;
 import c.team.message.model.Message;
 import c.team.message.model.MessageType;
+import c.team.quiz.exception.QuizNotFoundException;
+import c.team.quiz.model.Answer;
+import c.team.quiz.model.Question;
 import c.team.session.administration.SessionService;
+import c.team.session.statistics.SessionAnswersService;
+import c.team.session.statistics.model.SessionAnswersDto;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,13 +21,16 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SessionController {
 
     private final SessionService sessionsService;
+    private final SessionAnswersService answersService;
 
     @MessageMapping("/session/{sessionId}/send")
     @SendTo("/topic/session/{sessionId}")
@@ -93,11 +101,22 @@ public class SessionController {
         if(message.getType() != MessageType.QUIZ_ANSWERS)
             throw new InvalidMessageTypeException();
         sessionsService.addMessageToSessionLog(sessionId, message);
+
+        Map<String, List<Answer>> answersToQuestions = (Map<String, List<Answer>>) message.getContent();
+        answersToQuestions.forEach( (questionId, answers) -> {
+            List<Integer> answerIdx = answersService.getAnswerCountsOrAddForQuestion(questionId, answers);
+            answersService.addAnswers(sessionId, questionId, answerIdx);
+        });
         return message;
     }
 
     @ExceptionHandler(InvalidMessageTypeException.class)
     public final ResponseEntity<Error> handleException(InvalidMessageTypeException ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @ExceptionHandler(QuizNotFoundException.class)
+    public final ResponseEntity<Error> handleException(QuizNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }
