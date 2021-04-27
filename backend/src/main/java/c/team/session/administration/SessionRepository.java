@@ -1,6 +1,6 @@
-package c.team.session;
+package c.team.session.administration;
 
-import c.team.session.model.Session;
+import c.team.session.administration.model.Session;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

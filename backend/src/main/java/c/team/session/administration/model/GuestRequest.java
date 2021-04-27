@@ -1,4 +1,4 @@
-package c.team.session.model;
+package c.team.session.administration.model;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class SessionCreateRequest {
+public class GuestRequest {
 
     @NotBlank
     @Parameter(required = true)
@@ -14,8 +14,6 @@ public class SessionCreateRequest {
 
     @NotBlank
     @Parameter(required = true)
-    private String sessionTitle;
+    private String passcode;
 
-    @Parameter(required = true)
-    private boolean guestApproval;
 }

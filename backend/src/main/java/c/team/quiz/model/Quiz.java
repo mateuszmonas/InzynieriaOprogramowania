@@ -12,7 +12,7 @@ import java.util.List;
 @Document
 public class Quiz {     // Can be used as 'content' field of message (QUIZ message)
     @Id
-    String id;
-    String userId;
-    List<Question> questions;
+    private String id;
+    private String userId;
+    private List<String> questionIds;
 }
