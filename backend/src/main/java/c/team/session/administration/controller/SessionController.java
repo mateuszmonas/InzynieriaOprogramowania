@@ -6,6 +6,7 @@ import c.team.message.model.MessageType;
 import c.team.quiz.exception.QuizNotFoundException;
 import c.team.quiz.model.Answer;
 import c.team.quiz.model.Question;
+import c.team.quiz.model.QuizAnswers;
 import c.team.session.administration.SessionService;
 import c.team.session.statistics.SessionAnswersService;
 import c.team.session.statistics.model.SessionAnswersDto;
@@ -102,8 +103,8 @@ public class SessionController {
             throw new InvalidMessageTypeException();
         sessionsService.addMessageToSessionLog(sessionId, message);
 
-        Map<String, List<Answer>> answersToQuestions = (Map<String, List<Answer>>) message.getContent();
-        answersToQuestions.forEach( (questionId, answers) -> {
+        QuizAnswers answersToQuestions = (QuizAnswers) message.getContent();
+        answersToQuestions.getQuizAnswers().forEach( (questionId, answers) -> {
             List<Integer> answerIdx = answersService.getAnswerCountsOrAddForQuestion(questionId, answers);
             answersService.addAnswers(sessionId, questionId, answerIdx);
         });
