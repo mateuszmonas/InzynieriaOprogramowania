@@ -84,7 +84,7 @@ const Stats = ({ state, dispatch }) => {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="answers" fill="#ff0000">
+            <Bar dataKey="answers" fill="rgb(179, 144, 79)">
               {sampleQuestions[picked - 1].replies.map((entry, index) => (
                 <Cell
                   fill={
