@@ -6,6 +6,7 @@ import Chat from "./Chat";
 import Participants from "./Participants";
 import Question from "./Question";
 import Creator from "./Creator";
+import Stats from "./Stats";
 
 import "./Session.css";
 import Sessionbar from "./Sessionbar";
@@ -44,7 +45,11 @@ const Session = ({ state, dispatch }) => {
       <Sessionbar state={state} dispatch={dispatch} />
       <div className="session">
         {state.stage === "lecturer" ? (
-          <Creator state={state} dispatch={dispatch} />
+          state.isStatsVisible ? (
+            <Stats state={state} dispatch={dispatch} />
+          ) : (
+            <Creator state={state} dispatch={dispatch} />
+          )
         ) : (
           <Question state={state} dispatch={dispatch} />
         )}

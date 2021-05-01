@@ -250,3 +250,53 @@ button.answerButton {
 button.answerButton:hover {
   background-color: #666666;
 }
+
+.stats {
+  width: 75%;
+  height: 100%;
+  background: rgb(170, 231, 170);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.graphPicker {
+  width: 25%;
+  height: 95%;
+  background: rgb(200, 200, 200);
+  border-style: groove;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-y: scroll;
+}
+
+.picked {
+  width: 95%;
+  height: 10%;
+  background: rgb(175, 175, 175);
+  border-style: inset;
+  margin-top: 1%;
+  margin-bottom: 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.notPicked {
+  width: 95%;
+  height: 10%;
+  background: rgb(200, 200, 200);
+  margin-top: 1%;
+  margin-bottom: 2%;
+  border-style: outset;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
