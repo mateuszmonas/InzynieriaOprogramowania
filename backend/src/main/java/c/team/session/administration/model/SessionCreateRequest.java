@@ -1,14 +1,12 @@
-package c.team.session.model;
+package c.team.session.administration.model;
 
 import io.swagger.v3.oas.annotations.Parameter;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
-@AllArgsConstructor
-public class SessionCloseRequest {
+public class SessionCreateRequest {
 
     @NotBlank
     @Parameter(required = true)
@@ -16,6 +14,8 @@ public class SessionCloseRequest {
 
     @NotBlank
     @Parameter(required = true)
-    private String sessionId;
+    private String sessionTitle;
 
+    @Parameter(required = true)
+    private boolean guestApproval;
 }

@@ -1,9 +1,15 @@
-package c.team.session.controller;
+package c.team.session.administration.controller;
 
 import c.team.message.exception.InvalidMessageTypeException;
 import c.team.message.model.Message;
 import c.team.message.model.MessageType;
-import c.team.session.SessionService;
+import c.team.quiz.exception.QuizNotFoundException;
+import c.team.quiz.model.Answer;
+import c.team.quiz.model.Question;
+import c.team.quiz.model.QuizAnswers;
+import c.team.session.administration.SessionService;
+import c.team.session.statistics.SessionAnswersService;
+import c.team.session.statistics.model.SessionAnswersDto;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,13 +22,16 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SessionController {
 
     private final SessionService sessionsService;
+    private final SessionAnswersService answersService;
 
     @MessageMapping("/session/{sessionId}/send")
     @SendTo("/topic/session/{sessionId}")
@@ -77,8 +86,38 @@ public class SessionController {
         return updatedResponse;
     }
 
+    @MessageMapping("/session/{sessionId}/quiz")    // Here leader sends a quiz
+    @SendTo("/topic/session/{sessionId}/quiz")      // Here participants subscribe to receive quiz
+    public Message sendQuizToParticipants(@DestinationVariable String sessionId, @Payload final Message message){
+        if(message.getType() != MessageType.QUIZ)
+            throw new InvalidMessageTypeException();
+        sessionsService.addMessageToSessionLog(sessionId, message);
+        return message;
+    }
+
+    // Might require additional security
+    @MessageMapping("/session/{sessionId}/quiz-answers")    // Here participants send quiz answers
+    @SendTo("/topic/session/{sessionId}/quiz-answers")      // Here leader subscribes to receive quiz answers
+    public Message sendQuizAnswersToLeader(@DestinationVariable String sessionId, @Payload final Message message){
+        if(message.getType() != MessageType.QUIZ_ANSWERS)
+            throw new InvalidMessageTypeException();
+        sessionsService.addMessageToSessionLog(sessionId, message);
+
+        QuizAnswers answersToQuestions = (QuizAnswers) message.getContent();
+        answersToQuestions.getQuizAnswers().forEach( (questionId, answers) -> {
+            List<Integer> answerIdx = answersService.getAnswerCountsOrAddForQuestion(questionId, answers);
+            answersService.addAnswers(sessionId, questionId, answerIdx);
+        });
+        return message;
+    }
+
     @ExceptionHandler(InvalidMessageTypeException.class)
     public final ResponseEntity<Error> handleException(InvalidMessageTypeException ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @ExceptionHandler(QuizNotFoundException.class)
+    public final ResponseEntity<Error> handleException(QuizNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

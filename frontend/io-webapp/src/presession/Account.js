@@ -3,14 +3,11 @@ import Socket from "../socket";
 
 import "./Account.css";
 
-const Account = (props) => {
+const Account = ({ state, dispatch }) => {
   const [passcode, setPasscode] = React.useState("");
   const [title, setTitle] = React.useState("");
-  const [message, setMessage] = React.useState("");
   const [isOwner, setIsOwner] = React.useState(false);
   const [needsApproval, setNeedsApproval] = React.useState(false);
-
-  //props.setStage("lecturer")
 
   const handleJoin = (e) => {
     e.preventDefault();
@@ -21,67 +18,33 @@ const Account = (props) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: props.username, passcode: passcode }),
+        body: JSON.stringify({ username: state.username, passcode: passcode }),
       })
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           const gotPermission = !data.guestApproval;
           if (data.sessionId && !isOwner) {
-            props.setSessionID(data.sessionId);
+            dispatch({ type: "SET_SESSION_ID", payload: data.sessionId });
           }
-          props.setSessionTitle(data.sessionTitle);
-          props.setGuestID(data.guestId);
+          dispatch({ type: "SET_APPROVAL_ROOM_ID", payload: data.guestApprovalRoomId });
+          dispatch({ type: "SET_SESSION_TITLE", payload: data.sessionTitle });
+          dispatch({ type: "SET_GUEST_ID", payload: data.guestId });
           if (isOwner) {
-            props.setStage("lecturer");
-            props.setSocket(
-              Socket.connect(
-                props.username,
-                props.sessionID,
-                data.guestId,
-                "session",
-                true,
-                false,
-                props.setStage,
-                props.setSocket, 
-                props.setSessionID
-              )
-            );
+            dispatch({ type: "SET_STAGE_LECTURER" });
+            dispatch({
+              type: "SET_SOCKET",
+              payload: Socket.connect(state, dispatch, "session", true),
+            });
           } else if (!gotPermission) {
-            props.setStage("awaitsApprovalAccount");
-            props.setSocket(
-              Socket.connect(
-                props.username,
-                data.guestApprovalRoomId,
-                data.guestId,
-                "approval",
-                false,
-                false,
-                props.setStage,
-                props.setSocket, 
-                props.setSessionID
-              )
-            );
-            props.socket.sendRequest();
+            dispatch({ type: "SET_STAGE_STUDENT_NEEDS_APPROVAL" });
           } else {
-            props.setStage("student");
-            props.setSocket(
-              Socket.connect(
-                props.username,
-                data.sessionId,
-                data.guestId,
-                "session",
-                false,
-                false,
-                props.setStage,
-                props.setSocket, 
-                props.setSessionID
-              )
-            );
+            dispatch({ type: "SET_STAGE_STUDENT" });
           }
         })
         .catch((error) => {
           console.error(error);
-          setMessage("Failed to join session");
+          dispatch({ type: "SET_MESSAGE", payload: "Failed to join session" });
         });
     })();
   };
@@ -96,7 +59,7 @@ const Account = (props) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: props.username,
+          username: state.username,
           sessionTitle: title,
           guestApproval: needsApproval,
         }),
@@ -105,13 +68,22 @@ const Account = (props) => {
         .then((data) => {
           setIsOwner(true);
           setPasscode(data.passcode);
-          props.setSessionID(data.sessionId);
-          props.setApprovalRoomID(data.approvalRoomId);
-          setMessage("Your session passcode is:\n" + data.passcode);
+          dispatch({ type: "SET_SESSION_ID", payload: data.sessionId });
+          dispatch({
+            type: "SET_APPROVAL_ROOM_ID",
+            payload: data.approvalRoomId,
+          });
+          dispatch({
+            type: "SET_MESSAGE",
+            payload: "Your session passcode is:\n" + data.passcode,
+          });
         })
         .catch((error) => {
           console.error(error);
-          setMessage("Failed to create session");
+          dispatch({
+            type: "SET_MESSAGE",
+            payload: "Failed to create session",
+          });
         });
     })();
   };
@@ -143,7 +115,7 @@ const Account = (props) => {
         </button>
         {isOwner && (
           <>
-            <h4>{message}</h4>
+            <h4>{state.message}</h4>
             <button type="button" className="submit" onClick={handleJoin}>
               Join this session
             </button>
@@ -164,7 +136,7 @@ const Account = (props) => {
           <button type="button" className="submit" onClick={handleJoin}>
             Join session
           </button>
-          <h4>{message}</h4>
+          <h4>{state.message}</h4>
         </div>
       )}
     </div>
