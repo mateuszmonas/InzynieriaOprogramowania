@@ -16,6 +16,7 @@ import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -117,5 +118,10 @@ public class SessionService {
     public Session findByGuestApprovalRoomId(UUID guestApprovalRoomId){
         return sessionRepository.findSessionByGuestApprovalRoomId(guestApprovalRoomId)
                 .orElseThrow(() -> new SessionNotFoundException("no session with approval room: " + guestApprovalRoomId));
+    }
+
+    public List<Session> findByLeaderAccountId(String leaderAccountId){
+        return sessionRepository.findSessionsByLeaderAccountId(leaderAccountId)
+                .orElse(new ArrayList<>());
     }
 }

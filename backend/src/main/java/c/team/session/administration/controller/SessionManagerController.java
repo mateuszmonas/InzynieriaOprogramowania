@@ -4,6 +4,7 @@ import c.team.account.UserAccountService;
 import c.team.account.model.UserAccount;
 import c.team.participants.list.ParticipantListRequest;
 import c.team.participants.list.ParticipantListResponse;
+import c.team.security.model.UserPrincipal;
 import c.team.session.administration.SessionService;
 import c.team.session.administration.exception.SessionClosedException;
 import c.team.session.administration.exception.SessionNotFoundException;
@@ -15,10 +16,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -88,14 +91,20 @@ public class SessionManagerController {
         sessionsService.closeSession(request.getSessionId(), request.getUsername());
     }
 
-    // Test session ID: 6074cc8fffe6d61ae3952eb6
-    // Test session name: TimelineTest
-    // Test session passcode: 9c07fca0-58af-46d9-add9-86efc6681e4a
-    @PostMapping("timeline")
+    // Request used for one particular session
+    @GetMapping("timeline")
     public ResponseEntity<TimelineResponse> getTimeline(@RequestBody TimelineRequest request){
         Session session = sessionsService.findBySessionId(request.getSessionId());
         sessionsService.validateOwner(session.getId(), request.getUsername());
         TimelineResponse response = new TimelineResponse(session.getLog());
+        return ResponseEntity.ok(response);
+    }
+
+    // Request used in account menu - TODO on frontend
+    @GetMapping("history")
+    public ResponseEntity<SessionHistoryResponse> getSessionHistory(@AuthenticationPrincipal UserPrincipal user){
+        List<Session> userSessions = sessionsService.findByLeaderAccountId(user.getId());
+        SessionHistoryResponse response = new SessionHistoryResponse(userSessions);
         return ResponseEntity.ok(response);
     }
 
