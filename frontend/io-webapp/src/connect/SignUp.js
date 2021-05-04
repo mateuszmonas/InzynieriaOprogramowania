@@ -1,13 +1,12 @@
 import React from "react";
 
-const SignUp = (props) => {
+const SignUp = ({ state, dispatch }) => {
   const [creds, setCreds] = React.useState({
     username: "",
     password: "",
     email: "",
   });
   const [passwordCheck, setPasswordCheck] = React.useState("");
-  const [message, setMessage] = React.useState("");
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -25,21 +24,21 @@ const SignUp = (props) => {
           }),
         })
           .then((_) => {
-            props.setStage("signedUp");
-            props.setMessage("Signed up successfully");
+            dispatch({ type: "SET_STAGE_START" });
+            dispatch({ type: "SET_MESSAGE", payload: "Signed up successfully" });
             setTimeout(() => {
-              props.setMessage("");
+              dispatch({ type: "SET_MESSAGE", payload: "" });
             }, 3000);
           })
           .catch((error) => {
             console.error(error);
-            setMessage("Failed to register");
-            props.setStage("signUp");
+            dispatch({ type: "SET_STAGE_SIGNUP" });
+            dispatch({ type: "SET_MESSAGE", payload: "Failed to register" });
           });
       })();
     } else {
-      setMessage("Failed to register");
-      props.setStage("signUp");
+      dispatch({ type: "SET_STAGE_SIGNUP" });
+      dispatch({ type: "SET_MESSAGE", payload: "Failed to register" });
     }
   };
 
@@ -91,7 +90,7 @@ const SignUp = (props) => {
           <button
             type="button"
             className="submit"
-            onClick={() => props.setStage("")}
+            onClick={() => dispatch({ type: "SET_STAGE_START" })}
           >
             Back
           </button>
@@ -100,7 +99,7 @@ const SignUp = (props) => {
           </button>
         </div>
       </form>
-      <h1>{message}</h1>
+      <h1>{state.message}</h1>
     </div>
   );
 };
