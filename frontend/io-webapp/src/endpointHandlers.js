@@ -31,3 +31,29 @@ export const getParticipantsHandler = (e, state, dispatch) => {
         });
     })();
   };
+
+export const getSessionHistoryHandler = (e, state, dispatch) => {
+    e.preventDefault();
+
+    (async () => {
+        await fetch("http://localhost:8080/session/history", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                identification: state.username
+            }),
+        })
+            .then((response ) => response.json())
+            .then((data) => {
+                dispatch({
+                    type: "SET_SESSION_HISTORY",
+                    payload: data.sessions,
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    })();
+};

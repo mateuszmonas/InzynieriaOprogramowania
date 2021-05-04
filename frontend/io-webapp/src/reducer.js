@@ -1,5 +1,6 @@
 import Socket from "./socket";
-import { getParticipantsHandler } from "./endpointHandlers";
+import {getParticipantsHandler, getSessionHistoryHandler} from "./endpointHandlers";
+import {act} from "react-dom/test-utils";
 
 export const initialState = {
   stage: "start",
@@ -15,9 +16,11 @@ export const initialState = {
   message: "",
   isChatVisible: false,
   isParticipantsVisible: false,
+  isSessionHistoryVisible: false,
   questionWidth: "100%",
   sessionOwner: "",
   participants: [],
+  sessionHistory: []
 };
 
 export const reducer = (state, action) => {
@@ -40,6 +43,8 @@ export const reducer = (state, action) => {
       return { ...state, stage: "signUp", awaitsApproval: false };
     case "SET_STAGE_LOGIN": console.log(state);
       return { ...state, stage: "login", awaitsApproval: false };
+    case "SET_STATE_SESSION_HISTORY": console.log(state)
+      return { ...state, stage: "account", awaitsApproval: false}
 
     case "SET_USERNAME":
       return { ...state, username: action.payload };
@@ -68,11 +73,15 @@ export const reducer = (state, action) => {
     case "SET_MESSAGE":
       return { ...state, message: action.payload };
 
+    case "SET_SESSION_HISTORY":
+      return { ...state, sessionHistory: action.payload };
+
     case "CHAT_VISIBLE":
       return {
         ...state,
         isChatVisible: true,
         isParticipantsVisible: false,
+        isSessionHistoryVisible: false,
         questionWidth: "75%",
       };
     case "PARTICIPANTS_VISIBLE": {
@@ -85,14 +94,29 @@ export const reducer = (state, action) => {
         ...state,
         isChatVisible: false,
         isParticipantsVisible: true,
+        isSessionHistoryVisible: false,
         questionWidth: "75%",
       };
+    }
+    case "SESSION_HISTORY_VISIBLE": {
+      getSessionHistoryHandler(
+          action.payload.e,
+          action.payload.state,
+          action.payload.dispatch
+      );
+      return {
+        ...state,
+        isChatVisible: false,
+        isParticipantsVisible: false,
+        isSessionHistoryVisible: true
+      }
     }
     case "NOTHING_VISIBLE":
       return {
         ...state,
         isChatVisible: false,
         isParticipantsVisible: false,
+        isSessionHistoryVisible: false,
         questionWidth: "100%",
       };
 
