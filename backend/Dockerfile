@@ -1,4 +1,5 @@
 FROM openjdk:11-jre
+EXPOSE 8080:8080
 ENV HOME /home/root
 WORKDIR /
 COPY target/backend.jar backend.jar
