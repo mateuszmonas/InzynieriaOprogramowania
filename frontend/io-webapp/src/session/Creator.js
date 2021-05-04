@@ -9,6 +9,8 @@ const Creator = ({ state, dispatch }) => {
   const submitHandler = (e) => {
     /* TODO */
     e.preventDefault();
+
+    console.log(e);
     if (question !== "") {
       const newQuestion = { question };
       if (answer !== "") {
@@ -24,7 +26,7 @@ const Creator = ({ state, dispatch }) => {
       }
       const msg = {
         type : "quiz",
-        content: newQuestion,
+        content: newQuestion, 
       };
       state.socket.sendMessage(msg);
     }

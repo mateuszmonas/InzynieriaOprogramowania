@@ -19,7 +19,7 @@ const Chat = ({ state, dispatch }) => {
 
   const send = async (e) => {
     e.preventDefault();
-    state.socket.sendMessage(message);
+    //state.socket.sendMessage(message);
     const msg = {
       type : "send",
       content: message,
@@ -30,15 +30,12 @@ const Chat = ({ state, dispatch }) => {
   };
 
   useEffect(() => {
-    console.log("1");
     console.log(state.socket);
     if (state.socket && state.socket.messageListeners.length < 1) {
-      console.log("2");
       state.socket.addMessageListener(parseMessage);
     }
     return () => {
       if (state.socket && state.socket.messageListeners.length > 1) {
-        console.log("3");
         state.socket.removeMessageListener(parseMessage);
       }
     };
