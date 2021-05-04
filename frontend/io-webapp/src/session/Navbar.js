@@ -9,12 +9,22 @@ const Navbar = ({ state, dispatch }) => {
     dispatch({ type: "SET_MESSAGE", payload: "" });
   };
 
+  const sessionHistoryHandler = (e, state, dispatch) => {
+      dispatch({ type: "SET_STAGE_SESSION_HISTORY"})
+      dispatch({ type: "SESSION_HISTORY_VISIBLE",
+                payload: { e, state, dispatch }});
+      console.log("C l i c k")
+  };
+
   const LogButton = () => {
     return ["account", "student", "lecturer"].includes(state.stage) ? (
       <>
         <button type="button" onClick={logoutHandler}>
           Log Out
         </button>
+      <button type="button" onClick={(e => sessionHistoryHandler(e, state, dispatch))}>
+          Session history
+      </button>
         <h4 className="username">{state.username}</h4>
       </>
     ) : (

@@ -41,9 +41,6 @@ export const getSessionHistoryHandler = (e, state, dispatch) => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                identification: state.username
-            }),
         })
             .then((response ) => response.json())
             .then((data) => {

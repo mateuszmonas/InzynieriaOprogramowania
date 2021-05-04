@@ -1,0 +1,24 @@
+.timeline {
+    background: #ffe;
+    margin: 5% 40% 0% 50%;
+    padding: 1% 1% 1% 1%;
+    width: 40vw;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 2px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.history {
+    background: #ffe;
+    margin: 5% 30% 0% 35%;
+    padding: 1% 1% 1% 1%;
+    width: 40vw;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 2px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

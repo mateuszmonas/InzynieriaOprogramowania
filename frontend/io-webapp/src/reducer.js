@@ -53,8 +53,8 @@ export const reducer = (state, action) => {
     case "SET_STAGE_LOGIN":
       console.log(state);
       return { ...state, stage: "login", awaitsApproval: false };
-    case "SET_STATE_SESSION_HISTORY": console.log(state)
-      return { ...state, stage: "account", awaitsApproval: false}
+    case "SET_STAGE_SESSION_HISTORY": console.log(state)
+      return { ...state, stage: "session_history", awaitsApproval: false}
 
     case "SET_USERNAME":
       return { ...state, username: action.payload };
@@ -109,11 +109,11 @@ export const reducer = (state, action) => {
       };
     }
     case "SESSION_HISTORY_VISIBLE": {
-      getSessionHistoryHandler(
-          action.payload.e,
-          action.payload.state,
-          action.payload.dispatch
-      );
+      // getSessionHistoryHandler(
+      //     action.payload.e,
+      //     action.payload.state,
+      //     action.payload.dispatch
+      // );
       return {
         ...state,
         isChatVisible: false,

@@ -23,7 +23,7 @@ import java.util.UUID;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SessionService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SessionConnectedEvent.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(SessionConnectedEvent.class);
 
     private final SessionRepository sessionRepository;
     private final UserAccountService accountService;
