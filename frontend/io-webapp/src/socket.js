@@ -66,15 +66,15 @@ class Socket {
           {},
           JSON.stringify(msg)
         );
-
-        let msgType = 'quiz' ? this.isLeader : 'quiz-answers' 
-
-        this.stompClient.subscribe(    // subscribe quiz
-          `/topic/session/${this.state.sessionId}/${msgType}`,
-          this.onMessageReceived
-        );
-
       }
+      
+      let msgType = this.isLeader ? 'quiz-answers' : 'quiz' 
+
+      this.stompClient.subscribe(    // subscribe quiz
+        `/topic/session/${this.state.sessionId}/${msgType}`,
+        this.onMessageReceived
+      );
+
     } else if (this.type === "approval") {
       this.stompClient.subscribe(
         `/topic/session/${this.state.approvalRoomId}/guest-approval-response/guest-${this.state.guestId}`,
@@ -100,13 +100,13 @@ class Socket {
     COMMENT
     REPLY
     QUIZ
-    QUIZ_ANSWER
+    QUIZ_ANSWERS
   */
   sendMessage = (message) => {
     console.log("content...." + message.content);
     let types = {
       "send" : "COMMENT",
-      "quiz-answer" : "QUIZ_ANSWER",
+      "quiz-answers" : "QUIZ_ANSWERS",
       "quiz" : "QUIZ"
     }
 
