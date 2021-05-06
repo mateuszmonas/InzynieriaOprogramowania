@@ -14,5 +14,5 @@ public class CreateQuizRequest {
     @NotEmpty
     @Valid
     @Parameter(required = true)
-    private List<Question> questions;
+    private List<QuestionDto> questions;
 }
