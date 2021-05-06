@@ -17,7 +17,10 @@ public class QuizService {
 
     public String createQuiz(String userId, CreateQuizRequest createQuizRequest) {
         Quiz quiz = quizRepository.save(new Quiz(userId));
-        List<Question> questions = createQuizRequest.getQuestions().stream().map(q -> q.toQuestion(quiz.getId())).collect(Collectors.toList());
+        List<Question> questions = createQuizRequest.getQuestions()
+                .stream()
+                .map(q -> q.toQuestion(quiz.getId()))
+                .collect(Collectors.toList());
         questionRepository.saveAll(questions);
         return quiz.getId();
     }
@@ -31,7 +34,10 @@ public class QuizService {
     }
 
     public QuizDto quizToQuizDto(Quiz quiz) {
-        List<QuestionDto> questionDtos = questionRepository.findAllByQuizId(quiz.getId()).stream().map(Question::toQuestionDto).collect(Collectors.toList());
+        List<QuestionDto> questionDtos = questionRepository.findAllByQuizId(quiz.getId())
+                .stream()
+                .map(Question::toQuestionDto)
+                .collect(Collectors.toList());
         return QuizDto.builder()
                 .id(quiz.getId())
                 .questions(questionDtos)
