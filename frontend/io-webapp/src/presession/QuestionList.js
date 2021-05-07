@@ -12,10 +12,12 @@ const QuestionList = ({ state, dispatch }) => {
       await fetch("http://localhost:8080/quiz", {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
+          'Authorization': state.token.token,
+          "Content-Type": "application/json"
         },
       })
-        .then((response) => response.json())
+        .then((response) => 
+          response.json())
         .then((data) => {
           console.log(data);
         })
@@ -32,22 +34,20 @@ const QuestionList = ({ state, dispatch }) => {
       await fetch("http://localhost:8080/quiz", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          'Authorization': state.token.token,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
             "questions": [
               {
-                "id": "1",
-                "content": "What is my name?",
-                "answers": [
-                  {
-                    "text": "wah",
-                    "correct": true
-                  }
-                ]
+                "content": "What is my name?"
+              },
+              
+              {
+                "content": "Ooo?"
               }
             ]
-          }),
+          })
       })
         .then((response) => response.json())
         .then((data) => {
@@ -87,7 +87,9 @@ const QuestionList = ({ state, dispatch }) => {
   return (
     <div className="questionPicker">
       <div
-        onClick={() => setPicked(0)}
+        onClick={(e) => {setPicked(0);
+        
+          onCreate(e);}}
         className={picked === 0 ? "picked" : "notPicked"}
       >
         All Questions
@@ -97,7 +99,7 @@ const QuestionList = ({ state, dispatch }) => {
           <div
             onClick={(e) => {
               setPicked(question.id);
-              onCreate(e);
+              onLoad(e);
             }}
             className={picked === question.id ? "picked" : "notPicked"}
           >
