@@ -1,6 +1,6 @@
 .account {
   margin: auto;
-  padding: 10vh 10vw 10vh 10vw;
+  padding: 5vh 10vw 10vh 10vw;
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -85,6 +85,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .quizInList:active {
@@ -98,11 +99,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .quizList {
   background: #ffe;
-  margin: 10% 30% 0% 30%;
+  margin: 10vh 30vw 0vh 30vw;
   padding: 1% 1% 1% 1%;
   width: 40vw;
   height: 80vh;
