@@ -18,7 +18,7 @@ const LogIn = ({ state, dispatch }) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          dispatch({ type: "SET_TOKEN", payload: data });
+          dispatch({ type: "SET_TOKEN", payload: data.token });
           dispatch({ type: "SET_USERNAME", payload: creds.username });
           dispatch({ type: "SET_STAGE_ACCOUNT" });
           dispatch({ type: "SET_MESSAGE", payload: "" });

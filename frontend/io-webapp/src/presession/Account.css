@@ -57,6 +57,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .notPicked {
@@ -70,6 +71,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .quizInList {
@@ -77,6 +79,19 @@
   min-height: 3rem;
   background: rgb(200, 200, 200);
   border-style: outset;
+  margin-top: 0.2rem;
+  margin-bottom: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.quizInList:active {
+  width: 95%;
+  min-height: 3rem;
+  background: rgb(175, 175, 175);
+  border-style: inset;
   margin-top: 0.2rem;
   margin-bottom: 0.4rem;
   display: flex;
@@ -144,4 +159,12 @@
 
 .login button {
   width: 30%;
+}
+
+.questionListButtonBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: space-around;
+  width: 100%
 }
