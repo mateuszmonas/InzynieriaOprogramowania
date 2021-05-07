@@ -15,6 +15,8 @@ services:
     ports:
       - 8080:8080
       - 5005:5005
+    environment:
+      - spring.data.mongodb.uri=mongodb://host.docker.internal:27017/io
 
 volumes:
   io-database-vol:
