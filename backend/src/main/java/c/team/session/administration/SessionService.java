@@ -122,6 +122,6 @@ public class SessionService {
 
     public List<Session> findByLeaderAccountId(String leaderAccountId){
         return sessionRepository.findSessionsByLeaderAccountId(leaderAccountId)
-                .orElse(new ArrayList<>());
+                .orElse(Collections.emptyList());
     }
 }
