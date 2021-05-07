@@ -6,10 +6,8 @@ import c.team.quiz.model.CreateQuizResponse;
 import c.team.quiz.model.GetQuizzesResponse;
 import c.team.quiz.model.QuizDto;
 import c.team.security.model.UserPrincipal;
-import c.team.session.administration.SessionService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,14 +15,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("quiz")
 @AllArgsConstructor
+@Slf4j
 public class QuizController {
-
-    private static final Logger LOGGER = SessionService.LOGGER;
     private final QuizService quizService;
 
     @PostMapping
@@ -36,7 +32,7 @@ public class QuizController {
 
     @GetMapping
     public ResponseEntity<GetQuizzesResponse> getQuizzes(@AuthenticationPrincipal UserPrincipal user) {
-        LOGGER.info("Quizzes!");
+        log.info("Quizzes!");
         List<QuizDto> quizzes = quizService.getUserQuizzes(user.getId());
         GetQuizzesResponse response = new GetQuizzesResponse(quizzes);
         return ResponseEntity.ok(response);

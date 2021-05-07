@@ -8,22 +8,19 @@ import c.team.session.administration.exception.SessionUnauthorizedAccessExceptio
 import c.team.session.administration.model.Guest;
 import c.team.session.administration.model.Session;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
+@Slf4j
 public class SessionService {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(SessionConnectedEvent.class);
 
     private final SessionRepository sessionRepository;
     private final UserAccountService accountService;
@@ -44,7 +41,7 @@ public class SessionService {
             session.setGuestApprovalRoomId(UUID.randomUUID());
 
         sessionRepository.save(session);
-        LOGGER.info("Opened session: " + session.getId());
+        log.info("Opened session: " + session.getId());
 
         // Add empty message so that messageId = 0 is neutral
         Message msg = Message.builder().build();
@@ -57,7 +54,7 @@ public class SessionService {
         validateOwner(sessionId, potentialLeaderUsername);
         session.setActive(false);
         sessionRepository.save(session);
-        LOGGER.info("Closed session: " + sessionId);
+        log.info("Closed session: " + sessionId);
     }
 
     public void addMessageToSessionLog(String sessionId, Message message){
