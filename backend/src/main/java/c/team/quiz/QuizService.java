@@ -1,9 +1,6 @@
 package c.team.quiz;
 
-import c.team.quiz.model.CreateQuizRequest;
-import c.team.quiz.model.Question;
-import c.team.quiz.model.Quiz;
-import c.team.quiz.model.QuizDto;
+import c.team.quiz.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +16,13 @@ public class QuizService {
     private final QuestionRepository questionRepository;
 
     public String createQuiz(String userId, CreateQuizRequest createQuizRequest) {
-        List<Question> questions = questionRepository.saveAll(createQuizRequest.getQuestions());
-        List<String> questionIds = questions.stream().map(Question::getId).collect(Collectors.toList());
-        Quiz quiz = Quiz.builder()
-                .questionIds(questionIds)
-                .userId(userId)
-                .build();
-        return quizRepository.save(quiz).getId();
+        Quiz quiz = quizRepository.save(new Quiz(userId));
+        List<Question> questions = createQuizRequest.getQuestions()
+                .stream()
+                .map(q -> q.toQuestion(quiz.getId()))
+                .collect(Collectors.toList());
+        questionRepository.saveAll(questions);
+        return quiz.getId();
     }
 
     public List<QuizDto> getUserQuizzes(String userId) {
@@ -36,11 +33,14 @@ public class QuizService {
         return quizRepository.findByIdAndUserId(quizId, userId).map(this::quizToQuizDto);
     }
 
-    private QuizDto quizToQuizDto(Quiz quiz) {
+    public QuizDto quizToQuizDto(Quiz quiz) {
+        List<QuestionDto> questionDtos = questionRepository.findAllByQuizId(quiz.getId())
+                .stream()
+                .map(Question::toQuestionDto)
+                .collect(Collectors.toList());
         return QuizDto.builder()
                 .id(quiz.getId())
-                .userId(quiz.getUserId())
-                .questions(questionRepository.findAllById(quiz.getQuestionIds()))
+                .questions(questionDtos)
                 .build();
     }
 }
