@@ -1,5 +1,5 @@
 # build environment
-FROM node:16-alpine3.11 as react-build
+FROM node:16.1.0-alpine3.12 as react-build
 WORKDIR /app
 COPY package*.json /app/
 RUN npm install --silent
