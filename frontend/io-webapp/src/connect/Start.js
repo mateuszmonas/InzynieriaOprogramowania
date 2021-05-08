@@ -1,5 +1,4 @@
 import React from "react";
-import Socket from "../socket";
 
 import LogIn from "./LogIn";
 import SignUp from "./SignUp";
@@ -14,17 +13,17 @@ const Start = ({ state, dispatch }) => {
     const username = creds.name;
 
     (async () => {
-      await fetch("http://localhost:8080/session/connect", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          passcode: creds.sessionCode,
-        }),
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/session/connect", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              username: username,
+              passcode: creds.sessionCode,
+          }),
       })
-        .then((response) => response.json())
+          .then((response) => response.json())
         .then((data) => {
           console.log(data);
           const gotPermission = !data.guestApproval;
