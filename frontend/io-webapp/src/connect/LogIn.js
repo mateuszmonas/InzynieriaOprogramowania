@@ -9,7 +9,7 @@ const LogIn = ({ state, dispatch }) => {
     e.preventDefault();
 
     (async () => {
-      await fetch("http://localhost:8080/login", {
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

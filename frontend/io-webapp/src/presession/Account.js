@@ -13,17 +13,17 @@ const Account = ({ state, dispatch }) => {
     e.preventDefault();
 
     (async () => {
-      await fetch("http://localhost:8080/session/connect", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username: state.username, passcode: passcode }),
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/session/connect", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({username: state.username, passcode: passcode}),
       })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          const gotPermission = !data.guestApproval;
+          .then((response) => response.json())
+          .then((data) => {
+              console.log(data);
+              const gotPermission = !data.guestApproval;
           if (data.sessionId && !isOwner) {
             dispatch({ type: "SET_SESSION_ID", payload: data.sessionId });
           }
@@ -53,17 +53,17 @@ const Account = ({ state, dispatch }) => {
     e.preventDefault();
 
     (async () => {
-      await fetch("http://localhost:8080/session/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: state.username,
-          sessionTitle: title,
-          guestApproval: needsApproval,
-        }),
-      })
+        await fetch(process.env.REACT_APP_BACKEND_URL + "/session/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username: state.username,
+                sessionTitle: title,
+                guestApproval: needsApproval,
+            }),
+        })
         .then((response) => response.json())
         .then((data) => {
           setIsOwner(true);

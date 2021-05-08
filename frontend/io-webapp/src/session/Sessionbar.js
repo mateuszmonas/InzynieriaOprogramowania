@@ -5,7 +5,7 @@ const Sessionbar = ({ state, dispatch }) => {
     e.preventDefault();
 
     (async () => {
-      await fetch("http://localhost:8080/session/close", {
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/session/close", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -15,7 +15,7 @@ const Sessionbar = ({ state, dispatch }) => {
           sessionId: state.sessionId,
         }),
       })
-        .then((_) => {
+          .then((_) => {
           dispatch({ type: "SET_SESSION_ID", payload: "" });
           dispatch({ type: "SET_STAGE_ACCOUNT" });
         })
