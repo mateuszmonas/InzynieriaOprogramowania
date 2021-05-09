@@ -8,7 +8,7 @@ const QuestionList = ({ state, dispatch }) => {
     e.preventDefault();
 
     (async () => {
-      await fetch("http://localhost:8080/quiz", {
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
         method: "POST",
         headers: {
           Authorization: state.token,
