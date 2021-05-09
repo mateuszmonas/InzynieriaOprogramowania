@@ -19,37 +19,56 @@ export const initialState = {
   sessionOwner: "",
   participants: [],
   isStatsVisible: false,
+  designerQuestions: [],
+  pickedQuestion: -1,
+  quizList: [],
 };
 
 export const reducer = (state, action) => {
   switch (action.type) {
     case "SET_STAGE_START":
-      console.log(state);
       return { ...state, stage: "start", awaitsApproval: false };
     case "SET_STAGE_ACCOUNT":
-      console.log(state);
-      return { ...state, stage: "account", awaitsApproval: false };
+      return {
+        ...state,
+        stage: "account",
+        awaitsApproval: false,
+        questionWidth: "100%",
+      };
     case "SET_STAGE_STUDENT":
-      console.log(state);
       return { ...state, stage: "student", awaitsApproval: false };
     case "SET_STAGE_STUDENT_NEEDS_APPROVAL":
-      console.log(state);
       return { ...state, stage: "student", awaitsApproval: true };
     case "SET_STAGE_GUEST":
-      console.log(state);
       return { ...state, stage: "guest", awaitsApproval: false };
     case "SET_STAGE_GUEST_NEEDS_APPROVAL":
-      console.log(state);
       return { ...state, stage: "guest", awaitsApproval: true };
     case "SET_STAGE_LECTURER":
-      console.log(state);
-      return { ...state, stage: "lecturer", awaitsApproval: false, isStatsVisible: false };
+      return {
+        ...state,
+        stage: "lecturer",
+        awaitsApproval: false,
+        isStatsVisible: false,
+      };
     case "SET_STAGE_SIGNUP":
-      console.log(state);
       return { ...state, stage: "signUp", awaitsApproval: false };
     case "SET_STAGE_LOGIN":
-      console.log(state);
       return { ...state, stage: "login", awaitsApproval: false };
+    case "SET_STAGE_DESIGNER":
+      return {
+        ...state,
+        stage: "designer",
+        awaitsApproval: false,
+        questionWidth: "75%",
+        pickedQuestion: -1,
+      };
+    case "SET_STAGE_QUIZ_LIST":
+      return {
+        ...state,
+        stage: "quizList",
+        awaitsApproval: false,
+        questionWidth: "100%",
+      };
 
     case "SET_USERNAME":
       return { ...state, username: action.payload };
@@ -116,6 +135,32 @@ export const reducer = (state, action) => {
       return { ...state, isStatsVisible: true };
     case "SET_CREATOR_VISIBLE":
       return { ...state, isStatsVisible: false };
+
+    case "ADD_DESIGNER_QUESTION":
+      return {
+        ...state,
+        designerQuestions: [...state.designerQuestions, action.payload],
+      };
+    case "SET_DESIGNER_QUESTIONS":
+      return { ...state, designerQuestions: action.payload };
+    case "UPDATE_DESIGNER_QUESTION":
+      return {
+        ...state,
+        designerQuestions: [
+          ...state.designerQuestions.slice(0, action.payload.index),
+          action.payload.question,
+          ...state.designerQuestions.slice(
+            action.payload.index + 1,
+            state.designerQuestions.length
+          ),
+        ],
+      };
+
+    case "SET_PICKED_QUESTION":
+      return { ...state, pickedQuestion: action.payload };
+
+    case "SET_QUIZ_LIST":
+      return { ...state, quizList: action.payload };
 
     default:
       throw new Error();

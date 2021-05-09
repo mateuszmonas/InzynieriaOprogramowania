@@ -10,7 +10,7 @@ const Navbar = ({ state, dispatch }) => {
   };
 
   const LogButton = () => {
-    return ["account", "student", "lecturer"].includes(state.stage) ? (
+    return ["account", "quizList", "designer", "student", "lecturer"].includes(state.stage) ? (
       <>
         <button type="button" onClick={logoutHandler}>
           Log Out
@@ -41,9 +41,38 @@ const Navbar = ({ state, dispatch }) => {
     );
   };
 
+  const DesignerButton = () => {
+    return state.stage === "account" ? (
+      <>
+        <button
+          type="button"
+          onClick={() => {
+            dispatch({ type: "SET_STAGE_QUIZ_LIST" });
+          }}
+        >
+          Quiz List
+        </button>
+      </>
+    ) : state.stage === "designer" || state.stage === "quizList" ? (
+      <>
+        <button
+          type="button"
+          onClick={() => {
+            dispatch({ type: "SET_STAGE_ACCOUNT" });
+          }}
+        >
+          Sessions
+        </button>
+      </>
+    ) : (
+      <></>
+    );
+  };
+
   return (
     <div className="navbar">
       <LogButton />
+      <DesignerButton />
     </div>
   );
 };
