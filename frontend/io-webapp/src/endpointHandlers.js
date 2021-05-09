@@ -36,15 +36,16 @@ export const getSessionHistoryHandler = (e, state, dispatch) => {
     e.preventDefault();
 
     (async () => {
-        await fetch("http://localhost:8080/session/history", {
+        await fetch(process.env.REACT_APP_BACKEND_URL + "/history", {
             method: "GET",
             headers: {
-                Authorization: state.token.token,
+                Authorization: state.token,
                 "Content-Type": "application/json",
             },
         })
             .then((response ) => response.json())
             .then((data) => {
+                console.log(data);
                 dispatch({
                     type: "SET_SESSION_HISTORY",
                     payload: data.sessions,

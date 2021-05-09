@@ -10,9 +10,11 @@ import c.team.session.administration.exception.SessionClosedException;
 import c.team.session.administration.exception.SessionNotFoundException;
 import c.team.session.administration.exception.SessionUnauthorizedAccessException;
 import c.team.session.administration.model.*;
+import c.team.session.history.SessionHistoryResponse;
 import c.team.timeline.TimelineRequest;
 import c.team.timeline.TimelineResponse;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,9 +68,6 @@ public class SessionManagerController {
         throw new SessionClosedException();
     }
 
-    // Test session ID: 6075aa1270cdc94a69b24c33
-    // Test session title: ParticipantListTest
-    // Test session passcode: 13024218-87fb-4b66-b39b-8f0bb329d40a
     @PostMapping("participant-list")
     public ResponseEntity<ParticipantListResponse> getParticipantsList(@RequestBody ParticipantListRequest request){
         Session session = sessionsService.findBySessionId(request.getSessionId());
@@ -97,14 +96,6 @@ public class SessionManagerController {
         Session session = sessionsService.findBySessionId(request.getSessionId());
         sessionsService.validateOwner(session.getId(), request.getUsername());
         TimelineResponse response = new TimelineResponse(session.getLog());
-        return ResponseEntity.ok(response);
-    }
-
-    // Request used in account menu - TODO on frontend
-    @GetMapping("history")
-    public ResponseEntity<SessionHistoryResponse> getSessionHistory(@AuthenticationPrincipal UserPrincipal user){
-        List<Session> userSessions = sessionsService.findByLeaderAccountId(user.getId());
-        SessionHistoryResponse response = new SessionHistoryResponse(userSessions);
         return ResponseEntity.ok(response);
     }
 

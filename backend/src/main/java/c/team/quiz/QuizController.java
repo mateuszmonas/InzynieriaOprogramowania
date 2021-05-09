@@ -33,7 +33,6 @@ public class QuizController {
 
     @GetMapping
     public ResponseEntity<GetQuizzesResponse> getQuizzes(@AuthenticationPrincipal UserPrincipal user) {
-        log.info("Quizzes!");
         List<QuizDto> quizzes = quizService.getUserQuizzes(user.getId());
         GetQuizzesResponse response = new GetQuizzesResponse(quizzes);
         return ResponseEntity.ok(response);

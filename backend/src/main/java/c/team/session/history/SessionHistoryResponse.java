@@ -1,5 +1,6 @@
-package c.team.session.administration.model;
+package c.team.session.history;
 
+import c.team.session.administration.model.Session;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

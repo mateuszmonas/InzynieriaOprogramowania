@@ -13,7 +13,6 @@ const Navbar = ({ state, dispatch }) => {
       dispatch({ type: "SET_STAGE_SESSION_HISTORY"})
       dispatch({ type: "SESSION_HISTORY_VISIBLE",
                 payload: { e, state, dispatch }});
-      console.log(state.token.token);
   };
 
   const LogButton = () => {
