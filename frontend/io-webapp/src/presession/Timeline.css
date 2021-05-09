@@ -1,6 +1,5 @@
 .timeline {
-    background: #ffe;
-    margin: 5% 40% 0% 50%;
+    background: darkgrey;
     padding: 1% 1% 1% 1%;
     width: 40vw;
     border-radius: 1rem;
@@ -9,10 +8,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 500px;
+    flex: 1;
 }
-.history {
+
+.session-history-bg {
     background: #ffe;
-    margin: 5% 30% 0% 35%;
     padding: 1% 1% 1% 1%;
     width: 40vw;
     border-radius: 1rem;
@@ -21,4 +22,38 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 300px;
+    height: 70%;
+    flex: 1;
+}
+
+.session-history-scroll{
+    width: 275px;
+    height: 500px;
+    background: #3838ce;
+    overflow-y: scroll;
+    padding: 20px;
+}
+
+.session-list{
+
+}
+
+.session-in-list{
+    width: 250px;
+    height: 50px;
+    background: lightcoral;
+}
+
+.session-history-main {
+    background: lightblue;
+    padding: 1% 1% 1% 1%;
+    border-radius: 1rem;
+    box-shadow: 0px 0px 2px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 80%;
+    height: 70%;
+    margin: 5% 10%;
 }

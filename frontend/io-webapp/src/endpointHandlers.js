@@ -5,7 +5,8 @@ export const getParticipantsHandler = (e, state, dispatch) => {
       await fetch("http://localhost:8080/session/participant-list", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+            Authorization: state.token.token,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({
           identification: state.stage === "lecturer" ? state.username : state.guestId,
@@ -39,6 +40,7 @@ export const getSessionHistoryHandler = (e, state, dispatch) => {
         await fetch("http://localhost:8080/session/history", {
             method: "GET",
             headers: {
+                Authorization: state.token.token,
                 "Content-Type": "application/json",
             },
         })

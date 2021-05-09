@@ -31,18 +31,46 @@ const Timeline = ({ state, dispatch }) => {
     }];
 
     return (
-
-            <div className="timeline" style={{ width: "400px", height: "800px" }}>
-                <h2>Test timeline:</h2>
+        <div className="session-history-main">
+            <div className="session-history-bg">
+                <div className="session-history-scroll">
+                    <div className="session-list">
+                        <div className="session-in-list">a1</div>
+                        <div className="session-in-list">a2</div>
+                        <div className="session-in-list">a3</div>
+                        <div className="session-in-list">a1</div>
+                        <div className="session-in-list">a2</div>
+                        <div className="session-in-list">a3</div>
+                        <div className="session-in-list">a1</div>
+                        <div className="session-in-list">a2</div>
+                        <div className="session-in-list">a3</div>
+                        <div className="session-in-list">a1</div>
+                        <div className="session-in-list">a2</div>
+                        <div className="session-in-list">a3</div>
+                        <div className="session-in-list">a1</div>
+                        <div className="session-in-list">a2</div>
+                        <div className="session-in-list">a3</div>
+                        <div className="session-in-list">a1</div>
+                        <div className="session-in-list">a2</div>
+                        <div className="session-in-list">a3</div>
+                    </div>
+                </div>
+            </div>
+            <div className="timeline">
+                <div className="session-header">
+                    <h2>Session name:</h2>
+                </div>
                 <Chrono
                     items={items}
                     mode="VERTICAL_ALTERNATING"
                     useReadMore="false"
+                    hideControls="true"
                 />
                 {/*<div className="history" style={{ width: "400px", height: "800px" }}>*/}
                 {/*    <h2>Session history</h2>*/}
                 {/*</div>*/}
             </div>
+        </div>
     )
 }
 

@@ -109,11 +109,11 @@ export const reducer = (state, action) => {
       };
     }
     case "SESSION_HISTORY_VISIBLE": {
-      // getSessionHistoryHandler(
-      //     action.payload.e,
-      //     action.payload.state,
-      //     action.payload.dispatch
-      // );
+      getSessionHistoryHandler(
+          action.payload.e,
+          action.payload.state,
+          action.payload.dispatch
+      );
       return {
         ...state,
         isChatVisible: false,
