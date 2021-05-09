@@ -188,6 +188,13 @@
   box-shadow: 0px 0px 4px 0px;
 }
 
+.abcdAnswer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
 .question form {
   display: flex;
   flex-direction: column;
@@ -204,7 +211,7 @@
   margin: 1vh 0vw 1vh 0vw;
 }
 
-.question form div {
+.newQuestionBox {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -298,5 +305,3 @@ button.answerButton:hover {
   justify-content: center;
   align-items: center;
 }
-
-

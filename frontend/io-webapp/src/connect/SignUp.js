@@ -13,7 +13,7 @@ const SignUp = ({ state, dispatch }) => {
 
     if (creds.password === passwordCheck) {
       (async () => {
-        await fetch("http://localhost:8080/register", {
+        await fetch(process.env.REACT_APP_BACKEND_URL + "/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -23,7 +23,7 @@ const SignUp = ({ state, dispatch }) => {
             password: creds.password,
           }),
         })
-          .then((_) => {
+            .then((_) => {
             dispatch({ type: "SET_STAGE_START" });
             dispatch({ type: "SET_MESSAGE", payload: "Signed up successfully" });
             setTimeout(() => {

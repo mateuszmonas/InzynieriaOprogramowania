@@ -9,7 +9,7 @@ const LogIn = ({ state, dispatch }) => {
     e.preventDefault();
 
     (async () => {
-      await fetch("http://localhost:8080/login", {
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -18,7 +18,7 @@ const LogIn = ({ state, dispatch }) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          dispatch({ type: "SET_TOKEN", payload: data });
+          dispatch({ type: "SET_TOKEN", payload: data.token });
           dispatch({ type: "SET_USERNAME", payload: creds.username });
           dispatch({ type: "SET_STAGE_ACCOUNT" });
           dispatch({ type: "SET_MESSAGE", payload: "" });

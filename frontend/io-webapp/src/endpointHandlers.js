@@ -2,18 +2,17 @@ export const getParticipantsHandler = (e, state, dispatch) => {
     e.preventDefault();
 
     (async () => {
-      await fetch("http://localhost:8080/session/participant-list", {
-        method: "POST",
-        headers: {
-            Authorization: state.token.token,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          identification: state.stage === "lecturer" ? state.username : state.guestId,
-          sessionId: state.sessionId,
-        }),
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/session/participant-list", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              identification: state.stage === "lecturer" ? state.username : state.guestId,
+              sessionId: state.sessionId,
+          }),
       })
-        .then((response) => response.json())
+          .then((response) => response.json())
         .then((data) => {
           dispatch({
             type: "SET_SESSION_OWNER",
