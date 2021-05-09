@@ -6,7 +6,7 @@ const QuizList = ({ state, dispatch }) => {
 
   React.useEffect(() => {
     (async () => {
-      await fetch("http://localhost:8080/quiz", {
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
         method: "GET",
         headers: {
           Authorization: state.token,
