@@ -35,8 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/ping",
                 "/register",
                 "/login",
-                "/session/connect",
-                "/session/**",  // Debug purpose, because token didn't work - need double check
+                "/session/**",
                 "/session-handling/**",
                 "/topic/**",
                 "/app/**",

@@ -9,8 +9,14 @@ const Navbar = ({ state, dispatch }) => {
     dispatch({ type: "SET_MESSAGE", payload: "" });
   };
 
+  const sessionHistoryHandler = (e, state, dispatch) => {
+      dispatch({ type: "SET_STAGE_SESSION_HISTORY"})
+      dispatch({ type: "SESSION_HISTORY_VISIBLE",
+                payload: { e, state, dispatch }});
+  };
+
   const LogButton = () => {
-    return ["account", "quizList", "designer", "student", "lecturer"].includes(state.stage) ? (
+    return ["account", "quizList", "designer", "student", "lecturer", "sessionHistory"].includes(state.stage) ? (
       <>
         <button type="button" onClick={logoutHandler}>
           Log Out
@@ -42,7 +48,7 @@ const Navbar = ({ state, dispatch }) => {
   };
 
   const DesignerButton = () => {
-    return state.stage === "account" ? (
+    return state.stage === "account" || state.stage === "sessionHistory" ? (
       <>
         <button
           type="button"
@@ -69,10 +75,34 @@ const Navbar = ({ state, dispatch }) => {
     );
   };
 
+  const TimelineButton = () => {
+      return ["account", "designer", "quizList"].includes(state.stage) ? (
+          <>
+              <button type="button" onClick={(e => sessionHistoryHandler(e, state, dispatch))}>
+                  Session history
+              </button>
+          </>
+      ) : state.stage === "sessionHistory" ? (
+          <>
+              <button
+                  type="button"
+                  onClick={() => {
+                      dispatch({ type: "SET_STAGE_ACCOUNT" });
+                  }}
+              >
+                  Sessions
+              </button>
+          </>
+      ) : (
+          <></>
+      );
+  };
+
   return (
     <div className="navbar">
       <LogButton />
       <DesignerButton />
+      <TimelineButton />
     </div>
   );
 };
