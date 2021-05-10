@@ -18,31 +18,36 @@ const Question = ({ state, dispatch }) => {
 
   const [answer, setAnswer] = React.useState("");
 
+const updateQuestions  = () => {
+    const newQuestions = [...questions.slice(1, questions.length), ...state.socket.questions];
+    state.socket.questions = [];
+    setQuestions(newQuestions);
+    questions.shift();
+    setCurrent(questions[0]);
+  }
+
   const submitHandler = (id, answerNumber) => {
     console.log(id);
     const msg = {
-      type : "quiz-answer",
+      type : "quiz-answers",
+      //content: {"id" : id, "answer" : answerNumber},
       content: {"id" : id, "answer" : answerNumber},
     };
     state.socket.sendMessage(msg);
-    const newQuestions = questions;
-    newQuestions.shift();
-    setQuestions(newQuestions);
-    setCurrent(questions[0]);
+    updateQuestions();
   };
 
   const submitHandler2 = () => {
     console.log("answer" + " " + answer);
     const msg = {
-      type : "quiz-answer",
+      type : "quiz-answers",
       content: answer
     };
     state.socket.sendMessage(msg);
-    const newQuestions = questions;
-    newQuestions.shift();
-    setQuestions(newQuestions);
-    setCurrent(questions[0]);
+    updateQuestions();
   };
+
+  
 
   const changeHandler = (e) => {
     const { value } = e.target;
