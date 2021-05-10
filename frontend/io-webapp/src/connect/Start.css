@@ -31,14 +31,3 @@
 .login button {
   width: 30%;
 }
-
-.submit {
-  background-color: #555555;
-  padding: 1vh;
-  box-shadow: none;
-  outline:none;
-}
-
-.submit:hover {
-  background: #444444;
-}

@@ -1,6 +1,7 @@
 import React from "react";
 
 import "./Account.css";
+import "../common.css";
 
 const QuizList = ({ state, dispatch }) => {
 

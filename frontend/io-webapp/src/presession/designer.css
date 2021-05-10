@@ -1,0 +1,62 @@
+.designer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 97vw;
+    height: 91vh;
+    padding: 9vh 1.5vw 0vh 1.5vw;
+  }
+
+  .designerContent {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: 90%;
+    width: 100%;
+  }
+
+.designerSidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 25%;
+}
+
+.designerSidebarInput {
+    padding: 0.2rem;
+    outline: hidden;
+    box-shadow: hidden;
+    font-size: 1.5rem;
+}
+
+.designerHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 5%;
+    margin-bottom: 1vh;
+    width: 100%;
+}
+
+.designerHeaderButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 12%;
+}
+
+.designerHeaderButtons button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 45%;
+    height: 100%;
+    /* padding: 8% 10% 8% 10%; */
+}

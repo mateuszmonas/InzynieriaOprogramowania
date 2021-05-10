@@ -1,0 +1,42 @@
+.submit {
+  background-color: #bbbbbb;
+  border-style: hidden;
+  border-radius: 0.2rem;
+  padding: 1vh;
+  box-shadow: 0.2rem 0.2rem 0.4rem #999999;
+  outline: none;
+}
+
+.submitFlat {
+  background-color: #bbbbbb;
+  border-style: hidden;
+  border-radius: 0.2rem;
+  padding: 1vh;
+  outline: none;
+}
+
+.submit:hover {
+  background: #aaaaaa;
+}
+
+.submitFlat:hover {
+  background: #aaaaaa;
+}
+
+.cancel {
+  background-color: #fff;
+  border-style: ridge;
+  border-radius: 0.2rem;
+  padding: 1vh;
+  outline: none;
+}
+
+.cancel:hover {
+  background: #ddd;
+}
+
+.genericContainerColumn {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}

@@ -11,28 +11,6 @@
   margin: 0.5em;
 }
 
-.submit {
-  background-color: #555555;
-  padding: 1vh;
-  box-shadow: none;
-  outline: none;
-}
-
-.submit:hover {
-  background: #444444;
-}
-
-.designer {
-  margin: auto;
-  padding: 10vh 10vw 10vh 10vw;
-  width: 80vw;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
-  height: 80vh;
-}
-
 .questionPicker {
   margin-left: auto;
   width: 25%;
@@ -129,7 +107,6 @@
 
 .addQuiz button {
   padding: 5% 5% 5% 5%;
-  background-color: #555555;
   box-shadow: none;
   outline: none;
 }

@@ -150,6 +150,18 @@
   justify-content: center;
 }
 
+.question form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 50%;
+}
+
+.question form button {
+  margin: 1vh 0vw 1vh 0vw;
+}
+
 .specificQuestion {
   width: 100%;
   height: 100%;
@@ -195,20 +207,8 @@
   margin-bottom: 1rem;
 }
 
-.question form {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  height: 50%;
-}
-
 .newquestion button {
   margin: 1vh 0vw 10vh 0vw;
-}
-
-.question form button {
-  margin: 1vh 0vw 1vh 0vw;
 }
 
 .newQuestionBox {
