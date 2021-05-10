@@ -55,7 +55,6 @@ class Socket {
 
   onConnected = () => {
     if (this.type === "session") {
-      console.log('AAAAAAAAAAA');
       this.stompClient.subscribe(    // subscribe chat messages
         `/topic/session/${this.state.sessionId}`,
         this.onMessageReceived
@@ -124,7 +123,7 @@ class Socket {
       this.stompClient.send(
         `/app/session/${this.state.sessionId}/${message.type}`,
         {},
-        JSON.stringify(messageToSend)
+        JSON.stringify(messageToSend),
       );
     }
   };
@@ -173,7 +172,7 @@ class Socket {
       console.log(message.content);
       console.log(this.questions);
       if(message.type == 'QUIZ'){
-        this.questions.push(message.content)
+        this.questions.push(message.content);
       }
       /*
       for (const listener of this.messageListeners) {

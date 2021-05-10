@@ -37,7 +37,8 @@ const updateQuestions  = () => {
     updateQuestions();
   };
 
-  const submitHandler2 = () => {
+  const submitHandler2 = (e) => {
+    e.preventDefault();
     console.log("answer" + " " + answer);
     const msg = {
       type : "quiz-answers",
@@ -63,18 +64,18 @@ const updateQuestions  = () => {
           <div key={current.id} className="specificQuestion">
             <h1 className="questionProper">{current.question}</h1>
             <div className="questionRow">
-              <div className="answer" onClick={() => submitHandler(current.id, 0)}>
+              <div className="answer" onClick={(e) => submitHandler(e, current.id, 0)}>
                 <h4>{current.answers[0]}</h4>
               </div>
-              <div className="answer" onClick={() => submitHandler(current.id, 1)}>
+              <div className="answer" onClick={(e) => submitHandler(e, current.id, 1)}>
                 <h4>{current.answers[1]}</h4>
               </div>
             </div>
-            <div className="questionRow" onClick={() => submitHandler(current.id, 2)}>
+            <div className="questionRow" onClick={(e) => submitHandler(e, current.id, 2)}>
               <div className="answer">
                 <h4>{current.answers[2]}</h4>
               </div>
-              <div className="answer" onClick={() => submitHandler(current.id, 3)}>
+              <div className="answer" onClick={(e) => submitHandler(e, current.id, 3)}>
                 <h4>{current.answers[3]}</h4>
               </div>
             </div>
@@ -85,13 +86,13 @@ const updateQuestions  = () => {
             <div className="questionRow">
               <form
                 className="answer"
-                style={{ "justify-content": "center", width: "50%" }}
+                style={{ "justifyContent": "center", width: "50%" }}
               >
                 <input type="text" onChange={changeHandler} value={answer} id="answer" name="answer"></input>
                 <button
                   type="submit"
                   className="answerButton"
-                  onClick={() => submitHandler2()}
+                  onClick={(e) => submitHandler2(e)}
                 >
                   Submit
                 </button>
