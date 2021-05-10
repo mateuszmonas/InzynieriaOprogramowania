@@ -4,74 +4,88 @@ import { Chrono } from "react-chrono";
 import "./Timeline.css";
 
 const Timeline = ({ state, dispatch }) => {
-    const items = [{
-        title: "1:20",
-        cardTitle: "user1",
-        cardSubtitle:"time1",
-    }, {
-        title: "1:22",
-        cardTitle: "user2",
-        cardSubtitle:"time2",
-    }, {
-        title: "1:24",
-        cardTitle: "user3",
-        cardSubtitle:"time3",
-    }, {
-        title: "1:30",
-        cardTitle: "user4",
-        cardSubtitle:"time4",
-    }, {
-        title: "1:32",
-        cardTitle: "user5",
-        cardSubtitle:"time5",
-    }, {
-        title: "1:34",
-        cardTitle: "user6",
-        cardSubtitle:"time6",
-    }];
+    const ParseSessions = () => {
+        return (
+            <Chrono
+                cardHeight = "20"
+                items={state
+                    .sessionHistory[state.pickedSession]
+                    .log
+                    .slice(1, state.sessionHistory[state.pickedSession].log.length)
+                    .map((message) => {
+                        return {
+                            title: message.type,
+                            cardTitle: message.sender,
+                            cardSubtitle: message.timestamp,
+                            cardDetailedText: message.content   // need to parse that or add it to media
+                        }
+                    }) }
+                mode="VERTICAL"
+                useReadMore="true"
+                hideControls="true"
+                scrollable="true"
+            />
+        );
+    };
+
+
+    React.useEffect(() => {
+        (async () => {
+            await fetch(process.env.REACT_APP_BACKEND_URL + "/history", {
+                method: "GET",
+                headers: {
+                    Authorization: state.token,
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((response ) => response.json())
+                .then((data) => {
+                    dispatch({
+                        type: "SET_SESSION_HISTORY",
+                        payload: data.sessions,
+                    });
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        })();
+    }, []);
 
     return (
         <div className="session-history-main">
             <div className="session-history-bg">
                 <div className="session-history-scroll">
                     <div className="session-list">
-                        <div className="session-in-list">a1</div>
-                        <div className="session-in-list">a2</div>
-                        <div className="session-in-list">a3</div>
-                        <div className="session-in-list">a1</div>
-                        <div className="session-in-list">a2</div>
-                        <div className="session-in-list">a3</div>
-                        <div className="session-in-list">a1</div>
-                        <div className="session-in-list">a2</div>
-                        <div className="session-in-list">a3</div>
-                        <div className="session-in-list">a1</div>
-                        <div className="session-in-list">a2</div>
-                        <div className="session-in-list">a3</div>
-                        <div className="session-in-list">a1</div>
-                        <div className="session-in-list">a2</div>
-                        <div className="session-in-list">a3</div>
-                        <div className="session-in-list">a1</div>
-                        <div className="session-in-list">a2</div>
-                        <div className="session-in-list">a3</div>
+                        {state.sessionHistory.map((session, index) => {
+                            return (
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                    dispatch({ type: "SET_PICKED_SESSION_IN_HISTORY", payload: index })
+                                }}
+                                    className="session-in-list">
+                                    {session.title}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
+
             <div className="timeline">
+                {state.isSessionTimelineVisible ? (
+                    <div className="session-timeline">
+                        <h2>{ state.sessionHistory[state.pickedSession].title }</h2>
+                        <ParseSessions/>
+                    </div>
+                    ) : (
                 <div className="session-header">
-                    <h2>Session name:</h2>
+                    <h2>Select session to view timeline</h2>
                 </div>
-                <Chrono
-                    items={items}
-                    mode="VERTICAL_ALTERNATING"
-                    useReadMore="false"
-                    hideControls="true"
-                />
-                {/*<div className="history" style={{ width: "400px", height: "800px" }}>*/}
-                {/*    <h2>Session history</h2>*/}
-                {/*</div>*/}
+                )}
             </div>
         </div>
-    )
+    );
 }
 
 export default Timeline;

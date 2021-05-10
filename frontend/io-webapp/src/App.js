@@ -24,7 +24,7 @@ function App() {
         <Designer state={state} dispatch={dispatch} />
       ) : ["guest", "student", "lecturer"].includes(state.stage) ? (
         <Session state={state} dispatch={dispatch} />
-      ) : state.stage === "session_history" ? (
+      ) : state.stage === "sessionHistory" ? (
           <Timeline state={state} dispatch={dispatch} />
       ) : (
         <Start state={state} dispatch={dispatch} />

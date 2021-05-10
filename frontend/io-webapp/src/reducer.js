@@ -1,5 +1,5 @@
 import Socket from "./socket";
-import {getParticipantsHandler, getSessionHistoryHandler} from "./endpointHandlers";
+import {getParticipantsHandler} from "./endpointHandlers";
 import {act} from "react-dom/test-utils";
 
 export const initialState = {
@@ -16,7 +16,7 @@ export const initialState = {
   message: "",
   isChatVisible: false,
   isParticipantsVisible: false,
-  isSessionHistoryVisible: false,
+  isSessionTimelineVisible: false,
   questionWidth: "100%",
   sessionOwner: "",
   participants: [],
@@ -25,6 +25,7 @@ export const initialState = {
   designerQuestions: [],
   pickedQuestion: -1,
   quizList: [],
+  pickedSession: -1
 };
 
 export const reducer = (state, action) => {
@@ -57,8 +58,8 @@ export const reducer = (state, action) => {
       return { ...state, stage: "signUp", awaitsApproval: false };
     case "SET_STAGE_LOGIN":
       return { ...state, stage: "login", awaitsApproval: false };
-    case "SET_STAGE_SESSION_HISTORY": console.log(state)
-      return { ...state, stage: "session_history", awaitsApproval: false}
+    case "SET_STAGE_SESSION_HISTORY":
+      return { ...state, stage: "sessionHistory", awaitsApproval: false}
     case "SET_STAGE_DESIGNER":
       return {
         ...state,
@@ -109,7 +110,7 @@ export const reducer = (state, action) => {
         ...state,
         isChatVisible: true,
         isParticipantsVisible: false,
-        isSessionHistoryVisible: false,
+        isSessionTimelineVisible: false,
         questionWidth: "75%",
       };
     case "PARTICIPANTS_VISIBLE": {
@@ -122,21 +123,16 @@ export const reducer = (state, action) => {
         ...state,
         isChatVisible: false,
         isParticipantsVisible: true,
-        isSessionHistoryVisible: false,
+        isSessionTimelineVisible: false,
         questionWidth: "75%",
       };
     }
     case "SESSION_HISTORY_VISIBLE": {
-      getSessionHistoryHandler(
-          action.payload.e,
-          action.payload.state,
-          action.payload.dispatch
-      );
       return {
         ...state,
         isChatVisible: false,
         isParticipantsVisible: false,
-        isSessionHistoryVisible: true
+        isSessionTimelineVisible: false
       }
     }
     case "NOTHING_VISIBLE":
@@ -144,7 +140,7 @@ export const reducer = (state, action) => {
         ...state,
         isChatVisible: false,
         isParticipantsVisible: false,
-        isSessionHistoryVisible: false,
+        isSessionTimelineVisible: false,
         questionWidth: "100%",
       };
 
@@ -180,7 +176,17 @@ export const reducer = (state, action) => {
       };
 
     case "SET_PICKED_QUESTION":
-      return { ...state, pickedQuestion: action.payload };
+      return {
+        ...state,
+        pickedQuestion: action.payload,
+      };
+
+    case "SET_PICKED_SESSION_IN_HISTORY":
+      return {
+        ...state,
+        pickedSession: action.payload,
+        isSessionTimelineVisible: true
+      };
 
     case "SET_QUIZ_LIST":
       return { ...state, quizList: action.payload };
