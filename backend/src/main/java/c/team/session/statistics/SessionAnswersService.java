@@ -7,19 +7,21 @@ import c.team.quiz.exception.QuizNotFoundException;
 import c.team.quiz.model.Answer;
 import c.team.quiz.model.Question;
 import c.team.quiz.model.Quiz;
+import c.team.quiz.model.QuizAnswers;
 import c.team.session.statistics.model.SessionAnswers;
 import c.team.session.statistics.model.SessionAnswersDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor
-// A tu nie powinno być autowire?
 public class SessionAnswersService {
 
     private final QuestionRepository questionRepository;
@@ -60,5 +62,18 @@ public class SessionAnswersService {
                     questionRepository.save(question);
                 });
         return answerIdx;
+    }
+
+    public QuizAnswers convertMapToQuizAnswers(Map<String, List<String>> rawData) {
+        Map<String, List<Answer>> answers = rawData
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        e-> e.getValue()
+                                .stream()
+                                .map(Answer::new)
+                                .collect(Collectors.toList()
+                                )));
+        return new QuizAnswers(answers);
     }
 }

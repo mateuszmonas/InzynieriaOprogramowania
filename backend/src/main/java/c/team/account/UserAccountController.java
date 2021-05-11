@@ -30,7 +30,7 @@ public class UserAccountController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {  // if string contains illegal character like ']', an IllegalArgumentException is thrown and not caught
         UserAccount userAccount = userAccountService.findByUsernameAndPassword(request.getUsername(), request.getPassword());
         UUID token = tokenService.generateTokenForAccount(userAccount);
         LoginResponse loginResponse = new LoginResponse(token);

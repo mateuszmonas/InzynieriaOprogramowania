@@ -15,9 +15,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Quiz {     // Can be used as 'content' field of message (QUIZ message)
     @Id
     private String id;
+    private String name;
     private String userId;
 
-    public Quiz(String userId) {
+    public Quiz(String name, String userId) {
+        this.name = name;
         this.userId = userId;
     }
 }

@@ -15,7 +15,8 @@
     "moment": "2.29.1",
     "recharts": "2.0.9",
     "react-icons": "^4.2.0",
-    "reactjs-popup": "^2.0.4"
+    "reactjs-popup": "^2.0.4",
+    "react-chrono": "1.9.2"
   },
   "scripts": {
     "start": "react-scripts start",
