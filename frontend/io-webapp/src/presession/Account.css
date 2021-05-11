@@ -80,6 +80,20 @@
   overflow: hidden;
 }
 
+.quizInList:hover {
+  width: 95%;
+  min-height: 3rem;
+  background: rgb(225, 225, 225);
+  border-style: outset;
+  margin-top: 0.2rem;
+  margin-bottom: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
 .quizList {
   background: #ffe;
   margin: 10vh 30vw 0vh 30vw;

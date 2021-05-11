@@ -2,6 +2,7 @@ import React from "react"
 import { Chrono } from "react-chrono";
 
 import "./Timeline.css";
+import "./Account.css"
 
 const Timeline = ({ state, dispatch }) => {
     const ParseSessions = () => {
@@ -52,8 +53,8 @@ const Timeline = ({ state, dispatch }) => {
     }, []);
 
     return (
-        <div className="session-history-main">
-            <div className="session-history-bg">
+        <div className="quizList">
+            <div className="quizList">
                 <div className="session-history-scroll">
                     <div className="session-list">
                         {state.sessionHistory.map((session, index) => {
@@ -63,7 +64,7 @@ const Timeline = ({ state, dispatch }) => {
                                     onClick={(e) => {
                                     dispatch({ type: "SET_PICKED_SESSION_IN_HISTORY", payload: index })
                                 }}
-                                    className="session-in-list">
+                                    className="quizInList">
                                     {session.title}
                                 </button>
                             );
@@ -72,7 +73,7 @@ const Timeline = ({ state, dispatch }) => {
                 </div>
             </div>
 
-            <div className="timeline">
+            <div className="quizList">
                 {state.isSessionTimelineVisible ? (
                     <div className="session-timeline">
                         <h2>{ state.sessionHistory[state.pickedSession].title }</h2>

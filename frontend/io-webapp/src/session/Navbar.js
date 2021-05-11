@@ -56,7 +56,7 @@ const Navbar = ({ state, dispatch }) => {
   };
 
   const DesignerButton = () => {
-    return state.stage === "account" || state.stage === "sessionHistory" ? (
+    return ["account", "sessionHistory", "designer", "quizList"].includes(state.stage) ? (
       <>
         <div
           className="navbarButton"
@@ -67,41 +67,19 @@ const Navbar = ({ state, dispatch }) => {
           Quiz List
         </div>
       </>
-    ) : state.stage === "designer" || state.stage === "quizList" ? (
-      <>
-        <div
-          className="navbarButton"
-          onClick={() => {
-            dispatch({ type: "SET_STAGE_ACCOUNT" });
-          }}
-        >
-          Sessions
-        </div>
-      </>
     ) : (
       <></>
     );
   };
 
   const TimelineButton = () => {
-    return ["account", "designer", "quizList"].includes(state.stage) ? (
+    return ["account", "sessionHistory", "designer", "quizList"].includes(state.stage) ? (
       <>
         <div
           className="navbarButton"
           onClick={() => sessionHistoryHandler()}>
           Session history
         </div>
-      </>
-    ) : state.stage === "sessionHistory" ? (
-      <>
-        <button
-          type="button"
-          onClick={() => {
-            dispatch({ type: "SET_STAGE_ACCOUNT" });
-          }}
-        >
-          Sessions
-        </button>
       </>
     ) : (
       <></>
