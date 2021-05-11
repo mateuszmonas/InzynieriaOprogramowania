@@ -10,6 +10,9 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import {FiChevronLeft, FiChevronRight } from "react-icons/fi";
+
+import "./stats.css";
 
 const Stats = ({ state, dispatch }) => {
   const [picked, setPicked] = React.useState(0);
@@ -58,8 +61,30 @@ const Stats = ({ state, dispatch }) => {
   ];
 
   return (
-    <div className="stats" style={{ width: state.questionWidth }}>
-      <ResponsiveContainer width="70%" height="70%">
+    <div className="statsView" >
+
+    <div className="statsGraphPicker">
+      <FiChevronLeft size={32} onClick={() => setPicked((picked + sampleQuestions.length) % (sampleQuestions.length + 1))} />
+      <div
+        onClick={() => setPicked(0)}
+        style={picked === 0 ? {} : {display: "none"}}
+      >
+        All Questions
+      </div>
+      {sampleQuestions.map((question) => {
+        return (
+          <div
+            onClick={() => setPicked(question.id)}
+            style={picked === question.id ? {} : {display: "none"}}
+          >
+            Question {question.id}
+          </div>
+        );
+      })}
+      <FiChevronRight size={32} onClick={() => setPicked((picked + 1) % (sampleQuestions.length + 1))} />
+    </div>
+
+      <ResponsiveContainer width="95%" height="90%">
         {picked === 0 ? (
           <BarChart data={sampleHistogram}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -98,24 +123,6 @@ const Stats = ({ state, dispatch }) => {
           </BarChart>
         )}
       </ResponsiveContainer>
-      <div className="graphPicker">
-        <div
-          onClick={() => setPicked(0)}
-          className={picked === 0 ? "picked" : "notPicked"}
-        >
-          All Questions
-        </div>
-        {sampleQuestions.map((question) => {
-          return (
-            <div
-              onClick={() => setPicked(question.id)}
-              className={picked === question.id ? "picked" : "notPicked"}
-            >
-              Question {question.id}
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 };

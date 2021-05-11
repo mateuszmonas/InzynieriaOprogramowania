@@ -1,10 +1,13 @@
 import React from "react";
-import { FiPlusCircle, FiArrowLeft } from "react-icons/fi";
+import Popup from "reactjs-popup";
+import { FiPlusCircle, FiSend } from "react-icons/fi";
 
-import "./quizList.css";
+import Creator from "./Creator";
+
+import "./questionPicker.css";
 import "../common.css";
 
-const QuizList = ({ state, dispatch }) => {
+const QuestionPicker = ({ state, dispatch }) => {
   React.useEffect(() => {
     (async () => {
       await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
@@ -24,36 +27,43 @@ const QuizList = ({ state, dispatch }) => {
     })();
   }, []);
 
+  // const [open, setOpen] = React.useState(false);
+  const ref = React.useRef();
+  const openCreator = () => ref.current.open();
+  const closeCreator = () => ref.current.close();
+
   return (
-    <div className="quizListView">
-      <div className="quizListHeader">
+    <div className="questionPickerView">
+      <div className="questionPickerHeader">
         <h3>Quizzes</h3>
-        <div className="quizListHeaderButtons">
-          <button
-            type="button"
-            onClick={(e) => dispatch({ type: "SET_STAGE_ACCOUNT" })}
-            className="submit"
-          >
-            Back <FiArrowLeft size={16} />
-          </button>
+        <div className="questionPickerHeaderButtons">
           <button
             type="button"
             className="submit"
             onClick={() => {
-              dispatch({ type: "SET_DESIGNER_QUESTIONS", payload: [] });
-              dispatch({ type: "SET_STAGE_DESIGNER" });
+              // dispatch({ type: "SET_DESIGNER_QUESTIONS", payload: [] });
+              openCreator();
             }}
           >
             New <FiPlusCircle size={16} />
           </button>
+      <Popup ref={ref} modal >
+        <div className="creatorPopup">
+          <Creator
+            state={state}
+            dispatch={dispatch}
+            close={closeCreator}
+          />
+        </div>
+      </Popup>
         </div>
       </div>
 
-      <div className="quizListContent">
+      <div className="questionPickerContent">
         {state.quizList.map((quiz) => {
           return (
-            <div className="quizListElement">
-              <div className="quizListElementInfo">
+            <div className="questionPickerElement">
+              <div className="questionPickerElementInfo">
                 <div style={{ fontSize: "16px", fontWeight: "bold" }}>
                   {quiz.id}
                 </div>
@@ -61,20 +71,8 @@ const QuizList = ({ state, dispatch }) => {
                   Questions: {quiz.questions.length}
                 </div>
               </div>
-              <div className="quizListElementButtons">
-                <button
-                  type="button"
-                  className="submit"
-                  onClick={(e) => {
-                    dispatch({
-                      type: "SET_DESIGNER_QUESTIONS",
-                      payload: quiz.questions,
-                    });
-                    dispatch({ type: "SET_STAGE_DESIGNER" });
-                  }}
-                >
-                  Edit
-                </button>
+              <div className="questionPickerElementButtons">
+                <FiSend size={16} />
               </div>
             </div>
           );
@@ -84,4 +82,4 @@ const QuizList = ({ state, dispatch }) => {
   );
 };
 
-export default QuizList;
+export default QuestionPicker;

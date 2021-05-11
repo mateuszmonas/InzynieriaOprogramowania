@@ -4,7 +4,7 @@ import "./creator.css";
 
 import { FiCheckSquare } from "react-icons/fi";
 
-const Creator = ({ state, dispatch }) => {
+const Creator = ({ state, dispatch, close }) => {
   const [abcd, setAbcd] = React.useState(false);
   const [question, setQuestion] = React.useState("");
   const [answer, setAnswer] = React.useState("");
@@ -97,7 +97,7 @@ const Creator = ({ state, dispatch }) => {
   return (
     <div
       className="questionDesign"
-      style={state.stage === "designer" ? {} : { width: state.questionWidth }}
+      style={state.stage === "designer" ? {} : { width: "100%" }}
     >
       <form className="newQuestion" onSubmit={submitHandler}>
         <div className="newQuestionBox" style={{ height: "10%" }}>
@@ -136,10 +136,7 @@ const Creator = ({ state, dispatch }) => {
           </div>
         </div>
 
-        <div
-          className="newQuestionBox"
-          style={{ height: "50%" }}
-        >
+        <div className="newQuestionBox" style={{ height: "50%" }}>
           <div className="creatorAnswersHeader">
             <div className="questionText">{abcd ? "Answers" : "Answer"} </div>
             {abcd && <FiCheckSquare />}
@@ -283,17 +280,18 @@ const Creator = ({ state, dispatch }) => {
               </div>
             </>
           ) : (
-            <div style={{height: "70%", width: "100%"}}>
-            <div className="creatorAnswer">
-              <input
-                type="text"
-                className="creatorAnswersText"
-                id="answerText"
-                name="answerText"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              ></input>
-            </div></div>
+            <div style={{ height: "70%", width: "100%" }}>
+              <div className="creatorAnswer">
+                <input
+                  type="text"
+                  className="creatorAnswersText"
+                  id="answerText"
+                  name="answerText"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                ></input>
+              </div>
+            </div>
           )}
         </div>
         <div className="newQuestionBox" style={{ height: "10%" }}>
@@ -301,9 +299,10 @@ const Creator = ({ state, dispatch }) => {
             <button
               type="button"
               className="cancel"
-              onClick={() =>
-                dispatch({ type: "SET_PICKED_QUESTION", payload: -1 })
-              }
+              onClick={() => {
+                dispatch({ type: "SET_PICKED_QUESTION", payload: -1 });
+                if (close) close();
+              }}
             >
               Cancel
             </button>

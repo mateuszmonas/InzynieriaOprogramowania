@@ -114,18 +114,10 @@ export const reducer = (state, action) => {
         isSessionTimelineVisible: false,
         questionWidth: "75%",
       };
-    case "PARTICIPANTS_VISIBLE": {
-      getParticipantsHandler(
-        action.payload.e,
-        action.payload.state,
-        action.payload.dispatch
-      );
+    case "TOGGLE_PARTICIPANTS_VISIBLE": {
       return {
         ...state,
-        isChatVisible: false,
-        isParticipantsVisible: true,
-        isSessionTimelineVisible: false,
-        questionWidth: "75%",
+        isParticipantsVisible: !state.isParticipantsVisible,
       };
     }
     case "SESSION_HISTORY_VISIBLE": {

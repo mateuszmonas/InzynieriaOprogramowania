@@ -36,7 +36,7 @@ const QuestionList = ({ state, dispatch }) => {
         style={state.pickedQuestion === index ? { background: "#DDD" } : {}}
       >
         <div className="questionListElementInfo">
-          <div style={{fontSize: "16px"}}>{question.content}</div>
+          <div style={{fontSize: "16px", fontWeight: "bold"}}>{question.content}</div>
           <div style={{fontSize: "11px"}}>Type: {question.answers.length > 1 ? "ABCD" : "Open"}</div>
         </div>
         <div className="questionListElementButtons">
@@ -84,15 +84,6 @@ const QuestionList = ({ state, dispatch }) => {
           );
         })}
       </div>
-      {/* <div
-        onClick={(e) => dispatch({ type: "SET_PICKED_QUESTION", payload: -1 })}
-        className={state.pickedQuestion === -1 ? "picked" : "notPicked"}
-      >
-        New Question
-      </div> */}
-      {/* <div className="questionListButtonBox">
-        
-      </div> */}
     </div>
   );
 };
