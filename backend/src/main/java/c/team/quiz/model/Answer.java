@@ -11,4 +11,8 @@ public class Answer {
     private String text;
     @Parameter(required = true)
     private boolean correct;
+
+    public Answer(String text){
+        this.text = text;
+    }
 }

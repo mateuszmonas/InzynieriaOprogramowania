@@ -22,7 +22,6 @@ import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor
-// A tu nie powinno być autowire???
 public class SessionAnswersService {
 
     private final QuestionRepository questionRepository;
@@ -66,17 +65,15 @@ public class SessionAnswersService {
     }
 
     public QuizAnswers convertMapToQuizAnswers(Map<String, List<String>> rawData) {
-        Map<String, List<Answer>> quizAnswers = new HashMap<>();
-        rawData.forEach((questionId, answersToQuestion) ->
-                quizAnswers.put(
-                        questionId,
-                        answersToQuestion.stream().map(content ->  {
-                            Answer answer = new Answer();
-                            answer.setText(content);
-                            return answer;
-                            }).collect(Collectors.toList())
-                )
-        );
-        return new QuizAnswers(quizAnswers);
+        Map<String, List<Answer>> answers = rawData
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        e-> e.getValue()
+                                .stream()
+                                .map(Answer::new)
+                                .collect(Collectors.toList()
+                                )));
+        return new QuizAnswers(answers);
     }
 }
