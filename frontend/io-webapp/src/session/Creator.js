@@ -7,14 +7,12 @@ const Creator = ({ state, dispatch }) => {
   const [answers, setAnswers] = React.useState(["", "", "", ""]);
 
   const submitHandler = (e) => {
-    /* TODO */
     e.preventDefault();
 
-    console.log(e);
     if (question !== "") {
       const newQuestion = { question };
       if (answer !== "") {
-        newQuestion.answer = { answer };
+        newQuestion.answers = { answers : [answer] };
       } else if (
         answers.length === 4 &&
         answers[0] !== "" &&
@@ -22,7 +20,7 @@ const Creator = ({ state, dispatch }) => {
         answers[2] !== "" &&
         answers[3] !== ""
       ) {
-        newQuestion.answers = { answers };
+        newQuestion.answers = { answers : answers };
       }
       const msg = {
         type : "quiz",

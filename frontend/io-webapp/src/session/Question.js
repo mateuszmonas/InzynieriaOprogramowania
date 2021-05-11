@@ -10,8 +10,13 @@ const Question = ({ state, dispatch }) => {
     {
       id: 2,
       question: "What's the capital of Germany?",
+      answers: []
     },
   ];
+
+  function refreshPage() {
+    window.location.reload(false);
+  }
 
   const [questions, setQuestions] = React.useState(sampleQuestions);
   const [current, setCurrent] = React.useState(questions[0]);
@@ -19,30 +24,32 @@ const Question = ({ state, dispatch }) => {
   const [answer, setAnswer] = React.useState("");
 
 const updateQuestions  = () => {
-    const newQuestions = [...questions.slice(1, questions.length), ...state.socket.questions];
-    state.socket.questions = [];
+    let shift = true;
+    if(questions.length == 0)
+      shift = false;
+    let newQuestions = questions;
+    while(state.socket.questions.length > 0)
+      newQuestions.push(state.socket.questions.shift());
     setQuestions(newQuestions);
-    questions.shift();
+    if(shift)
+      questions.shift();
     setCurrent(questions[0]);
   }
 
-  const submitHandler = (id, answerNumber) => {
-    console.log(id);
+  const submitHandler = (questionId, answerNumber) => {
     const msg = {
       type : "quiz-answers",
-      //content: {"id" : id, "answer" : answerNumber},
-      content: {"id" : id, "answer" : answerNumber},
+      content: {id : questionId, answers : [answerNumber]},
     };
     state.socket.sendMessage(msg);
     updateQuestions();
   };
 
-  const submitHandler2 = (e) => {
+  const submitHandler2 = (e, questionId) => {
     e.preventDefault();
-    console.log("answer" + " " + answer);
     const msg = {
       type : "quiz-answers",
-      content: answer
+      content: {"id" : questionId, "answers" : [answer]}
     };
     state.socket.sendMessage(msg);
     updateQuestions();
@@ -60,22 +67,22 @@ const updateQuestions  = () => {
       {state.awaitsApproval ? (
         <h1>Waiting for permission from room owner</h1>
       ) : questions.length ? (
-        current.hasOwnProperty("answers") ? (
+        current.answers.length > 1 ? (
           <div key={current.id} className="specificQuestion">
             <h1 className="questionProper">{current.question}</h1>
             <div className="questionRow">
-              <div className="answer" onClick={(e) => submitHandler(e, current.id, 0)}>
+              <div className="answer" onClick={(e) => submitHandler(current.id, 0)}>
                 <h4>{current.answers[0]}</h4>
               </div>
-              <div className="answer" onClick={(e) => submitHandler(e, current.id, 1)}>
+              <div className="answer" onClick={(e) => submitHandler(current.id, 1)}>
                 <h4>{current.answers[1]}</h4>
               </div>
             </div>
-            <div className="questionRow" onClick={(e) => submitHandler(e, current.id, 2)}>
+            <div className="questionRow" onClick={(e) => submitHandler(current.id, 2)}>
               <div className="answer">
                 <h4>{current.answers[2]}</h4>
               </div>
-              <div className="answer" onClick={(e) => submitHandler(e, current.id, 3)}>
+              <div className="answer" onClick={(e) => submitHandler(current.id, 3)}>
                 <h4>{current.answers[3]}</h4>
               </div>
             </div>
@@ -92,7 +99,7 @@ const updateQuestions  = () => {
                 <button
                   type="submit"
                   className="answerButton"
-                  onClick={(e) => submitHandler2(e)}
+                  onClick={(e) => submitHandler2(e, current.id)}
                 >
                   Submit
                 </button>
@@ -101,7 +108,16 @@ const updateQuestions  = () => {
           </div>
         )
       ) : (
-        <h1>There are no questions at the moment</h1>
+        //<h1>There are no questions at the moment</h1>
+        <div className="refresh">
+                <button
+                  type="submit"
+                  className="refreshButton"
+                  onClick={updateQuestions}
+                >
+                  Odśwież stronę
+                </button>
+            </div>
       )}
     </div>
   );

@@ -70,9 +70,6 @@ class Socket {
       }
 
       let msgType = this.isLeader ? 'quiz-answers' : 'quiz'; 
-
-      console.log('msg type: ' + msgType);
-
       this.stompClient.subscribe(    // subscribe quiz
         `/topic/session/${this.state.sessionId}/${msgType}`,
         this.onMessageReceived
@@ -123,7 +120,7 @@ class Socket {
       this.stompClient.send(
         `/app/session/${this.state.sessionId}/${message.type}`,
         {},
-        JSON.stringify(messageToSend),
+        JSON.stringify(messageToSend)
       );
     }
   };
@@ -149,7 +146,6 @@ class Socket {
         content: isApproved,
         type: "GUEST_APPROVAL",
       };
-      console.log(chatMessage);
       this.stompClient.send(
         `/app/session/${this.state.approvalRoomId}/guest-approval-response/${guestId}`,
         {},
@@ -160,27 +156,26 @@ class Socket {
 
   onMessageReceived = (payload) => {
     const message = JSON.parse(payload.body);
-    console.log(this.messageListeners);
-    console.log(message);
 
     if (message.type === "CONNECT") {
       console.log(message);
     } else if (message.type === "DISCONNECT") {
       console.log(message);
     } else {
-      console.log('received ' + message.content);
-      console.log(message.content);
-      console.log(this.questions);
       if(message.type == 'QUIZ'){
-        this.questions.push(message.content);
+        let question = {
+          question : message.content.question,
+          answers : message.content.answers.answers,
+          id : message.id
+        };
+        this.questions.push(question);
       }
-      /*
-      for (const listener of this.messageListeners) {
-        console.log(listener);
-        console.log('received ' + message);
+      if(message.type = "COMMENT"){
+        for (const listener of this.messageListeners) {
         listener(message);
       }
-      */
+      }
+      
 
       // messageElement.classList.add('chat-message')
 

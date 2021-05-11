@@ -5,7 +5,6 @@ const Chat = ({ state, dispatch }) => {
   const [messages, setMessages] = useState([]);
 
   const parseMessage = (message) => {
-    console.log(message);
     setMessages((messages) => [
       {
         id: message.id,
@@ -30,7 +29,6 @@ const Chat = ({ state, dispatch }) => {
   };
 
   useEffect(() => {
-    console.log(state.socket);
     if (state.socket && state.socket.messageListeners.length < 1) {
       state.socket.addMessageListener(parseMessage);
     }
