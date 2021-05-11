@@ -16,7 +16,7 @@ public class QuizService {
     private final QuestionRepository questionRepository;
 
     public String createQuiz(String userId, CreateQuizRequest createQuizRequest) {
-        Quiz quiz = quizRepository.save(new Quiz(userId));
+        Quiz quiz = quizRepository.save(new Quiz(createQuizRequest.getName(), userId));
         List<Question> questions = createQuizRequest.getQuestions()
                 .stream()
                 .map(q -> q.toQuestion(quiz.getId()))
@@ -38,9 +38,6 @@ public class QuizService {
                 .stream()
                 .map(Question::toQuestionDto)
                 .collect(Collectors.toList());
-        return QuizDto.builder()
-                .id(quiz.getId())
-                .questions(questionDtos)
-                .build();
+        return new QuizDto(quiz.getId(), quiz.getName(), questionDtos);
     }
 }

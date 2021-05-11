@@ -23,7 +23,8 @@ Swagger api documentation can be accessed on url `/swagger-ui.html`
   /app/session/{sessionId}/send or where to ask for an approval for joining)
 * **Closing session:** /session/close -> session with given ID is now closed (still in DB)
 * **Getting participant list:** /session/participant-list -> returns list of participants (their ID and name)
-* **Getting timeline:** /session/timeline -> returns list of all messages sent in session
+* **Getting timeline for one session:** /session/timeline -> returns list of all messages sent in session
+* **Getting whole session history for leader account:** /session/history -> returns list of all sessions organized by user
 #### Websocket communication in one session:
 * **Creating websocket:** /session-handling (websocket connection address)
 * **Subscribtion:** /topic/session/{sessionId} (receiving all messages, requires getting session ID from connect request)
