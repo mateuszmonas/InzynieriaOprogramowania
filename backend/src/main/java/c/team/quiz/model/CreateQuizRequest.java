@@ -11,8 +11,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CreateQuizRequest {
-    @NotEmpty
-    @Parameter(required = true)
     private String name;
     @NotEmpty
     @Valid
