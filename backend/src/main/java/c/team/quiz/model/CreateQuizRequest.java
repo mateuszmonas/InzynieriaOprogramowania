@@ -12,6 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateQuizRequest {
     @NotEmpty
+    @Parameter(required = true)
+    private String name;
+    @NotEmpty
     @Valid
     @Parameter(required = true)
     private List<QuestionDto> questions;
