@@ -55,7 +55,7 @@ const QuizList = ({ state, dispatch }) => {
             <div className="quizListElement">
               <div className="quizListElementInfo">
                 <div style={{ fontSize: "16px", fontWeight: "bold" }}>
-                  {quiz.id}
+                  {quiz.name}
                 </div>
                 <div style={{ fontSize: "11px", fontWeight: "bold" }}>
                   Questions: {quiz.questions.length}

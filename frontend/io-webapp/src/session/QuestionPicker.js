@@ -65,7 +65,7 @@ const QuestionPicker = ({ state, dispatch }) => {
             <div className="questionPickerElement">
               <div className="questionPickerElementInfo">
                 <div style={{ fontSize: "16px", fontWeight: "bold" }}>
-                  {quiz.id}
+                  {quiz.name}
                 </div>
                 <div style={{ fontSize: "11px", fontWeight: "bold" }}>
                   Questions: {quiz.questions.length}

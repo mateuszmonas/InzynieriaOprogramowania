@@ -19,6 +19,7 @@ const Designer = ({ state, dispatch }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          name: state.quizName,
           questions: state.designerQuestions,
         }),
       })
