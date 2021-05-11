@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.Valid;
@@ -14,14 +13,12 @@ import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Data
-@Builder
 @Document
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Question {
-    @Id
+public class QuestionDto {
     private String id;
-    private String quizId;
     @Parameter(required = true)
     @NotBlank
     private String content;
@@ -29,12 +26,12 @@ public class Question {
     @Nullable
     private List<Answer> answers;
 
-    public QuestionDto toQuestionDto() {
-        return QuestionDto.builder()
+    public Question toQuestion(String quizId) {
+        return Question.builder()
+                .id(id)
+                .quizId(quizId)
                 .answers(answers)
                 .content(content)
-                .id(id)
                 .build();
     }
-
 }

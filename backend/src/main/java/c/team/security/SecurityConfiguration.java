@@ -35,8 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/ping",
                 "/register",
                 "/login",
-                "/session/connect",
-                "/session/**",  // Debug purpose, because token didn't work - need double check
+                "/session/**",
                 "/session-handling/**",
                 "/topic/**",
                 "/app/**",
@@ -50,7 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("*");
+                registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
             }
         };
     }
@@ -66,6 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .cors().and()
                 .csrf().disable();
     }
 }

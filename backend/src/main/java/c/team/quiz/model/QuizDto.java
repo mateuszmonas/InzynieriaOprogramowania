@@ -1,14 +1,14 @@
 package c.team.quiz.model;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-@Builder
+@AllArgsConstructor
 public class QuizDto {
     private String id;
-    private String userId;
-    private List<Question> questions;
+    private String name;
+    private List<QuestionDto> questions;
 }
