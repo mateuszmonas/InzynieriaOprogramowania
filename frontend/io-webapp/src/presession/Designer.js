@@ -2,6 +2,7 @@ import React from "react";
 import Creator from "../session/Creator";
 import QuestionList from "./QuestionList";
 import { FiSave, FiArrowLeft } from "react-icons/fi";
+import { Popup } from "reactjs-popup";
 
 import "./Account.css";
 import "./designer.css";
@@ -41,14 +42,14 @@ const Designer = ({ state, dispatch }) => {
             onClick={(e) => dispatch({ type: "SET_STAGE_QUIZ_LIST" })}
             className="submit"
           >
-            Back <FiArrowLeft size={16}/>
+            Back <FiArrowLeft size={16} />
           </button>
           <button
             type="button"
             onClick={(e) => createHandler(e)}
             className="submit"
           >
-            Save <FiSave size={16}/>
+            Save <FiSave size={16} />
           </button>
         </div>
       </div>

@@ -5,6 +5,7 @@
   padding: 1vh;
   box-shadow: 0.2rem 0.2rem 0.4rem #999999;
   outline: none;
+  text-align: center;
 }
 
 .submitFlat {
@@ -13,6 +14,7 @@
   border-radius: 0.2rem;
   padding: 1vh;
   outline: none;
+  text-align: center;
 }
 
 .submit:hover {
@@ -29,6 +31,7 @@
   border-radius: 0.2rem;
   padding: 1vh;
   outline: none;
+  text-align: center;
 }
 
 .cancel:hover {

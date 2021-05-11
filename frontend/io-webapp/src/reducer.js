@@ -105,17 +105,10 @@ export const reducer = (state, action) => {
         isParticipantsVisible: false,
         questionWidth: "75%",
       };
-    case "PARTICIPANTS_VISIBLE": {
-      getParticipantsHandler(
-        action.payload.e,
-        action.payload.state,
-        action.payload.dispatch
-      );
+    case "TOGGLE_PARTICIPANTS_VISIBLE": {
       return {
         ...state,
-        isChatVisible: false,
-        isParticipantsVisible: true,
-        questionWidth: "75%",
+        isParticipantsVisible: !state.isParticipantsVisible,
       };
     }
     case "NOTHING_VISIBLE":
