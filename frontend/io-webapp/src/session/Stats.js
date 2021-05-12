@@ -1,36 +1,26 @@
 import React from "react";
-import {
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Bar,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
-import {FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import {Bar, BarChart, CartesianGrid, Cell, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis,} from "recharts";
+import {FiChevronLeft, FiChevronRight} from "react-icons/fi";
 
 import "./stats.css";
 
-const Stats = ({ state, dispatch }) => {
+const Stats = ({state, dispatch}) => {
   const [picked, setPicked] = React.useState(0);
   const [questions, setQuestions] = React.useState([]);
 
   const getStats = () => {
     (async () => {
-      await fetch(process.env.REACT_APP_BACKEND_URL + `/session/${state.sessionId}/statistics/answers`, {
+      await fetch(process.env.REACT_APP_BACKEND_URL + `/temporary/${state.sessionId}/statistics/answers`, {
         method: "GET",
         headers: {
           Authorization: state.token,
           "Content-Type": "application/json",
         },
       })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          const dataReplies = [];
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            const dataReplies = [];
 
           for (const property in data.sessionAnswers.answerCounts) {
             const idx = parseInt(property.substring(14));
