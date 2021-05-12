@@ -1,9 +1,8 @@
-POST http://localhost:8080/session/participant-list
+POST http://localhost:8080/{sessionId}/participant/list
 Content-Type: application/json
 
 {
   "identification": "guestId or account_username"
-  "sessionId": "sessionId"
 }
 
 ###
