@@ -10,7 +10,7 @@ const Question = ({ state, dispatch }) => {
     {
       id: 2,
       question: "What's the capital of Germany?",
-      answers: []
+      answers: [],
     },
   ];
 
@@ -23,23 +23,21 @@ const Question = ({ state, dispatch }) => {
 
   const [answer, setAnswer] = React.useState("");
 
-const updateQuestions  = () => {
+  const updateQuestions = () => {
     let shift = true;
-    if(questions.length == 0)
-      shift = false;
+    if (questions.length == 0) shift = false;
     let newQuestions = questions;
-    while(state.socket.questions.length > 0)
+    while (state.socket.questions.length > 0)
       newQuestions.push(state.socket.questions.shift());
     setQuestions(newQuestions);
-    if(shift)
-      questions.shift();
+    if (shift) questions.shift();
     setCurrent(questions[0]);
-  }
+  };
 
   const submitHandler = (questionId, answerNumber) => {
     const msg = {
-      type : "quiz-answers",
-      content: {id : questionId, answers : [answerNumber]},
+      type: "quiz-answers",
+      content: { id: questionId, answers: [answerNumber] },
     };
     state.socket.sendMessage(msg);
     updateQuestions();
@@ -48,19 +46,27 @@ const updateQuestions  = () => {
   const submitHandler2 = (e, questionId) => {
     e.preventDefault();
     const msg = {
-      type : "quiz-answers",
-      content: {"id" : questionId, "answers" : [answer]}
+      type: "quiz-answers",
+      content: { id: questionId, answers: [answer] },
     };
     state.socket.sendMessage(msg);
     updateQuestions();
+    setAnswer("");
   };
 
-  
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (questions.length === 0) updateQuestions();
+    }, 5000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   const changeHandler = (e) => {
     const { value } = e.target;
     setAnswer(value);
-  }
+  };
 
   return (
     <div className="question" style={{ width: state.questionWidth }}>
@@ -71,19 +77,39 @@ const updateQuestions  = () => {
           <div key={current.id} className="specificQuestion">
             <h1 className="questionProper">{current.question}</h1>
             <div className="questionRow">
-              <div className="answer" onClick={(e) => submitHandler(current.id, 0)}>
-                <h4>{current.answers[0]}</h4>
-              </div>
-              <div className="answer" onClick={(e) => submitHandler(current.id, 1)}>
-                <h4>{current.answers[1]}</h4>
+              <div
+                className="answer"
+                onClick={(e) => submitHandler(current.id, 0)}
+              >
+                <h4>A:</h4>
+                <p style={{ textIndent: "3px" }}>{current.answers[0]}</p>
               </div>
             </div>
-            <div className="questionRow" onClick={(e) => submitHandler(current.id, 2)}>
-              <div className="answer">
-                <h4>{current.answers[2]}</h4>
+            <div className="questionRow">
+              <div
+                className="answer"
+                onClick={(e) => submitHandler(current.id, 1)}
+              >
+                <h4>B:</h4>
+                <p style={{ textIndent: "3px" }}>{current.answers[1]}</p>
               </div>
-              <div className="answer" onClick={(e) => submitHandler(current.id, 3)}>
-                <h4>{current.answers[3]}</h4>
+            </div>
+            <div className="questionRow">
+              <div
+                className="answer"
+                onClick={(e) => submitHandler(current.id, 2)}
+              >
+                <h4>C:</h4>
+                <p style={{ textIndent: "3px" }}>{current.answers[2]}</p>
+              </div>
+            </div>
+            <div className="questionRow">
+              <div
+                className="answer"
+                onClick={(e) => submitHandler(current.id, 3)}
+              >
+                <h4>D:</h4>
+                <p style={{ textIndent: "3px" }}>{current.answers[3]}</p>
               </div>
             </div>
           </div>
@@ -93,12 +119,28 @@ const updateQuestions  = () => {
             <div className="questionRow">
               <form
                 className="answer"
-                style={{ "justifyContent": "center", width: "50%" }}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  height: "40px",
+                  justifyContent: "space-evenly",
+                  paddingLeft: "0px",
+                  width: "50%"
+                }}
               >
-                <input type="text" onChange={changeHandler} value={answer} id="answer" name="answer"></input>
+                <input
+                  type="text"
+                  onChange={changeHandler}
+                  value={answer}
+                  id="answer"
+                  name="answer"
+                  style={{
+                    width: "70%"
+                  }}
+                ></input>
                 <button
                   type="submit"
-                  className="answerButton"
+                  className="submit"
                   onClick={(e) => submitHandler2(e, current.id)}
                 >
                   Submit
@@ -108,16 +150,16 @@ const updateQuestions  = () => {
           </div>
         )
       ) : (
-        //<h1>There are no questions at the moment</h1>
-        <div className="refresh">
-                <button
-                  type="submit"
-                  className="refreshButton"
-                  onClick={updateQuestions}
-                >
-                  Odśwież stronę
-                </button>
-            </div>
+        <h1>There are no questions at the moment</h1>
+        // <div className="refresh">
+        //         <button
+        //           type="submit"
+        //           className="refreshButton"
+        //           onClick={updateQuestions}
+        //         >
+        //           Odśwież stronę
+        //         </button>
+        //     </div>
       )}
     </div>
   );

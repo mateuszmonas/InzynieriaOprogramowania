@@ -117,6 +117,7 @@ class Socket {
         type: types[message.type],
         timestamp: moment().calendar(),
       };
+      console.log(messageToSend);
       this.stompClient.send(
         `/app/session/${this.state.sessionId}/${message.type}`,
         {},
@@ -162,7 +163,7 @@ class Socket {
     } else if (message.type === "DISCONNECT") {
       console.log(message);
     } else {
-      if(message.type == 'QUIZ'){
+      if(message.type === 'QUIZ'){
         let question = {
           question : message.content.question,
           answers : message.content.answers.answers,
@@ -170,7 +171,7 @@ class Socket {
         };
         this.questions.push(question);
       }
-      if(message.type = "COMMENT"){
+      if(message.type === "COMMENT"){
         for (const listener of this.messageListeners) {
         listener(message);
       }
