@@ -10,40 +10,39 @@ const Start = ({ state, dispatch }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch({ type: "SET_STAGE_GUEST" });
-    // const username = creds.name;
+    const username = creds.name;
 
-    // (async () => {
-    //   await fetch(process.env.REACT_APP_BACKEND_URL + "/session/connect", {
-    //       method: "POST",
-    //       headers: {
-    //           "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({
-    //           username: username,
-    //           passcode: creds.sessionCode,
-    //       }),
-    //   })
-    //       .then((response) => response.json())
-    //     .then((data) => {
-    //       console.log(data);
-    //       const gotPermission = !data.guestApproval;
-    //       dispatch({ type: "SET_SESSION_ID", payload: data.sessionId });
-    //       dispatch({ type: "SET_APPROVAL_ROOM_ID", payload: data.guestApprovalRoomId });
-    //       dispatch({ type: "SET_SESSION_TITLE", payload: data.sessionTitle });
-    //       dispatch({ type: "SET_GUEST_ID", payload: data.guestId });
-    //       dispatch({ type: "SET_USERNAME", payload: username });
-    //       if (!gotPermission) {
-    //         dispatch({ type: "SET_STAGE_GUEST_NEEDS_APPROVAL" });
-    //       } else {
-    //         dispatch({ type: "SET_STAGE_GUEST" });
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error(error);
-    //       dispatch({ type: "SET_MESSAGE", payload: "Failed to join session" });
-    //     });
-    // })();
+    (async () => {
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/session/connect", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              username: username,
+              passcode: creds.sessionCode,
+          }),
+      })
+          .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          const gotPermission = !data.guestApproval;
+          dispatch({ type: "SET_SESSION_ID", payload: data.sessionId });
+          dispatch({ type: "SET_APPROVAL_ROOM_ID", payload: data.guestApprovalRoomId });
+          dispatch({ type: "SET_SESSION_TITLE", payload: data.sessionTitle });
+          dispatch({ type: "SET_GUEST_ID", payload: data.guestId });
+          dispatch({ type: "SET_USERNAME", payload: username });
+          if (!gotPermission) {
+            dispatch({ type: "SET_STAGE_GUEST_NEEDS_APPROVAL" });
+          } else {
+            dispatch({ type: "SET_STAGE_GUEST" });
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          dispatch({ type: "SET_MESSAGE", payload: "Failed to join session" });
+        });
+    })();
   };
 
   if (state.stage === "login") {
