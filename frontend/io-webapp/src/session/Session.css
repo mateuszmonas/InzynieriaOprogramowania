@@ -54,7 +54,8 @@
   background: #eeeeee;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .question form {
@@ -74,37 +75,32 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .questionProper {
+  margin-left: 2%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 50%;
   width: 100%;
 }
 
 .questionRow {
   margin: 0.5rem 0.5rem 0.5rem 0.5rem;
-  height: 20%;
+  height: 7%;
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: flex-start;
 }
 
 .answer {
+  padding-left: 2%;
+  align-items: center;
   width: 30%;
   display: flex;
-  justify-content: center;
-  text-align: center;
-  align-items:center;
-  background: rgb(244, 252, 177);
-  border-radius: 2rem;
-  padding: 1vh 1vw 1vh 1vw;
-  overflow: hidden;
-  box-shadow: 0px 0px 4px 0px;
+  background: #d8d8d8;
+  box-shadow: 0.2rem 0.2rem 0.4rem #999999;
 }
 
 .abcdAnswer {
@@ -112,45 +108,6 @@
   flex-direction: row;
   justify-content: center;
   margin-bottom: 1rem;
-}
-
-button.leave {
-  background-color: #b64b4b;
-  border-color: #b63333;
-  padding: 0.5% 0.5% 0.5% 0.5%;
-  border-radius: 0.3rem;
-  box-shadow: none;
-  outline:none;
-}
-
-button.leave:hover {
-  background-color: #b64141;
-}
-
-button.view {
-  background-color: #6666b6;
-  border-color: #5555b6;
-  padding: 0.5% 0.5% 0.5% 0.5%;
-  border-radius: 0.3rem;
-  box-shadow: none;
-  outline:none;
-}
-
-button.view:hover {
-  background-color: #5555b6;
-}
-
-button.answerButton {
-  background-color: #777777;
-  border-color: #666666;
-  padding: 0.5% 0.5% 0.5% 0.5%;
-  border-radius: 0.3rem;
-  box-shadow: none;
-  outline:none;
-}
-
-button.answerButton:hover {
-  background-color: #666666;
 }
 
 .stats {
