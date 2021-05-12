@@ -22,8 +22,13 @@ const Chat = ({ state, dispatch }) => {
 
   const send = async (e) => {
     e.preventDefault();
+    //state.socket.sendMessage(message);
+    const msg = {
+      type : "send",
+      content: message,
+    };
 
-    state.socket.sendMessage(message);
+    state.socket.sendMessage(msg);
     setMessage("");
   };
 

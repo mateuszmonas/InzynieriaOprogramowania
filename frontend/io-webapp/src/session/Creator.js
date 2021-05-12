@@ -15,9 +15,9 @@ const Creator = ({ state, dispatch, close }) => {
     e.preventDefault();
 
     if (question !== "") {
-      const newQuestion = { content: question };
+      const newQuestion = { question: question };
       if (answer !== "") {
-        newQuestion.answers = [{ text: answer, correct: true }];
+        newQuestion.answers = { answers : [answer] };
       } else if (
         answers.length === 4 &&
         answers[0] !== "" &&
@@ -25,26 +25,13 @@ const Creator = ({ state, dispatch, close }) => {
         answers[2] !== "" &&
         answers[3] !== ""
       ) {
-        newQuestion.answers = answers.map((answer, index) => {
-          return {
-            text: answer,
-            correct: corrects[index],
-          };
-        });
-      } else {
-        return;
+        newQuestion.answers = { answers : answers };
       }
-      if (state.stage === "designer") {
-        if (state.pickedQuestion < 0) {
-          dispatch({ type: "ADD_DESIGNER_QUESTION", payload: newQuestion });
-        } else {
-          dispatch({
-            type: "UPDATE_DESIGNER_QUESTION",
-            payload: { index: state.pickedQuestion, question: newQuestion },
-          });
-          dispatch({ type: "SET_PICKED_QUESTION", payload: -1 });
-        }
-      }
+      const msg = {
+        type : "quiz",
+        content: newQuestion, 
+      };
+      state.socket.sendMessage(msg);
     }
 
     setQuestion("");
