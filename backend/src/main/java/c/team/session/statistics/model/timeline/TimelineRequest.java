@@ -1,4 +1,4 @@
-package c.team.timeline;
+package c.team.session.statistics.model.timeline;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.Data;

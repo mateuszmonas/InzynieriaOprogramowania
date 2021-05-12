@@ -4,12 +4,9 @@ import c.team.message.exception.InvalidMessageTypeException;
 import c.team.message.model.Message;
 import c.team.message.model.MessageType;
 import c.team.quiz.exception.QuizNotFoundException;
-import c.team.quiz.model.Answer;
-import c.team.quiz.model.Question;
 import c.team.quiz.model.QuizAnswers;
 import c.team.session.administration.SessionService;
 import c.team.session.statistics.SessionAnswersService;
-import c.team.session.statistics.model.SessionAnswersDto;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,9 +19,9 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -33,7 +30,7 @@ public class SessionController {
     private final SessionService sessionsService;
     private final SessionAnswersService answersService;
 
-    @MessageMapping("/session/{sessionId}/send")
+    @MessageMapping("/socket/session/{sessionId}/send")
     @SendTo("/topic/session/{sessionId}")
     public Message sendMessage(@DestinationVariable String sessionId, @Payload final Message message){
         // Possibly throwing some exception if message type is wrong, but need to define "wrong" types
@@ -42,7 +39,7 @@ public class SessionController {
         return message;
     }
 
-    @MessageMapping("/session/{sessionId}/new-user")
+    @MessageMapping("/socket/session/{sessionId}/new-user")
     @SendTo("/topic/session/{sessionId}")
     public Message addParticipant(@DestinationVariable String sessionId, @Payload final Message message, SimpMessageHeaderAccessor headerAccessor){
         if(message.getType() != MessageType.CONNECT)
@@ -53,7 +50,7 @@ public class SessionController {
         return message;
     }
 
-    @MessageMapping("/session/{sessionApprovalId}/guest-approval-request")  // Here guest sends a request
+    @MessageMapping("/socket/session/{sessionApprovalId}/guest-approval-request")  // Here guest sends a request
     @SendTo("/topic/session/{sessionApprovalId}/guest-approval-request")    // Here room leader subscribes for requests
     public Message guestApprovalRequest(@DestinationVariable String sessionApprovalId, @Payload final Message message){
         if(message.getType() != MessageType.GUEST_APPROVAL)
@@ -62,8 +59,10 @@ public class SessionController {
     }
 
     // Routed to endpoint for particular guest
-    @MessageMapping("/session/{sessionApprovalId}/guest-approval-response/{guestId}")       // Here room leader sends response
-    @SendTo("/topic/session/{sessionApprovalId}/guest-approval-response/guest-{guestId}")   // Here guest subscribes to listen for response
+    @MessageMapping("/socket/session/{sessionApprovalId}/guest-approval-response/{guestId}")
+    // Here room leader sends response
+    @SendTo("/topic/session/{sessionApprovalId}/guest-approval-response/guest-{guestId}")
+    // Here guest subscribes to listen for response
     // Can be done with UserDestinationMessageHandler and @SentToUser but it's harder
     public Message guestApprovalResponse(@DestinationVariable String sessionApprovalId, @DestinationVariable String guestId, @Payload final Message message){
         if(message.getType() != MessageType.GUEST_APPROVAL)
@@ -86,7 +85,7 @@ public class SessionController {
         return updatedResponse;
     }
 
-    @MessageMapping("/session/{sessionId}/quiz")    // Here leader sends a quiz
+    @MessageMapping("/socket/session/{sessionId}/quiz")    // Here leader sends a quiz
     @SendTo("/topic/session/{sessionId}/quiz")      // Here participants subscribe to receive quiz
     public Message sendQuizToParticipants(@DestinationVariable String sessionId, @Payload final Message message){
         if(message.getType() != MessageType.QUIZ)
@@ -96,7 +95,7 @@ public class SessionController {
     }
 
     // Might require additional security
-    @MessageMapping("/session/{sessionId}/quiz-answers")    // Here participants send quiz answers
+    @MessageMapping("/socket/session/{sessionId}/quiz-answers")    // Here participants send quiz answers
     @SendTo("/topic/session/{sessionId}/quiz-answers")      // Here leader subscribes to receive quiz answers
     public Message sendQuizAnswersToLeader(@DestinationVariable String sessionId, @Payload final Message message){
         if(message.getType() != MessageType.QUIZ_ANSWERS)

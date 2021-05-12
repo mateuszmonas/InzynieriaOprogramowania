@@ -9,11 +9,8 @@ import c.team.session.administration.model.Guest;
 import c.team.session.administration.model.Session;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.messaging.SessionConnectedEvent;
 
 import java.util.*;
 
@@ -49,9 +46,8 @@ public class SessionService {
         return session;
     }
 
-    public void closeSession(String sessionId, String potentialLeaderUsername){
+    public void closeSession(String sessionId) {
         Session session = this.findBySessionId(sessionId);
-        validateOwner(sessionId, potentialLeaderUsername);
         session.setActive(false);
         sessionRepository.save(session);
         log.info("Closed session: " + sessionId);
