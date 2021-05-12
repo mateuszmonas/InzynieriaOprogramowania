@@ -1,0 +1,71 @@
+.questionDesign {
+  width: 70%;
+  height: 100%;
+  background: white;
+  box-shadow: 0.2rem 0.2rem 0.4rem #999999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.newQuestion {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  height: 100%;
+  width: 95%;
+}
+
+.newQuestionBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.questionText {
+  font-size: "0.8rem";
+}
+
+.creatorRadio {
+  display: flex;
+  flex-direction: row;
+}
+
+.creatorAnswersHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.creatorAnswer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.creatorAnswer label {
+  font-size: 24px;
+  width: 5%;
+  text-align: left;
+}
+
+.creatorAnswersText  {
+  font-size: 24px;
+  width: 85%;
+}
+
+.creatorBottomButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 20%;
+}

@@ -1,0 +1,79 @@
+.questionPickerView {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    height: 100%;
+}
+
+.questionPickerContent {
+    background-color: white;
+    box-shadow: 0.2rem 0.2rem 0.4rem #999999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    height: 95%;
+    width: 100%;
+}
+
+.questionPickerElement {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 10%;
+    width: 95%;
+    border-style: hidden hidden solid hidden;
+    border-width: 0px 0px 1px 0px;
+}
+
+.questionPickerElementInfo {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: space-between;
+}
+
+.questionPickerElementInfo div {
+    overflow-x: hidden;
+    text-align: left;
+}
+
+.questionPickerHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 5%;
+    margin-bottom: 3vh;
+    width: 100%;
+}
+
+.questionPickerHeaderButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 20%;
+}
+
+.questionPickerHeaderButtons button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.creatorPopup {
+    height: 90vh;
+    width: 90vw;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: left;
+}

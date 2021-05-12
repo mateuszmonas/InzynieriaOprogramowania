@@ -11,61 +11,12 @@
 
 .fullsession {
   margin: auto;
-  padding: 10vh 10vw 10vh 10vw;
-  width: 80vw;
+  padding: 10vh 0vw 0vh 0vw;
+  width: 95vw;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   height: 80vh;
-}
-
-.chat {
-  border-radius: 0.3em;
-  box-shadow: 4px 4px 4px 4px #aaa;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #999;
-  background: #eeeeee;
-  margin: 0.5em;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: left;
-  width: 25%;
-  height: 100%;
-  overflow: scroll;
-}
-
-.chat div {
-  margin: 0.5em;
-  background: #3838ce;
-  border-radius: 0.2em;
-  text-align: justify;
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-}
-
-.chat section {
-  /* margin: 0.5em; */
-  background: #abc;
-  border-style: solid;
-  border-width: 0.1rem 0rem 0rem 0rem;
-  width: 100%;
-  /* display: flex;
-  flex-direction: column;
-  align-items: left; */
-}
-
-.chat section form {
-  margin: 0.1rem 0.2rem 0.3rem 0.2rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.chat div * {
-  margin: 0.2rem;
 }
 
 .sessionbar {
@@ -97,57 +48,25 @@
   align-self: center;
 }
 
-.participants {
-  border-radius: 0.3em;
-  box-shadow: 4px 4px 4px 4px #aaa;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #999;
-  background: #eeeeee;
-  margin: 0.5em;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  width: 25%;
-  height: 100%;
-  overflow: scroll;
-}
-
-.waiting {
-  background: #5555ce;
-  flex-direction: row;
-  margin: 0.3rem;
-  border-radius: 0.2em;
-  text-align: justify;
-  width: 60%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.accepted {
-  margin: 0.3rem;
-  background: #3838ce;
-  border-radius: 0.2em;
-  text-align: justify;
-  width: 60%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.participants div * {
-  margin: 0.2rem;
-}
-
 .question {
   width: 75%;
   height: 100%;
-  background: rgb(170, 231, 170);
+  background: #eeeeee;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.question form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 50%;
+}
+
+.question form button {
+  margin: 1vh 0vw 1vh 0vw;
 }
 
 .specificQuestion {
@@ -193,30 +112,6 @@
   flex-direction: row;
   justify-content: center;
   margin-bottom: 1rem;
-}
-
-.question form {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  height: 50%;
-}
-
-.newquestion button {
-  margin: 1vh 0vw 10vh 0vw;
-}
-
-.question form button {
-  margin: 1vh 0vw 1vh 0vw;
-}
-
-.newQuestionBox {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
 }
 
 button.leave {
@@ -304,4 +199,14 @@ button.answerButton:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+
+/* NEW */
+
+.sessionRightSidebar {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }

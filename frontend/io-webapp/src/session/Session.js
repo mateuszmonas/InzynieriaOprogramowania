@@ -10,6 +10,7 @@ import Stats from "./Stats";
 
 import "./Session.css";
 import Sessionbar from "./Sessionbar";
+import QuestionPicker from "./QuestionPicker";
 
 const Session = ({ state, dispatch }) => {
   React.useEffect(() => {
@@ -42,19 +43,20 @@ const Session = ({ state, dispatch }) => {
 
   return (
     <section className="fullsession">
-      <Sessionbar state={state} dispatch={dispatch} />
+      {/* <Sessionbar state={state} dispatch={dispatch} /> */}
       <div className="session">
         {state.stage === "lecturer" ? (
-          state.isStatsVisible ? (
+          <>
+            <QuestionPicker state={state} dispatch={dispatch} />
             <Stats state={state} dispatch={dispatch} />
-          ) : (
-            <Creator state={state} dispatch={dispatch} />
-          )
+          </>
         ) : (
           <Question state={state} dispatch={dispatch} />
         )}
-        {<Chat state={state} dispatch={dispatch} />}
-        {<Participants state={state} dispatch={dispatch} />}
+        <div className="sessionRightSidebar">
+          <Participants state={state} dispatch={dispatch} />
+          <Chat state={state} dispatch={dispatch} />
+        </div>
       </div>
     </section>
   );

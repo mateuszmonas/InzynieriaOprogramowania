@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { FiSend } from "react-icons/fi";
+
+import "./chat.css";
 
 const Chat = ({ state, dispatch }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
   const parseMessage = (message) => {
+    console.log("HI");
     setMessages((messages) => [
       {
         id: message.id,
@@ -29,37 +33,52 @@ const Chat = ({ state, dispatch }) => {
   };
 
   useEffect(() => {
-    console.log(state.socket);
-    if (state.socket && state.socket.messageListeners.length < 1) {
-      state.socket.addMessageListener(parseMessage);
-    }
-    return () => {
-      if (state.socket && state.socket.messageListeners.length > 1) {
-        state.socket.removeMessageListener(parseMessage);
+    if (state.stage === "lecturer") {
+      if (state.socket) {
+        state.socket.addMessageListener(parseMessage);
       }
-    };
-  }, [state.isChatVisible, send]);
+      return () => {
+        if (state.socket) {
+          state.socket.removeMessageListener(parseMessage);
+        }
+      };
+    } else {
+      if (state.socket && state.socket.messageListeners.length < 1) {
+        state.socket.addMessageListener(parseMessage);
+      }
+      return () => {
+        if (state.socket && state.socket.messageListeners.length > 1) {
+          state.socket.removeMessageListener(parseMessage);
+        }
+      };
+    }
+  }, [state.setChatVisible, send]);
 
-
-  if (state.isChatVisible) {
-    return (
-      <div className="chat">
-        <section>
-          <h3>Here be reactions</h3>
-          <form onSubmit={send}>
-            <input
-              type="text"
-              id="chatMessage"
-              name="chatMessage"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <button type="submit">Send</button>
-          </form>
-        </section>
+  return (
+    <div className="chat">
+      <div className="chatFooter">
+        <textarea
+          className="chatText"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        ></textarea>
+        <FiSend
+          onClick={(e) => {
+            send(e);
+          }}
+          size={40}
+        />
+      </div>
+      <div className="chatContent">
         {messages.map((msg) => {
           return (
-            <div key={msg.id}>
+            <div
+              className={
+                msg.username === state.username
+                  ? "chatMessageBubbleMine"
+                  : "chatMessageBubble"
+              }
+            >
               <h6>[{msg.time}]</h6>
               <h4>{msg.username}:</h4>
               <p>{msg.message}</p>
@@ -67,10 +86,8 @@ const Chat = ({ state, dispatch }) => {
           );
         })}
       </div>
-    );
-  } else {
-    return <></>
-  }
+    </div>
+  );
 };
 
 export default Chat;
