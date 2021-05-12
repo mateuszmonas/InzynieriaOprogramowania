@@ -1,5 +1,5 @@
 import React from "react";
-import { FiChevronUp, FiChevronDown } from "react-icons/fi";
+import {FiChevronDown, FiChevronUp} from "react-icons/fi";
 
 import "./participants.css";
 import "../common.css";
@@ -14,18 +14,17 @@ const Participants = ({ state, dispatch }) => {
   const getParticipantsHandler = () =>
     (async () => {
       await fetch(
-        process.env.REACT_APP_BACKEND_URL + "/session/participant-list",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            identification:
-              state.stage === "lecturer" ? state.username : state.guestId,
-            sessionId: state.sessionId,
-          }),
-        }
+          process.env.REACT_APP_BACKEND_URL + `/session/${state.sessionId}/participant/list`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              identification:
+                  state.stage === "lecturer" ? state.username : state.guestId,
+            }),
+          }
       )
         .then((response) => response.json())
         .then((data) => {

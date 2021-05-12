@@ -10,7 +10,7 @@ const Stats = ({state, dispatch}) => {
 
   const getStats = () => {
     (async () => {
-      await fetch(process.env.REACT_APP_BACKEND_URL + `/temporary/${state.sessionId}/statistics/answers`, {
+      await fetch(process.env.REACT_APP_BACKEND_URL + `/session/${state.sessionId}/statistics/answers`, {
         method: "GET",
         headers: {
           Authorization: state.token,

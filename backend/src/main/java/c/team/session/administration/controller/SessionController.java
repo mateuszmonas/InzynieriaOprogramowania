@@ -7,6 +7,9 @@ import c.team.quiz.exception.QuizNotFoundException;
 import c.team.quiz.model.QuizAnswers;
 import c.team.session.administration.SessionService;
 import c.team.session.statistics.SessionAnswersService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Controller
@@ -64,10 +66,10 @@ public class SessionController {
     @SendTo("/topic/session/{sessionApprovalId}/guest-approval-response/guest-{guestId}")
     // Here guest subscribes to listen for response
     // Can be done with UserDestinationMessageHandler and @SentToUser but it's harder
-    public Message guestApprovalResponse(@DestinationVariable String sessionApprovalId, @DestinationVariable String guestId, @Payload final Message message){
-        if(message.getType() != MessageType.GUEST_APPROVAL)
+    public Message guestApprovalResponse(@DestinationVariable String sessionApprovalId, @DestinationVariable String guestId, @Payload final Message message) throws JsonProcessingException {
+        if (message.getType() != MessageType.GUEST_APPROVAL)
             throw new InvalidMessageTypeException();
-        boolean leaderApproval = (boolean) message.getContent();
+        boolean leaderApproval = new ObjectMapper().readValue(message.getContent(), Boolean.class);
 
         String sessionId = sessionsService
                 .findByGuestApprovalRoomId(UUID.fromString(sessionApprovalId))
@@ -97,13 +99,14 @@ public class SessionController {
     // Might require additional security
     @MessageMapping("/socket/session/{sessionId}/quiz-answers")    // Here participants send quiz answers
     @SendTo("/topic/session/{sessionId}/quiz-answers")      // Here leader subscribes to receive quiz answers
-    public Message sendQuizAnswersToLeader(@DestinationVariable String sessionId, @Payload final Message message){
-        if(message.getType() != MessageType.QUIZ_ANSWERS)
+    public Message sendQuizAnswersToLeader(@DestinationVariable String sessionId, @Payload final Message message) throws JsonProcessingException {
+        if (message.getType() != MessageType.QUIZ_ANSWERS)
             throw new InvalidMessageTypeException();
         sessionsService.addMessageToSessionLog(sessionId, message);
 
-        QuizAnswers answersToQuestions = answersService.convertMapToQuizAnswers((Map<String, List<String>>) message.getContent());
-        answersToQuestions.getQuizAnswers().forEach( (questionId, answers) -> {
+        QuizAnswers answersToQuestions = answersService.convertMapToQuizAnswers(new ObjectMapper().readValue(message.getContent(), new TypeReference<>() {
+        }));
+        answersToQuestions.getQuizAnswers().forEach((questionId, answers) -> {
             List<Integer> answerIdx = answersService.getAnswerCountsOrAddForQuestion(questionId, answers);
             answersService.addAnswers(sessionId, questionId, answerIdx);
         });

@@ -63,9 +63,9 @@ class Socket {
 
       if (!this.isLeader) {
         this.stompClient.send(
-          `/app/session/${this.state.sessionId}/new-user`,
-          {},
-          JSON.stringify(msg)
+            `/app/socket/session/${this.state.sessionId}/new-user`,
+            {},
+            JSON.stringify(msg)
         );
       }
 
@@ -113,15 +113,15 @@ class Socket {
     if (message && this.stompClient) {
       const messageToSend = {
         sender: this.state.username,
-        content: message.content,
+        content: JSON.stringify(message.content),
         type: types[message.type],
         timestamp: moment().calendar(),
       };
       console.log(messageToSend);
       this.stompClient.send(
-        `/app/session/${this.state.sessionId}/${message.type}`,
-        {},
-        JSON.stringify(messageToSend)
+          `/app/socket/session/${this.state.sessionId}/${message.type}`,
+          {},
+          JSON.stringify(messageToSend)
       );
     }
   };
@@ -134,9 +134,9 @@ class Socket {
         type: "GUEST_APPROVAL",
       };
       this.stompClient.send(
-        `/app/session/${this.state.approvalRoomId}/guest-approval-request`,
-        {},
-        JSON.stringify(chatMessage)
+          `/app/socket/session/${this.state.approvalRoomId}/guest-approval-request`,
+          {},
+          JSON.stringify(chatMessage)
       );
     }
   };
@@ -148,9 +148,9 @@ class Socket {
         type: "GUEST_APPROVAL",
       };
       this.stompClient.send(
-        `/app/session/${this.state.approvalRoomId}/guest-approval-response/${guestId}`,
-        {},
-        JSON.stringify(chatMessage)
+          `/app/socket/session/${this.state.approvalRoomId}/guest-approval-response/${guestId}`,
+          {},
+          JSON.stringify(chatMessage)
       );
     }
   };

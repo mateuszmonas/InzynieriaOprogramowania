@@ -37,5 +37,4 @@ public class SessionStatisticsController {
         TimelineResponse response = new TimelineResponse(session.getLog());
         return ResponseEntity.ok(response);
     }
-
 }
