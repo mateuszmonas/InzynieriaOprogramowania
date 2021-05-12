@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/session/{sessionId}/statistics/answers")
+@RequestMapping("/temporary/{sessionId}/statistics/answers")
 @AllArgsConstructor
 public class SessionAnswersController {
     private final SessionService sessionService;
