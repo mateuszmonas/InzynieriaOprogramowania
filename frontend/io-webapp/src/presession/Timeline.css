@@ -1,68 +1,88 @@
-.timeline {
-    background: darkgrey;
-    padding: 1% 1% 1% 1%;
-    width: 40vw;
-    border-radius: 1rem;
-    box-shadow: 0px 0px 2px 0px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 500px;
-    flex: 1;
-    overflow: hidden;
-}
-
-.session-history-bg {
-    background: #ffe;
-    padding: 1% 1% 1% 1%;
-    width: 40vw;
-    border-radius: 1rem;
-    box-shadow: 0px 0px 2px 0px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 70%;
-    flex: 1;
-}
-
-.session-history-scroll{
-    overflow-y: scroll;
-    padding: 20px;
-}
-
-.session-list{
-
-}
-
-.session-in-list{
-    width: 250px;
-    height: 50px;
-    background: lightcoral;
-}
-
-.session-history-main {
-    background: lightblue;
-    padding: 1% 1% 1% 1%;
-    border-radius: 1rem;
-    box-shadow: 0px 0px 2px 0px;
+.session-history-view {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-    width: 80%;
-    height: 70%;
-    margin: 5% 10%;
+    width: 95vw;
+    height: 90vh;
+    padding: 5vh 1.5vw 0vh 1.5vw;
 }
 
-.session-timeline {
-    padding: 1% 1% 1% 1%;
-    width: 40vw;
-    border-radius: 1rem;
-    box-shadow: 0px 0px 2px 0px;
+.session-history-element {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 10%;
+    width: 95%;
+    border-style: hidden hidden solid hidden;
+    border-width: 0px 0px 1px 0px;
+}
+
+.session-history-element:hover {
+    display: flex;
+    flex-direction: row;
+    background: #cccccc;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 10%;
+    width: 95%;
+    border-style: hidden hidden solid hidden;
+    border-width: 0px 0px 1px 0px;
+}
+
+.session-history-button {
+    border: none;
+    background-color: inherit;
+    text-align: left;
+    font-size: medium;
+    width: 100%;
+    height: 100%;
+}
+
+.session-history-content {
+    background-color: white;
+    box-shadow: 0.2rem 0.2rem 0.4rem #999999;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-y: scroll;
+    height: 90%;
+    width: 50%;
+}
+
+.session-timeline-content {
+    background-color: white;
+    box-shadow: 0.2rem 0.2rem 0.4rem #999999;
+    align-content: center;
+    height: 90%;
+    width: 50%;
+}
+
+.timeline-content {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: 625px;
+}
+.session-history-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 5%;
+    width: 100%;
+}
+
+.session-title {
+    align-content: center;
+    height: 5%;
+    width: 100%;
+    display: flex;
     justify-content: center;
-    height: 500px;
+
+}
+
+.session-title-text {
+    width: 90%;
+    border-style: hidden hidden solid hidden;
+    border-width: 0px 0px 1px 0px;
 }

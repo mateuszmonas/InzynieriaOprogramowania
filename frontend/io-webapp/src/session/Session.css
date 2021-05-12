@@ -51,7 +51,7 @@
 .question {
   width: 75%;
   height: 100%;
-  background: rgb(170, 231, 170);
+  background: #eeeeee;
   display: flex;
   flex-direction: column;
   justify-content: center;
