@@ -17,8 +17,6 @@ services:
       - 5005:5005
     environment:
       - spring.data.mongodb.uri=mongodb://host.docker.internal:27017/io
-    extra_hosts:
-      - host.docker.internal:host-gateway
 
 volumes:
   io-database-vol:
