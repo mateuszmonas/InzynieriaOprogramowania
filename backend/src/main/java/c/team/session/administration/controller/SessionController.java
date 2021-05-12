@@ -29,6 +29,7 @@ import java.util.UUID;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class SessionController {
 
+    private final ObjectMapper objectMapper;
     private final SessionService sessionsService;
     private final SessionAnswersService answersService;
 
@@ -69,7 +70,7 @@ public class SessionController {
     public Message guestApprovalResponse(@DestinationVariable String sessionApprovalId, @DestinationVariable String guestId, @Payload final Message message) throws JsonProcessingException {
         if (message.getType() != MessageType.GUEST_APPROVAL)
             throw new InvalidMessageTypeException();
-        boolean leaderApproval = new ObjectMapper().readValue(message.getContent(), Boolean.class);
+        boolean leaderApproval = objectMapper.readValue(message.getContent(), Boolean.class);
 
         String sessionId = sessionsService
                 .findByGuestApprovalRoomId(UUID.fromString(sessionApprovalId))
@@ -104,7 +105,7 @@ public class SessionController {
             throw new InvalidMessageTypeException();
         sessionsService.addMessageToSessionLog(sessionId, message);
 
-        QuizAnswers answersToQuestions = answersService.convertMapToQuizAnswers(new ObjectMapper().readValue(message.getContent(), new TypeReference<>() {
+        QuizAnswers answersToQuestions = answersService.convertMapToQuizAnswers(objectMapper.readValue(message.getContent(), new TypeReference<>() {
         }));
         answersToQuestions.getQuizAnswers().forEach((questionId, answers) -> {
             List<Integer> answerIdx = answersService.getAnswerCountsOrAddForQuestion(questionId, answers);
