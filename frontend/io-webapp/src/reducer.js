@@ -68,6 +68,7 @@ export const reducer = (state, action) => {
         awaitsApproval: false,
         questionWidth: "75%",
         pickedQuestion: -1,
+        quizName: "",
       };
     case "SET_STAGE_QUIZ_LIST":
       return {
