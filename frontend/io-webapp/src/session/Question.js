@@ -56,7 +56,7 @@ const Question = ({ state, dispatch }) => {
 
   React.useEffect(() => {
     const interval = setInterval(() => {
-      if (state.socket && questions.length === 0) updateQuestions();
+      if (questions.length === 0) updateQuestions();
     }, 5000);
     return () => {
       clearInterval(interval);
