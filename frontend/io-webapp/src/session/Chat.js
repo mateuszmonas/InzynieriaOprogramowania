@@ -29,6 +29,7 @@ const Chat = ({ state, dispatch }) => {
   };
 
   useEffect(() => {
+    console.log(state.socket);
     if (state.socket && state.socket.messageListeners.length < 1) {
       state.socket.addMessageListener(parseMessage);
     }

@@ -1,0 +1,59 @@
+name: deploy to gcr
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: gcs
+    env:
+      BACKEND_IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/backend
+      FRONTEND_IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/frontend
+    steps:
+
+      - name: Login
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests -q
+        working-directory: ./backend
+
+      - name: Build Backend Docker image
+        run: docker build . -t $BACKEND_IMAGE_NAME
+        working-directory: ./backend
+
+      - name: Push Backend Docker image
+        run: docker push $BACKEND_IMAGE_NAME
+        working-directory: ./backend
+
+      - name: Deploy Backend Docker image
+        run: gcloud run deploy backend --image $BACKEND_IMAGE_NAME --region europe-north1 --platform managed --allow-unauthenticated --set-env-vars spring.data.mongodb.uri=${{ secrets.DATABASE_URL }}
+        working-directory: ./backend
+
+      - name: Set backend url
+        run: echo "REACT_APP_BACKEND_URL=$(gcloud run services describe backend --format='value(status.url)' --platform managed --region europe-north1)" >> $GITHUB_ENV
+
+      - name: Build Frontend Docker image
+        run: docker build . -t $FRONTEND_IMAGE_NAME --build-arg REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL
+        working-directory: ./frontend/io-webapp
+
+      - name: Push Frontend Docker image
+        run: docker push $FRONTEND_IMAGE_NAME
+        working-directory: ./frontend/io-webapp
+
+      - name: Deploy Frontend Docker image
+        run: gcloud run deploy frontend --image $FRONTEND_IMAGE_NAME --region europe-north1 --platform managed --allow-unauthenticated
+        working-directory: ./frontend/io-webapp

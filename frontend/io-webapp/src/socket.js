@@ -37,7 +37,7 @@ class Socket {
     isLeader = false,
   ) => {
     if (state) {
-      const socket = new SockJS("http://localhost:8080/session-handling");
+      const socket = new SockJS(process.env.REACT_APP_BACKEND_URL + "/session-handling");
       const stompClient = Stomp.over(socket);
       const sock = new Socket(
         socket,

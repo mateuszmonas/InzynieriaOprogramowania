@@ -7,6 +7,7 @@ import c.team.quiz.model.GetQuizzesResponse;
 import c.team.quiz.model.QuizDto;
 import c.team.security.model.UserPrincipal;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,8 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("quiz")
 @AllArgsConstructor
+@Slf4j
 public class QuizController {
-
     private final QuizService quizService;
 
     @PostMapping

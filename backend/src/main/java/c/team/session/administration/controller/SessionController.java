@@ -103,7 +103,7 @@ public class SessionController {
             throw new InvalidMessageTypeException();
         sessionsService.addMessageToSessionLog(sessionId, message);
 
-        QuizAnswers answersToQuestions = (QuizAnswers) message.getContent();
+        QuizAnswers answersToQuestions = answersService.convertMapToQuizAnswers((Map<String, List<String>>) message.getContent());
         answersToQuestions.getQuizAnswers().forEach( (questionId, answers) -> {
             List<Integer> answerIdx = answersService.getAnswerCountsOrAddForQuestion(questionId, answers);
             answersService.addAnswers(sessionId, questionId, answerIdx);
