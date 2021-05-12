@@ -8,6 +8,21 @@ import "./questionPicker.css";
 import "../common.css";
 
 const QuestionPicker = ({ state, dispatch }) => {
+  const submitHandler = (e, quiz) => {
+    e.preventDefault();
+
+    for (let i = 0; i < quiz.questions.length; i++) {
+      const q = quiz.questions[i];
+      const newQuestion = { question: q.content };
+      newQuestion.answers = { answers : q.answers.map((a) => {return a.text}) };
+      const msg = {
+        type : "quiz",
+        content: newQuestion, 
+      };
+      state.socket.sendMessage(msg);
+    }
+  };
+
   React.useEffect(() => {
     (async () => {
       await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
@@ -72,7 +87,7 @@ const QuestionPicker = ({ state, dispatch }) => {
                 </div>
               </div>
               <div className="questionPickerElementButtons">
-                <FiSend size={16} />
+                <FiSend size={16} onClick={(e) => {submitHandler(e, quiz)}}/>
               </div>
             </div>
           );

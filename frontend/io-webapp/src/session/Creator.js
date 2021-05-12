@@ -15,9 +15,9 @@ const Creator = ({ state, dispatch, close }) => {
     e.preventDefault();
 
     if (question !== "") {
-      const newQuestion = { question: question };
+      const newQuestion = state.stage === "designer" ? {content: question} : { question: question };
       if (answer !== "") {
-        newQuestion.answers = { answers : [answer] };
+        newQuestion.answers = state.stage === "designer" ? [{ text: answer, correct: true }] : { answers : [answer] };
       } else if (
         answers.length === 4 &&
         answers[0] !== "" &&
@@ -25,13 +25,32 @@ const Creator = ({ state, dispatch, close }) => {
         answers[2] !== "" &&
         answers[3] !== ""
       ) {
-        newQuestion.answers = { answers : answers };
+        newQuestion.answers = state.stage === "designer" ? answers.map((answer, index) => {
+          return {
+            text: answer,
+            correct: corrects[index],
+          };
+        }) : { answers : answers };
       }
-      const msg = {
-        type : "quiz",
-        content: newQuestion, 
-      };
-      state.socket.sendMessage(msg);
+      if (state.stage !== "designer") {
+        const msg = {
+          type : "quiz",
+          content: newQuestion, 
+        };
+        state.socket.sendMessage(msg);
+      }
+
+      if (state.stage === "designer") {
+        if (state.pickedQuestion < 0) {
+          dispatch({ type: "ADD_DESIGNER_QUESTION", payload: newQuestion });
+        } else {
+          dispatch({
+            type: "UPDATE_DESIGNER_QUESTION",
+            payload: { index: state.pickedQuestion, question: newQuestion },
+          });
+          dispatch({ type: "SET_PICKED_QUESTION", payload: -1 });
+        }
+      }
     }
 
     setQuestion("");
