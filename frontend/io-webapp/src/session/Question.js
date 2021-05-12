@@ -18,7 +18,7 @@ const Question = ({ state, dispatch }) => {
     window.location.reload(false);
   }
 
-  const [questions, setQuestions] = React.useState(sampleQuestions);
+  const [questions, setQuestions] = React.useState([]);
   const [current, setCurrent] = React.useState(questions[0]);
 
   const [answer, setAnswer] = React.useState("");
