@@ -56,10 +56,10 @@ const Account = ({ state, dispatch }) => {
         await fetch(process.env.REACT_APP_BACKEND_URL + "/session/create", {
             method: "POST",
             headers: {
+                Authorization: state.token,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                username: state.username,
                 sessionTitle: title,
                 guestApproval: needsApproval,
             }),

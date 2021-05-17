@@ -12,5 +12,5 @@ public class Message {
     private MessageType type;
     private String timestamp;
     private String sessionId;
-    private Object content; // Maybe we'll need to make it more specific but works right now
+    private String content;
 }

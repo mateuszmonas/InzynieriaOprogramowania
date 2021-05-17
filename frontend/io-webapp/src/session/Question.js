@@ -35,19 +35,23 @@ const Question = ({ state, dispatch }) => {
   };
 
   const submitHandler = (questionId, answerNumber) => {
+    let answers = {}
+    answers[questionId] = [answerNumber]
     const msg = {
       type: "quiz-answers",
-      content: { id: questionId, answers: [answerNumber] },
+      content: answers,
     };
     state.socket.sendMessage(msg);
     updateQuestions();
   };
 
   const submitHandler2 = (e, questionId) => {
+    let answers = {}
+    answers[questionId] = [answer]
     e.preventDefault();
     const msg = {
       type: "quiz-answers",
-      content: { id: questionId, answers: [answer] },
+      content: answers,
     };
     state.socket.sendMessage(msg);
     updateQuestions();

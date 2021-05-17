@@ -14,17 +14,17 @@ const Navbar = ({ state, dispatch }) => {
     e.preventDefault();
 
     (async () => {
-      await fetch(process.env.REACT_APP_BACKEND_URL + "/session/close", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: state.username,
-          sessionId: state.sessionId,
-        }),
+      await fetch(process.env.REACT_APP_BACKEND_URL + `/session/${state.sessionId}/close`, {
+          method: "POST",
+          headers: {
+              Authorization: state.token,
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              username: state.username,
+          }),
       })
-        .then((_) => {
+          .then((_) => {
           dispatch({ type: "SET_SESSION_ID", payload: "" });
           dispatch({ type: "SET_STAGE_ACCOUNT" });
         })

@@ -11,8 +11,4 @@ public class ParticipantListRequest {
     @NotBlank
     @Parameter(required = true)
     private String identification;  // account username of owner or guestId
-
-    @NotBlank
-    @Parameter(required = true)
-    private String sessionId;
 }
