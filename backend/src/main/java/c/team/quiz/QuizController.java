@@ -1,17 +1,13 @@
 package c.team.quiz;
 
 import c.team.quiz.exception.QuizNotFoundException;
-import c.team.quiz.model.CreateQuizRequest;
-import c.team.quiz.model.CreateQuizResponse;
-import c.team.quiz.model.GetQuizzesResponse;
-import c.team.quiz.model.QuizDto;
+import c.team.quiz.model.*;
 import c.team.security.model.UserPrincipal;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,8 +19,6 @@ import java.util.List;
 @Slf4j
 public class QuizController {
     private final QuizService quizService;
-
-    @PutMapping()
 
     @PostMapping
     public ResponseEntity<CreateQuizResponse> createQuiz(@AuthenticationPrincipal UserPrincipal user, @RequestBody @Valid CreateQuizRequest request) {
@@ -46,8 +40,21 @@ public class QuizController {
         return ResponseEntity.ok(quiz);
     }
 
+
+    @PostMapping("{quizId}/edit")   // PUT does not seem to work well with spring
+    @ResponseStatus(HttpStatus.OK)
+    public void updateQuiz(@RequestBody @Valid UpdateQuizRequest request, @PathVariable String quizId){
+        quizService.updateQuiz(quizId, request);
+    }
+
+    @PostMapping("{quizId}/delete") // DELETE not supported by spring
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteQuiz(@PathVariable String quizId){
+        quizService.deleteQuiz(quizId);
+    }
+
     @ExceptionHandler(QuizNotFoundException.class)
-    public final ResponseEntity<Error> handleException(UsernameNotFoundException ex) {
+    public final ResponseEntity<Error> handleException(QuizNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

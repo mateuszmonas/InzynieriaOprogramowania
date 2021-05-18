@@ -5,7 +5,22 @@ import "./quizList.css";
 import "../common.css";
 
 const QuizList = ({ state, dispatch }) => {
-  React.useEffect(() => {
+  const deleteHandler = (quizId) => {
+    (async () => {
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz/" + quizId + "/delete", {
+        method: "POST",
+        headers: {
+          Authorization: state.token,
+          "Content-Type": "application/json",
+        },
+      })
+        .catch((error) => {
+          console.error(error);
+        });
+    })();
+  };
+
+  const downloadQuizzes = () => {
     (async () => {
       await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
         method: "GET",
@@ -22,6 +37,10 @@ const QuizList = ({ state, dispatch }) => {
           console.error(error);
         });
     })();
+  };
+
+  React.useEffect(() => {
+    downloadQuizzes();
   }, []);
 
   return (
@@ -62,7 +81,7 @@ const QuizList = ({ state, dispatch }) => {
       </div>
 
       <div className="quizListContent">
-        {state.quizList.map((quiz) => {
+        {state.quizList.map((quiz, index) => {
           return (
             <div className="quizListElement">
               <div className="quizListElementInfo">
@@ -98,6 +117,18 @@ const QuizList = ({ state, dispatch }) => {
                   }}
                 >
                   Edit
+                </button>
+              </div>
+              <div className="quizListElementButtons">
+                <button
+                  type="button"
+                  className="submit"
+                  onClick={() => {
+                    deleteHandler(quiz.id);
+                    downloadQuizzes();
+                  }}
+                >
+                  Delete
                 </button>
               </div>
             </div>

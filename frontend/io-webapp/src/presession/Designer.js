@@ -33,6 +33,29 @@ const Designer = ({ state, dispatch }) => {
     })();
   };
 
+  const editHandler = (e) => {
+    e.preventDefault();
+    (async () => {
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz/" + state.quizId + "/edit", {
+        method: "POST",
+        headers: {
+          Authorization: state.token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: state.quizName,
+          questions: state.designerQuestions,
+        }),
+      })
+        .then(() => {
+          dispatch({ type: "SET_STAGE_QUIZ_LIST" });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    })();
+  };
+
   return (
     <div className="designer">
       <div className="designerHeader">
@@ -49,8 +72,8 @@ const Designer = ({ state, dispatch }) => {
             type="button"
             onClick={(e) => {
               state.editMode
-                ? EditHandler(e)
-                : CreateHandler(e);
+                ? editHandler(e)
+                : createHandler(e);
             }}
             className="submit"
           >
