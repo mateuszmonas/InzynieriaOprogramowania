@@ -24,6 +24,8 @@ import java.util.List;
 public class QuizController {
     private final QuizService quizService;
 
+    @PutMapping()
+
     @PostMapping
     public ResponseEntity<CreateQuizResponse> createQuiz(@AuthenticationPrincipal UserPrincipal user, @RequestBody @Valid CreateQuizRequest request) {
         String quizId = quizService.createQuiz(user.getId(), request);

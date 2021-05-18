@@ -33,8 +33,8 @@ const QuestionList = ({ state, dispatch }) => {
     e.preventDefault();
 
     (async () => {
-      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz/edit", {
-        method: "POST",
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
+        method: "PUT",
         headers: {
           Authorization: state.token,
           "Content-Type": "application/json",
