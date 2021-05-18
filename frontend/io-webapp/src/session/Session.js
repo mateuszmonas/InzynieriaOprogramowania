@@ -22,7 +22,7 @@ const Session = ({ state, dispatch }) => {
     }
   }, []);
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
     if (state.stage === "lecturer") {
       dispatch({
         type: "SET_SOCKET",
@@ -33,10 +33,11 @@ const Session = ({ state, dispatch }) => {
         type: "SET_SOCKET",
         payload: Socket.connect(state, dispatch, "approval"),
       });
-    } else {
+    } else { 
+      const socket = Socket.connect(state, dispatch, "session");
       dispatch({
         type: "SET_SOCKET",
-        payload: Socket.connect(state, dispatch, "session"),
+        payload: socket,
       });
     }
   }, [state.sessionId, state.awaitsApproval, state.approvalRoomId]);
