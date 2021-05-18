@@ -47,7 +47,11 @@ const Designer = ({ state, dispatch }) => {
           </button>
           <button
             type="button"
-            onClick={(e) => createHandler(e)}
+            onClick={(e) => {
+              state.editMode
+                ? EditHandler(e)
+                : CreateHandler(e);
+            }}
             className="submit"
           >
             Save <FiSave size={16} />

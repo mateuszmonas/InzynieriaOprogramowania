@@ -29,6 +29,32 @@ const QuestionList = ({ state, dispatch }) => {
     })();
   };
 
+  const EditHandler = (e) => {
+    e.preventDefault();
+
+    (async () => {
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz/edit", {
+        method: "POST",
+        headers: {
+          Authorization: state.token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: state.quizId,
+          name: state.name,
+          questions: state.designerQuestions,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          dispatch({ type: "SET_STAGE_QUIZ_LIST" });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    })();
+  };
+
   const QuestionListElement = ({ state, dispatch, question, index }) => {
     return (
       <div

@@ -41,6 +41,18 @@ const QuizList = ({ state, dispatch }) => {
             className="submit"
             onClick={() => {
               dispatch({ type: "SET_DESIGNER_QUESTIONS", payload: [] });
+              dispatch({
+                type: "SET_QUIZ_EDIT_MODE",
+                payload: false
+              })
+              dispatch({
+                type: "SET_QUIZ_ID",
+                payload: ""
+              })
+              dispatch({
+                type: "SET_QUIZ_NAME",
+                payload: ""
+              })
               dispatch({ type: "SET_STAGE_DESIGNER" });
             }}
           >
@@ -70,6 +82,18 @@ const QuizList = ({ state, dispatch }) => {
                       type: "SET_DESIGNER_QUESTIONS",
                       payload: quiz.questions,
                     });
+                    dispatch({
+                      type: "SET_QUIZ_EDIT_MODE",
+                      payload: true
+                    })
+                    dispatch({
+                      type: "SET_QUIZ_ID",
+                      payload: quiz.id
+                    })
+                    dispatch({
+                      type: "SET_QUIZ_NAME",
+                      payload: quiz.name
+                    })
                     dispatch({ type: "SET_STAGE_DESIGNER" });
                   }}
                 >

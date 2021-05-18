@@ -26,6 +26,8 @@ export const initialState = {
   pickedQuestion: -1,
   quizList: [],
   quizName: "",
+  quizId: "",
+  editMode: false,
   pickedSession: -1
 };
 
@@ -68,7 +70,6 @@ export const reducer = (state, action) => {
         awaitsApproval: false,
         questionWidth: "75%",
         pickedQuestion: -1,
-        quizName: "",
       };
     case "SET_STAGE_QUIZ_LIST":
       return {
@@ -156,6 +157,10 @@ export const reducer = (state, action) => {
       };
     case "SET_DESIGNER_QUESTIONS":
       return { ...state, designerQuestions: action.payload };
+    case "SET_QUIZ_ID":
+      return { ...state, quizId: action.payload };
+    case "SET_QUIZ_EDIT_MODE":
+      return { ...state, editMode: action.payload };
     case "UPDATE_DESIGNER_QUESTION":
       return {
         ...state,
