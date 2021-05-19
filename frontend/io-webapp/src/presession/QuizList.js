@@ -1,5 +1,5 @@
 import React from "react";
-import { FiPlusCircle, FiArrowLeft } from "react-icons/fi";
+import {FiArrowLeft, FiPlusCircle} from "react-icons/fi";
 
 import "./quizList.css";
 import "../common.css";
@@ -7,17 +7,17 @@ import "../common.css";
 const QuizList = ({ state, dispatch }) => {
   const deleteHandler = (quizId) => {
     (async () => {
-      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz/" + quizId + "/delete", {
-        method: "POST",
-        headers: {
-          Authorization: state.token,
-          "Content-Type": "application/json",
-        },
-      })
-        .catch((error) => {
-          console.error(error);
-        });
-      downloadQuizzes();
+        await fetch(process.env.REACT_APP_BACKEND_URL + `/quiz/${quizId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: state.token,
+                "Content-Type": "application/json",
+            },
+        })
+            .catch((error) => {
+                console.error(error);
+            });
+        downloadQuizzes();
     })();
   };
 

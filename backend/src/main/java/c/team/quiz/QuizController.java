@@ -36,18 +36,18 @@ public class QuizController {
 
     @GetMapping("{quizId}")
     public ResponseEntity<QuizDto> getQuiz(@AuthenticationPrincipal UserPrincipal user, @PathVariable String quizId) {
-        QuizDto quiz = quizService.findQuiz(user.getId(), quizId).orElseThrow();
+        QuizDto quiz = quizService.findQuiz(user.getId(), quizId).orElseThrow(QuizNotFoundException::new);
         return ResponseEntity.ok(quiz);
     }
 
 
-    @PostMapping("{quizId}/edit")   // PUT does not seem to work well with spring
+    @PutMapping("{quizId}")
     @ResponseStatus(HttpStatus.OK)
     public void updateQuiz(@RequestBody @Valid UpdateQuizRequest request, @PathVariable String quizId){
         quizService.updateQuiz(quizId, request);
     }
 
-    @PostMapping("{quizId}/delete") // DELETE not supported by spring
+    @DeleteMapping("{quizId}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteQuiz(@PathVariable String quizId){
         quizService.deleteQuiz(quizId);

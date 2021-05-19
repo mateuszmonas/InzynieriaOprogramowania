@@ -1,8 +1,7 @@
 import React from "react";
 import Creator from "../session/Creator";
 import QuestionList from "./QuestionList";
-import { FiSave, FiArrowLeft } from "react-icons/fi";
-import { Popup } from "reactjs-popup";
+import {FiArrowLeft, FiSave} from "react-icons/fi";
 
 import "./Account.css";
 import "./designer.css";
@@ -36,8 +35,8 @@ const Designer = ({ state, dispatch }) => {
   const editHandler = (e) => {
     e.preventDefault();
     (async () => {
-      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz/" + state.quizId + "/edit", {
-        method: "POST",
+      await fetch(process.env.REACT_APP_BACKEND_URL + `/quiz/${state.quizId}`, {
+        method: "PUT",
         headers: {
           Authorization: state.token,
           "Content-Type": "application/json",
@@ -47,7 +46,7 @@ const Designer = ({ state, dispatch }) => {
           questions: state.designerQuestions,
         }),
       })
-        .then(() => {
+          .then(() => {
           dispatch({ type: "SET_STAGE_QUIZ_LIST" });
         })
         .catch((error) => {
