@@ -17,6 +17,7 @@ const QuizList = ({ state, dispatch }) => {
         .catch((error) => {
           console.error(error);
         });
+      downloadQuizzes();
     })();
   };
 
@@ -125,7 +126,6 @@ const QuizList = ({ state, dispatch }) => {
                   className="submit"
                   onClick={() => {
                     deleteHandler(quiz.id);
-                    downloadQuizzes();
                   }}
                 >
                   Delete
