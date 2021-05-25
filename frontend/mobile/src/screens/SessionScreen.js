@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useMemo} from "react";
 import {StyleSheet, View, FlatList, Text, TextInput, TouchableOpacity} from "react-native";
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
@@ -33,7 +33,24 @@ const styles = StyleSheet.create({
     },
     sendText: {
         fontSize: 16
-    }
+    },
+    questionInput: {
+        backgroundColor: 'lightgray',
+        paddingHorizontal: 8,
+        borderRadius: 4,
+        height: 48,
+        fontSize: 18,
+    },
+    nextQuestionButton: {
+        alignSelf: 'flex-end',
+        height: 40,
+        marginTop: 8,
+        alignItems: "center",
+        justifyContent: 'center',
+        backgroundColor: "orange",
+        borderRadius: 10,
+        paddingHorizontal: 16,
+    },
 });
 
 
@@ -47,6 +64,11 @@ const SessionScreen = ({ route }) => {
 
     const [messageText, setMessageText] = useState('');
 
+    const [questions, setQuestions] = useState([]);
+    const [activeQuestion, setActiveQuestion] = useState(undefined);
+
+    const [answer, setAnswer] = useState(undefined);
+
     useEffect(() => {
         if (!newMessage) {
             return;
@@ -58,17 +80,29 @@ const SessionScreen = ({ route }) => {
 
     const onMessageReceived = (payload) => {
         console.log('received message')
-        console.log(payload)
+        // console.log(payload)
         const message = JSON.parse(payload.body);
         console.log(message);
         if (message.sender === route.params.username) {
             return;
         }
-        setNewMessage({
-           type: 'incoming',
-           content: message.content,
-           sender: message.sender,
-        });
+        if(message.type === 'COMMENT') {
+            setNewMessage({
+               type: 'incoming',
+               content: message.content.replace(/['"]+/g, ''),
+               sender: message.sender,
+            });
+        }
+    };
+
+    const onQuizReceived = (payload) => {
+        console.log('received quiz')
+        const message = JSON.parse(payload.body);
+        const rawQuestion = JSON.parse(message.content);
+        const question = { question: rawQuestion.question, id: message.id, answers: rawQuestion.answers.answers }
+        console.log(question);
+        setQuestions((oldQuestions) => [...oldQuestions, question])
+        setActiveQuestion((currentQuestion) => currentQuestion ?? question)
     };
 
     const onError = (error) => {
@@ -90,9 +124,10 @@ const SessionScreen = ({ route }) => {
                 console.log('connected')
                 console.log(stompClient)
                 stompClient?.subscribe(`/topic/session/${sessionNumber}`, onMessageReceived)
-                stompClient?.send(`/app/session/${sessionNumber}/new-user`,
+                stompClient?.subscribe(`/topic/session/${sessionNumber}/quiz`, onQuizReceived)
+                stompClient?.send(`/app/socket/session/${sessionNumber}/new-user`,
                     {},
-                    JSON.stringify({sender: 'studenciak', type: 'CONNECT'})
+                    JSON.stringify({sender: route.params.guestId, type: 'CONNECT'})
                 )
                 setStomp(stompClient)
             },
@@ -101,8 +136,84 @@ const SessionScreen = ({ route }) => {
     }, [sessionNumber, setConnected, isConnected])
 
 
-    return (
-        <SafeAreaView style={styles.container}>
+    const questionsView = useMemo(() => {
+        console.log(activeQuestion)
+        console.log(questions)
+        console.log(questions.indexOf(activeQuestion))
+        console.log(answer)
+        const isABCDQuestion = activeQuestion
+            && activeQuestion.answers
+            && activeQuestion.answers.length > 1;
+        return (activeQuestion && (
+            <View style={{flex: 1, paddingHorizontal: 8}}>
+                <Text style={{fontSize: 24, textAlign: 'center', marginTop: 48}}>{'Quiz'}</Text>
+                <Text style={{fontSize: 24}}>{activeQuestion?.question}</Text>
+                <Text style={{marginTop: 24}}>{'Twoja odpowiedź'}</Text>
+                {isABCDQuestion ? (
+                    <>
+                        {activeQuestion.answers.map((answerText, i) => (
+                            <TouchableOpacity
+                                key={i.toString()}
+                                style={{flexDirection: 'row', paddingVertical: 6}}
+                                onPress={() =>{
+                                    setAnswer(i);
+                                }}
+                            >
+                                <View style={{
+                                    height: 20,
+                                    width: 20,
+                                    borderRadius: 10,
+                                    borderWidth: 1,
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                    {answer === i && (
+                                        <View
+                                            style={{height: 14, width: 14, borderRadius: 7, backgroundColor: 'black'}}/>
+                                    )}
+                                </View>
+                                <Text style={{marginHorizontal: 12, fontSize: 16}}>{answerText}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </>
+                ) : (
+                    <View>
+                        <TextInput
+                            style={styles.questionInput}
+                            onChangeText={(text) => {
+                                setAnswer(text)
+                            }}
+                        />
+                    </View>
+                )}
+                <TouchableOpacity style={styles.nextQuestionButton} onPress={() => {
+                    const indexOfActiveQuestion = questions.indexOf(activeQuestion)
+                    const content = {}
+                    content[activeQuestion.id] = isABCDQuestion ? [answer] : answer;
+                    const answerMessage = JSON.stringify({sender: route.params.username, type: 'QUIZ_ANSWERS', content})
+                    console.log(content)
+                    console.log(answerMessage)
+                    stomp?.send(`/app/socket/session/${sessionNumber}/quiz-answers`,
+                        {},
+                        answerMessage
+                    )
+                    setAnswer(undefined);
+                    if (indexOfActiveQuestion < questions.length - 1) {
+                        setActiveQuestion(questions[indexOfActiveQuestion + 1])
+                    } else {
+                        setActiveQuestion(undefined)
+                    }
+                }}>
+                    <Text style={{fontSize: 16}}>
+                        {(questions.indexOf(activeQuestion) === questions.length - 1) ? 'Zapisz' : 'Następne pytanie'}
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        ))
+    }, [activeQuestion, questions, answer]);
+
+    const chatView = useMemo(() => (
+        <>
             <FlatList
                 style={{flex: 1, paddingHorizontal: 8, paddingBottom: 8 }}
                 data={messages}
@@ -151,15 +262,21 @@ const SessionScreen = ({ route }) => {
                             sender: ':)',
                         })
                         setMessageText('');
-                        stomp?.send(`/app/session/${sessionNumber}/send`,
+                        stomp?.send(`/app/socket/session/${sessionNumber}/send`,
                             {},
-                            JSON.stringify({sender: route.params.username, type: 'COMMENT', content: messageText})
+                            JSON.stringify({sender: route.params.username, type: 'COMMENT', content: `"${messageText}"`})
                         )
                     }}
                 >
                     <Text style={styles.sendText}>Wyślij</Text>
                 </TouchableOpacity>
             </View>
+        </>
+    ), [messages, messageText, sessionNumber])
+
+    return (
+        <SafeAreaView style={styles.container}>
+            { activeQuestion ? questionsView : chatView }
         </SafeAreaView>
     )
 }

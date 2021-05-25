@@ -12,7 +12,7 @@ function HomeScreen({ navigation }) {
     const [username, setUsername] = useState('studenciak');
     const [isUsernameHighlighted, setUserNameHighlighted] = useState(false);
 
-    const [sessionId, setSessionId] = useState('985385f2-6020-4378-b501-bb4fa2a47e0f')
+    const [sessionId, setSessionId] = useState('ef6eb273-5a71-4b03-bd2b-940c4e65d1f9')
     const [isSessionIdHighlighted, setSessionIdHighlighted] = useState(false);
 
     const [isJoinSessionButtonEnabled, setJoinSessionButtonEnabled] = useState(true);
@@ -40,7 +40,10 @@ function HomeScreen({ navigation }) {
             .then((response) => {console.log(response); return response.json();})
             .then((json) => {
                 console.log(json)
-                json.sessionId && navigation.navigate('Session', { sessionId: json.sessionId, username })
+                json.sessionId && navigation.navigate(
+                    'Session',
+                    { sessionId: json.sessionId.trim(), username, guestId: json.guestId }
+                )
             })
             .catch((error) => console.error(error))
             .finally(() => setJoinSessionButtonEnabled(true))
@@ -91,10 +94,7 @@ function HomeScreen({ navigation }) {
                 </TouchableOpacity>
             </View>
             <Text style={styles.inputLabel}>Zeskanuj QR kod sesji</Text>
-            <TouchableOpacity style={styles.joinByQrCodeButton} onPress={() => {
-                // Just for testing purposes
-                navigation.navigate('Session', { username })
-            }}>
+            <TouchableOpacity style={styles.joinByQrCodeButton} onPress={() => {} }>
                 <Text style={styles.joinByQrCodeText}>Skanuj kod QR</Text>
             </TouchableOpacity>
             <StatusBar style={"auto"} />
