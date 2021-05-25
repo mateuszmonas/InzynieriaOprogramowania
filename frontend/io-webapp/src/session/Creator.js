@@ -313,7 +313,7 @@ const Creator = ({ state, dispatch, close }) => {
               Cancel
             </button>
             <button type="submit" className="submitFlat">
-              {(state.stage === "designer" && state.pickedQuestion) >= 0
+              {(state.stage === "designer" && state.pickedQuestion >= 0)
                 ? "Edit Question"
                 : "Add Question"}
             </button>
