@@ -8,12 +8,11 @@ const Chat = ({ state, dispatch }) => {
   const [messages, setMessages] = useState([]);
 
   const parseMessage = (message) => {
-    console.log("HI");
     setMessages((messages) => [
       {
         id: message.id,
         username: message.sender,
-        message: message.content,
+        message: JSON.parse(message.content), 
         time: message.timestamp,
       },
       ...messages,
@@ -22,7 +21,6 @@ const Chat = ({ state, dispatch }) => {
 
   const send = async (e) => {
     e.preventDefault();
-    //state.socket.sendMessage(message);
     const msg = {
       type : "send",
       content: message,
@@ -43,6 +41,7 @@ const Chat = ({ state, dispatch }) => {
         }
       };
     } else {
+      console.log("SOCKET CHAT " + state.socket);
       if (state.socket && state.socket.messageListeners.length < 1) {
         state.socket.addMessageListener(parseMessage);
       }
