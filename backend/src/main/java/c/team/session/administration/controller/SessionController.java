@@ -23,6 +23,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -103,6 +104,12 @@ public class SessionController {
     @SendTo("/topic/session/{sessionId}/reaction")
     public String sendReaction(@DestinationVariable String sessionId, @Payload String reactionString) {
         reactionService.saveReaction(sessionId, reactionString);
+        sessionsService.addMessageToSessionLog(sessionId, Message.builder()
+                .timestamp(OffsetDateTime.now().toString())
+                .sessionId(sessionId)
+                .content(reactionString)
+                .type(MessageType.EMOTE)
+                .build());
         return reactionString;
     }
 
