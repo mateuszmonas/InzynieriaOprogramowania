@@ -1,11 +1,27 @@
 import React from "react";
-import { FiPlusCircle, FiArrowLeft } from "react-icons/fi";
+import {FiArrowLeft, FiPlusCircle} from "react-icons/fi";
 
 import "./quizList.css";
 import "../common.css";
 
 const QuizList = ({ state, dispatch }) => {
-  React.useEffect(() => {
+  const deleteHandler = (quizId) => {
+    (async () => {
+        await fetch(process.env.REACT_APP_BACKEND_URL + `/quiz/${quizId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: state.token,
+                "Content-Type": "application/json",
+            },
+        })
+            .catch((error) => {
+                console.error(error);
+            });
+        downloadQuizzes();
+    })();
+  };
+
+  const downloadQuizzes = () => {
     (async () => {
       await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
         method: "GET",
@@ -22,6 +38,10 @@ const QuizList = ({ state, dispatch }) => {
           console.error(error);
         });
     })();
+  };
+
+  React.useEffect(() => {
+    downloadQuizzes();
   }, []);
 
   return (
@@ -41,6 +61,18 @@ const QuizList = ({ state, dispatch }) => {
             className="submit"
             onClick={() => {
               dispatch({ type: "SET_DESIGNER_QUESTIONS", payload: [] });
+              dispatch({
+                type: "SET_QUIZ_EDIT_MODE",
+                payload: false
+              })
+              dispatch({
+                type: "SET_QUIZ_ID",
+                payload: ""
+              })
+              dispatch({
+                type: "SET_QUIZ_NAME",
+                payload: ""
+              })
               dispatch({ type: "SET_STAGE_DESIGNER" });
             }}
           >
@@ -50,7 +82,7 @@ const QuizList = ({ state, dispatch }) => {
       </div>
 
       <div className="quizListContent">
-        {state.quizList.map((quiz) => {
+        {state.quizList.map((quiz, index) => {
           return (
             <div className="quizListElement">
               <div className="quizListElementInfo">
@@ -70,10 +102,33 @@ const QuizList = ({ state, dispatch }) => {
                       type: "SET_DESIGNER_QUESTIONS",
                       payload: quiz.questions,
                     });
+                    dispatch({
+                      type: "SET_QUIZ_EDIT_MODE",
+                      payload: true
+                    })
+                    dispatch({
+                      type: "SET_QUIZ_ID",
+                      payload: quiz.id
+                    })
+                    dispatch({
+                      type: "SET_QUIZ_NAME",
+                      payload: quiz.name
+                    })
                     dispatch({ type: "SET_STAGE_DESIGNER" });
                   }}
                 >
                   Edit
+                </button>
+              </div>
+              <div className="quizListElementButtons">
+                <button
+                  type="button"
+                  className="submit"
+                  onClick={() => {
+                    deleteHandler(quiz.id);
+                  }}
+                >
+                  Delete
                 </button>
               </div>
             </div>

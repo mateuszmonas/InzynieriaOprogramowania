@@ -1,17 +1,13 @@
 package c.team.quiz;
 
 import c.team.quiz.exception.QuizNotFoundException;
-import c.team.quiz.model.CreateQuizRequest;
-import c.team.quiz.model.CreateQuizResponse;
-import c.team.quiz.model.GetQuizzesResponse;
-import c.team.quiz.model.QuizDto;
+import c.team.quiz.model.*;
 import c.team.security.model.UserPrincipal;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,12 +36,25 @@ public class QuizController {
 
     @GetMapping("{quizId}")
     public ResponseEntity<QuizDto> getQuiz(@AuthenticationPrincipal UserPrincipal user, @PathVariable String quizId) {
-        QuizDto quiz = quizService.findQuiz(user.getId(), quizId).orElseThrow();
+        QuizDto quiz = quizService.findQuiz(user.getId(), quizId).orElseThrow(QuizNotFoundException::new);
         return ResponseEntity.ok(quiz);
     }
 
+
+    @PutMapping("{quizId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateQuiz(@RequestBody @Valid UpdateQuizRequest request, @PathVariable String quizId){
+        quizService.updateQuiz(quizId, request);
+    }
+
+    @DeleteMapping("{quizId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteQuiz(@PathVariable String quizId){
+        quizService.deleteQuiz(quizId);
+    }
+
     @ExceptionHandler(QuizNotFoundException.class)
-    public final ResponseEntity<Error> handleException(UsernameNotFoundException ex) {
+    public final ResponseEntity<Error> handleException(QuizNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 }

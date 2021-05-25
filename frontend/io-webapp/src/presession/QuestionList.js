@@ -16,7 +16,7 @@ const QuestionList = ({ state, dispatch }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          questions: state.designerQuestions,
+          questions: state.designerQuestions
         }),
       })
         .then((response) => response.json())
