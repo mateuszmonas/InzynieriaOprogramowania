@@ -1,23 +1,6 @@
 import React from "react";
 
-const Question = ({ state, dispatch }) => {
-  const sampleQuestions = [
-    {
-      id: 1,
-      question: "What's the first letter of the alphabet?",
-      answers: ["A", "D", "F", "P"],
-    },
-    {
-      id: 2,
-      question: "What's the capital of Germany?",
-      answers: [],
-    },
-  ];
-
-  function refreshPage() {
-    window.location.reload(false);
-  }
-
+const Question = ({ state, dispatch }) => { 
   const [questions, setQuestions] = React.useState([]);
   const [current, setCurrent] = React.useState(questions[0]);
 
@@ -27,8 +10,12 @@ const Question = ({ state, dispatch }) => {
     let shift = true;
     if (questions.length == 0) shift = false;
     let newQuestions = questions;
-    while (state.socket.questions.length > 0)
-      newQuestions.push(state.socket.questions.shift());
+    if (state.socket) {
+      console.log(state)
+      console.log(state.socket.type)
+      while (state.socket.questions.length > 0)
+        newQuestions.push(state.socket.questions.shift());
+    }
     setQuestions(newQuestions);
     if (shift) questions.shift();
     setCurrent(questions[0]);
@@ -59,13 +46,8 @@ const Question = ({ state, dispatch }) => {
   };
 
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      if (questions.length === 0) updateQuestions();
-    }, 5000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
+    if (questions.length === 0) updateQuestions();
+  }, [state.participants]);
 
   const changeHandler = (e) => {
     const { value } = e.target;

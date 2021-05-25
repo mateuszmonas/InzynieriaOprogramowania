@@ -11,7 +11,6 @@ class Socket {
     type,
     isLeader
   ) {
-    console.log(state.sessionId)
     this.socket = socket;
     this.stompClient = stompClient;
     this.state = state;
@@ -164,9 +163,10 @@ class Socket {
       console.log(message);
     } else {
       if(message.type === 'QUIZ'){
+        const content = JSON.parse(message.content);
         let question = {
-          question : message.content.question,
-          answers : message.content.answers.answers,
+          question : content.question,
+          answers : content.answers.answers,
           id : message.id
         };
         this.questions.push(question);

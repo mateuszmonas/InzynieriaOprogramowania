@@ -10,7 +10,7 @@ export const initialState = {
   sessionId: "",
   sessionTitle: "",
   guestId: "",
-  socket: undefined,
+  socket: new Socket(),
   approvalSocket: undefined,
   approvalRoomId: "",
   message: "",
