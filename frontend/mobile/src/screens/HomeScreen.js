@@ -12,7 +12,7 @@ function HomeScreen({ navigation }) {
     const [username, setUsername] = useState('studenciak');
     const [isUsernameHighlighted, setUserNameHighlighted] = useState(false);
 
-    const [sessionId, setSessionId] = useState('ef6eb273-5a71-4b03-bd2b-940c4e65d1f9')
+    const [sessionId, setSessionId] = useState('b498e050-20ee-485f-932e-d3a95c1fa53d')
     const [isSessionIdHighlighted, setSessionIdHighlighted] = useState(false);
 
     const [isJoinSessionButtonEnabled, setJoinSessionButtonEnabled] = useState(true);

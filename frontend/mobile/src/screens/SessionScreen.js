@@ -106,7 +106,7 @@ const SessionScreen = ({ route }) => {
     };
 
     const onError = (error) => {
-        console.log('error')
+        console.log('ERROR')
         console.log(error)
         console.error(error)
     }
@@ -115,13 +115,12 @@ const SessionScreen = ({ route }) => {
         if(!sessionNumber) return;
         if(isConnected) return;
         console.log('creating stomp')
-        const socket = new SockJS(`${BASE_URL}/session-handling`)
-        const stompClient = Stomp.over(socket)
+        const stompClient = Stomp.over(() => new SockJS(`${BASE_URL}/session-handling`))
         stompClient.connect(
             {},
             () => {
                 setConnected(true)
-                console.log('connected')
+                console.log('conneced')
                 console.log(stompClient)
                 stompClient?.subscribe(`/topic/session/${sessionNumber}`, onMessageReceived)
                 stompClient?.subscribe(`/topic/session/${sessionNumber}/quiz`, onQuizReceived)
@@ -245,6 +244,7 @@ const SessionScreen = ({ route }) => {
                         <View style={{flex: 3}} />
                     </View>
                 )}
+                keyExtractor={(item, index) => index.toString()}
             />
             <View style={styles.messageInputContainer}>
                 <TextInput
