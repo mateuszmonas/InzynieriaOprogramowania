@@ -9,7 +9,7 @@ import "./designer.css";
 const Designer = ({ state, dispatch }) => {
   const createHandler = (e) => {
     e.preventDefault();
-
+    console.log(state.designerQuestions);
     (async () => {
       await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
         method: "POST",
@@ -34,6 +34,7 @@ const Designer = ({ state, dispatch }) => {
 
   const editHandler = (e) => {
     e.preventDefault();
+    console.log(state.designerQuestions);
     (async () => {
       await fetch(process.env.REACT_APP_BACKEND_URL + `/quiz/${state.quizId}`, {
         method: "PUT",

@@ -100,13 +100,15 @@ public class SessionController {
     // Might require additional security
     @MessageMapping("/socket/session/{sessionId}/quiz-answers")    // Here participants send quiz answers
     @SendTo("/topic/session/{sessionId}/quiz-answers")      // Here leader subscribes to receive quiz answers
-    public Message sendQuizAnswersToLeader(@DestinationVariable String sessionId, @Payload final Message message) throws JsonProcessingException {
+    public Message sendQuizAnswersToLeader(@DestinationVariable String sessionId,
+                                           @Payload final Message message) throws JsonProcessingException {
         if (message.getType() != MessageType.QUIZ_ANSWERS)
             throw new InvalidMessageTypeException();
         sessionsService.addMessageToSessionLog(sessionId, message);
 
-        QuizAnswers answersToQuestions = answersService.convertMapToQuizAnswers(objectMapper.readValue(message.getContent(), new TypeReference<>() {
-        }));
+        QuizAnswers answersToQuestions = answersService.convertMapToQuizAnswers(
+                objectMapper.readValue(message.getContent(), new TypeReference<>() {}));
+
         answersToQuestions.getQuizAnswers().forEach((questionId, answers) -> {
             List<Integer> answerIdx = answersService.getAnswerCountsOrAddForQuestion(questionId, answers);
             answersService.addAnswers(sessionId, questionId, answerIdx);

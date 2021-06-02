@@ -19,6 +19,7 @@ class Socket {
     this.isLeader = isLeader;
     this.messageListeners = [];
     this.questions = []
+    this.quizId = ""
   }
 
   addMessageListener(listener) {
@@ -117,6 +118,7 @@ class Socket {
         timestamp: moment().calendar(),
       };
       console.log(messageToSend);
+      console.log("JSON: " + JSON.stringify(messageToSend));
       this.stompClient.send(
           `/app/socket/session/${this.state.sessionId}/${message.type}`,
           {},
@@ -162,19 +164,19 @@ class Socket {
     } else if (message.type === "DISCONNECT") {
       console.log(message);
     } else {
+      console.log(message);
       if(message.type === 'QUIZ'){
-        const content = JSON.parse(message.content);
-        let question = {
-          question : content.question,
-          answers : content.answers.answers,
-          id : message.id
-        };
-        this.questions.push(question);
+        const quiz = JSON.parse(message.content);
+        console.log(quiz);
+        console.log(quiz.id);
+        this.quizId = quiz.id;
+        console.log(quiz.questions);
+        this.questions.push.apply(this.questions, quiz.questions);
       }
       if(message.type === "COMMENT"){
         for (const listener of this.messageListeners) {
-        listener(message);
-      }
+          listener(message);
+        }
       }
       
 

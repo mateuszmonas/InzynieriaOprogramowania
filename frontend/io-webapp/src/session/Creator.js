@@ -16,6 +16,7 @@ const Creator = ({ state, dispatch, close }) => {
 
     if (question !== "") {
       const newQuestion = state.stage === "designer" ? {content: question} : { question: question };
+      newQuestion.open = !abcd;
       if (answer !== "") {
         newQuestion.answers = state.stage === "designer" ? [{ text: answer, correct: true }] : { answers : [answer] };
       } else if (
@@ -60,6 +61,9 @@ const Creator = ({ state, dispatch, close }) => {
   };
 
   React.useEffect(() => {
+    console.log(state.designerQuestions[state.pickedQuestion]);
+    if (state.designerQuestions[state.pickedQuestion])
+      console.log(!state.designerQuestions[state.pickedQuestion].open);
     if (state.stage === "designer") {
       if (state.pickedQuestion < 0) {
         setQuestion("");
@@ -75,7 +79,7 @@ const Creator = ({ state, dispatch, close }) => {
           setAnswers(["", "", "", ""]);
           setCorrects([false, false, false, false]);
         } else if (
-          state.designerQuestions[state.pickedQuestion].answers.length > 1
+          !state.designerQuestions[state.pickedQuestion].open
         ) {
           setAbcd(true);
           setAnswers([

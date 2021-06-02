@@ -37,7 +37,7 @@ const QuestionList = ({ state, dispatch }) => {
       >
         <div className="questionListElementInfo">
           <div style={{fontSize: "16px", fontWeight: "bold"}}>{question.content}</div>
-          <div style={{fontSize: "11px"}}>Type: {question.answers.length > 1 ? "ABCD" : "Open"}</div>
+          <div style={{fontSize: "11px"}}>Type: {question.open ? "Open" : "ABCD"}</div>
         </div>
         <div className="questionListElementButtons">
           <FiTrash2
