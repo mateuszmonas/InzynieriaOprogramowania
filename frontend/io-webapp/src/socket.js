@@ -118,7 +118,6 @@ class Socket {
         timestamp: moment().calendar(),
       };
       console.log(messageToSend);
-      console.log("JSON: " + JSON.stringify(messageToSend));
       this.stompClient.send(
           `/app/socket/session/${this.state.sessionId}/${message.type}`,
           {},
@@ -174,7 +173,6 @@ class Socket {
           listener(message);
         }
       }
-
 
       // messageElement.classList.add('chat-message')
 
