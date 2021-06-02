@@ -61,9 +61,6 @@ const Creator = ({ state, dispatch, close }) => {
   };
 
   React.useEffect(() => {
-    console.log(state.designerQuestions[state.pickedQuestion]);
-    if (state.designerQuestions[state.pickedQuestion])
-      console.log(!state.designerQuestions[state.pickedQuestion].open);
     if (state.stage === "designer") {
       if (state.pickedQuestion < 0) {
         setQuestion("");

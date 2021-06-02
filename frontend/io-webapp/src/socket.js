@@ -160,17 +160,13 @@ class Socket {
     const message = JSON.parse(payload.body);
 
     if (message.type === "CONNECT") {
-      console.log(message);
+      console.log(message);   // consider deleting
     } else if (message.type === "DISCONNECT") {
-      console.log(message);
+      console.log(message);   // consider deleting
     } else {
-      console.log(message);
       if(message.type === 'QUIZ'){
         const quiz = JSON.parse(message.content);
-        console.log(quiz);
-        console.log(quiz.id);
         this.quizId = quiz.id;
-        console.log(quiz.questions);
         this.questions.push.apply(this.questions, quiz.questions);
       }
       if(message.type === "COMMENT"){
@@ -178,7 +174,7 @@ class Socket {
           listener(message);
         }
       }
-      
+
 
       // messageElement.classList.add('chat-message')
 

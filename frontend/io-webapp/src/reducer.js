@@ -151,7 +151,6 @@ export const reducer = (state, action) => {
       return { ...state, isStatsVisible: false };
 
     case "ADD_DESIGNER_QUESTION":
-      console.log(action.payload);
       return {
         ...state,
         designerQuestions: [...state.designerQuestions, action.payload],
@@ -163,7 +162,6 @@ export const reducer = (state, action) => {
     case "SET_QUIZ_EDIT_MODE":
       return { ...state, editMode: action.payload };
     case "UPDATE_DESIGNER_QUESTION":
-      console.log(action.payload);
       return {
         ...state,
         designerQuestions: [
@@ -202,7 +200,6 @@ export const reducer = (state, action) => {
       };
 
     case "SET_QUIZ_LIST":
-      console.log(action.payload);
       return { ...state, quizList: action.payload };
 
     case "SET_QUIZ_NAME":

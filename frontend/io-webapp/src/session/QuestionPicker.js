@@ -16,16 +16,6 @@ const QuestionPicker = ({ state, dispatch }) => {
       content: quiz
     }
     state.socket.sendMessage(msg);
-    // for (let i = 0; i < quiz.questions.length; i++) {
-    //   const q = quiz.questions[i];
-    //   const newQuestion = { question: q.content };
-    //   newQuestion.answers = { answers : q.answers.map((a) => {return a.text}) };
-    //   const msg = {
-    //     type : "quiz",
-    //     content: newQuestion,
-    //   };
-    //   state.socket.sendMessage(msg);
-    // }
   };
 
   React.useEffect(() => {
@@ -44,7 +34,6 @@ const QuestionPicker = ({ state, dispatch }) => {
         .catch((error) => {
           console.error(error);
         });
-      console.log(state.quizList);
     })();
   }, []);
 

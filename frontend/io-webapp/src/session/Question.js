@@ -27,7 +27,6 @@ const Question = ({ state, dispatch }) => {
       type: "quiz-answers",
       content: answers,
     };
-    console.log(msg);
     state.socket.sendMessage(msg);
     updateQuestions();
   };
@@ -53,7 +52,7 @@ const Question = ({ state, dispatch }) => {
     const { value } = e.target;
     setAnswer(value);
   };
-  console.log(current);
+
   return (
     <div className="question" style={{ width: state.questionWidth }}>
       {state.awaitsApproval ? (
