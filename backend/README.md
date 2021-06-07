@@ -47,7 +47,8 @@ Swagger api documentation can be accessed on url `/swagger-ui.html`
     * answers - list of Answers (List<Answer>)
   * Answer:
     * text - text for answer, a letter if it's a closed question (String)
-    * correct - information whether chosen answer is correct (Bool) // perhaps checking answer might be backend responsibility
+    * correct - information whether chosen answer is correct (Bool) // perhaps checking answer might be backend
+      responsibility
   * QuizAnswers:
     * quizAnswers - dictionary questionId -> list of Answers for to this question (String -> List<Answer>)
   * ***Leader sends a quiz***: /app/socket/session/{sessionId}/quiz - here leader sends a message with quiz (content
@@ -57,3 +58,5 @@ Swagger api documentation can be accessed on url `/swagger-ui.html`
     quiz (content field of message is QuizAnswers)
   * ***Leader receives answers***: /topic/session/{sessionId}/quiz-answers - here leader subscribes to receive quiz
     answers
+  * ***Send reaction***: /app/socket/session/{sessionId}/reaction - send reaction as String
+  * ***Receive reaction answers***: /topic/session/{sessionId}/reaction - receive reactions sent to this session

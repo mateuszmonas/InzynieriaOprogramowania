@@ -5,6 +5,7 @@ import c.team.message.model.Message;
 import c.team.message.model.MessageType;
 import c.team.quiz.exception.QuizNotFoundException;
 import c.team.quiz.model.QuizAnswers;
+import c.team.session.administration.ReactionService;
 import c.team.session.administration.SessionService;
 import c.team.session.statistics.SessionAnswersService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,6 +23,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +34,7 @@ public class SessionController {
     private final ObjectMapper objectMapper;
     private final SessionService sessionsService;
     private final SessionAnswersService answersService;
+    private final ReactionService reactionService;
 
     @MessageMapping("/socket/session/{sessionId}/send")
     @SendTo("/topic/session/{sessionId}")
@@ -90,11 +93,24 @@ public class SessionController {
 
     @MessageMapping("/socket/session/{sessionId}/quiz")    // Here leader sends a quiz
     @SendTo("/topic/session/{sessionId}/quiz")      // Here participants subscribe to receive quiz
-    public Message sendQuizToParticipants(@DestinationVariable String sessionId, @Payload final Message message){
-        if(message.getType() != MessageType.QUIZ)
+    public Message sendQuizToParticipants(@DestinationVariable String sessionId, @Payload final Message message) {
+        if (message.getType() != MessageType.QUIZ)
             throw new InvalidMessageTypeException();
         sessionsService.addMessageToSessionLog(sessionId, message);
         return message;
+    }
+
+    @MessageMapping("/socket/session/{sessionId}/reaction")
+    @SendTo("/topic/session/{sessionId}/reaction")
+    public String sendReaction(@DestinationVariable String sessionId, @Payload String reactionString) {
+        reactionService.saveReaction(sessionId, reactionString);
+        sessionsService.addMessageToSessionLog(sessionId, Message.builder()
+                .timestamp(OffsetDateTime.now().toString())
+                .sessionId(sessionId)
+                .content(reactionString)
+                .type(MessageType.EMOTE)
+                .build());
+        return reactionString;
     }
 
     // Might require additional security
