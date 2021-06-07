@@ -11,16 +11,11 @@ const QuestionPicker = ({ state, dispatch }) => {
   const submitHandler = (e, quiz) => {
     e.preventDefault();
 
-    for (let i = 0; i < quiz.questions.length; i++) {
-      const q = quiz.questions[i];
-      const newQuestion = { question: q.content };
-      newQuestion.answers = { answers : q.answers.map((a) => {return a.text}) };
-      const msg = {
-        type : "quiz",
-        content: newQuestion, 
-      };
-      state.socket.sendMessage(msg);
+    const msg = {
+      type: "quiz",
+      content: quiz
     }
+    state.socket.sendMessage(msg);
   };
 
   React.useEffect(() => {
