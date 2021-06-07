@@ -16,6 +16,7 @@ const Creator = ({ state, dispatch, close }) => {
 
     if (question !== "") {
       const newQuestion = state.stage === "designer" ? {content: question} : { question: question };
+      newQuestion.open = !abcd;
       if (answer !== "") {
         newQuestion.answers = state.stage === "designer" ? [{ text: answer, correct: true }] : { answers : [answer] };
       } else if (
@@ -75,7 +76,7 @@ const Creator = ({ state, dispatch, close }) => {
           setAnswers(["", "", "", ""]);
           setCorrects([false, false, false, false]);
         } else if (
-          state.designerQuestions[state.pickedQuestion].answers.length > 1
+          !state.designerQuestions[state.pickedQuestion].open
         ) {
           setAbcd(true);
           setAnswers([

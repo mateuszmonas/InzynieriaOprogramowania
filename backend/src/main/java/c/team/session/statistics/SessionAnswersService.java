@@ -64,6 +64,7 @@ public class SessionAnswersService {
         return answerIdx;
     }
 
+    // questionId -> answers
     public QuizAnswers convertMapToQuizAnswers(Map<String, List<String>> rawData) {
         Map<String, List<Answer>> answers = rawData
                 .entrySet()
