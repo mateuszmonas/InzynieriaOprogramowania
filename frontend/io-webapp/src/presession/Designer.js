@@ -2,12 +2,39 @@ import React from "react";
 import Creator from "../session/Creator";
 import QuestionList from "./QuestionList";
 import {FiArrowLeft, FiSave} from "react-icons/fi";
-import {createHandler} from "../endpointHandlers";
 
 import "./Account.css";
 import "./designer.css";
 
 const Designer = ({ state, dispatch }) => {
+  const createHandler = (e) => {
+    e.preventDefault();
+
+    (async () => {
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
+        method: "POST",
+        headers: {
+          Authorization: state.token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: state.quizName,
+          questions: state.designerQuestions,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (state.stage === "designer")
+            dispatch({ type: "SET_STAGE_QUIZ_LIST" });
+          else
+            state.quizId = data.quizId;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    })();
+  };
+
   const editHandler = (e) => {
     e.preventDefault();
 
@@ -49,7 +76,7 @@ const Designer = ({ state, dispatch }) => {
             onClick={(e) => {
               state.editMode
                 ? editHandler(e)
-                : createHandler(e, state, dispatch);
+                : createHandler(e);
             }}
             className="submit"
           >

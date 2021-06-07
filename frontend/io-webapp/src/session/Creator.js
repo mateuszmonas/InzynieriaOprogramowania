@@ -1,7 +1,6 @@
 import React from "react";
 
 import "./creator.css";
-import {createHandler} from "../endpointHandlers";
 import { FiCheckSquare } from "react-icons/fi";
 
 const Creator = ({ state, dispatch, close }) => {
@@ -30,7 +29,6 @@ const Creator = ({ state, dispatch, close }) => {
         });
 
       state.quizId = quizIdJson.quizId;
-      console.log(state);
 
       await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz/" + state.quizId, {
         method: "GET",
@@ -41,9 +39,7 @@ const Creator = ({ state, dispatch, close }) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           const quiz = data;
-          console.log(quiz);
           const msg = {
             type : "quiz",
             content: quiz,

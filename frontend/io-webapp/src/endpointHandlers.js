@@ -30,33 +30,3 @@ export const getParticipantsHandler = (e, state, dispatch) => {
       });
   })();
 };
-
-export const createHandler = (e, state, dispatch) => {
-  e.preventDefault();
-  console.log(state);
-  (async () => {
-    await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
-      method: "POST",
-      headers: {
-        Authorization: state.token,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: state.quizName,
-        questions: state.designerQuestions,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (state.stage === "designer")
-          dispatch({ type: "SET_STAGE_QUIZ_LIST" });
-        else
-          state.quizId = data.quizId;
-        console.log(state);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  })();
-};
