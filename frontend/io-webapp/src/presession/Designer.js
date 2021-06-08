@@ -24,7 +24,10 @@ const Designer = ({ state, dispatch }) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          dispatch({ type: "SET_STAGE_QUIZ_LIST" });
+          if (state.stage === "designer")
+            dispatch({ type: "SET_STAGE_QUIZ_LIST" });
+          else
+            state.quizId = data.quizId;
         })
         .catch((error) => {
           console.error(error);
@@ -34,6 +37,7 @@ const Designer = ({ state, dispatch }) => {
 
   const editHandler = (e) => {
     e.preventDefault();
+
     (async () => {
       await fetch(process.env.REACT_APP_BACKEND_URL + `/quiz/${state.quizId}`, {
         method: "PUT",

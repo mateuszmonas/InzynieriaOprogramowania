@@ -19,6 +19,7 @@ class Socket {
     this.isLeader = isLeader;
     this.messageListeners = [];
     this.questions = []
+    this.quizId = ""
   }
 
   addMessageListener(listener) {
@@ -158,25 +159,20 @@ class Socket {
     const message = JSON.parse(payload.body);
 
     if (message.type === "CONNECT") {
-      console.log(message);
+      console.log(message);   // consider deleting
     } else if (message.type === "DISCONNECT") {
-      console.log(message);
+      console.log(message);   // consider deleting
     } else {
       if(message.type === 'QUIZ'){
-        const content = JSON.parse(message.content);
-        let question = {
-          question : content.question,
-          answers : content.answers.answers,
-          id : message.id
-        };
-        this.questions.push(question);
+        const quiz = JSON.parse(message.content);
+        this.quizId = quiz.id;
+        this.questions.push.apply(this.questions, quiz.questions);
       }
       if(message.type === "COMMENT"){
         for (const listener of this.messageListeners) {
-        listener(message);
+          listener(message);
+        }
       }
-      }
-      
 
       // messageElement.classList.add('chat-message')
 

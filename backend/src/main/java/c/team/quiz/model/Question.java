@@ -25,6 +25,8 @@ public class Question {
     @Parameter(required = true)
     @NotBlank
     private String content;
+    @Parameter(required = true)
+    private boolean open;
     @Valid
     @Nullable
     private List<Answer> answers;
@@ -33,6 +35,7 @@ public class Question {
         return QuestionDto.builder()
                 .answers(answers)
                 .content(content)
+                .open(open)
                 .id(id)
                 .build();
     }

@@ -1,7 +1,6 @@
 import React from "react";
 
 import "./creator.css";
-
 import { FiCheckSquare } from "react-icons/fi";
 
 const Creator = ({ state, dispatch, close }) => {
@@ -11,36 +10,71 @@ const Creator = ({ state, dispatch, close }) => {
   const [answers, setAnswers] = React.useState(["", "", "", ""]);
   const [corrects, setCorrects] = React.useState([false, false, false, false]);
 
-  const submitHandler = (e) => {
+  const oneQuestionQuizHandler = () => {
+    (async () => {
+      const quizIdJson = await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
+        method: "POST",
+        headers: {
+          Authorization: state.token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: state.quizName,
+          questions: state.designerQuestions,
+        }),
+      })
+        .then((response) => response.json())
+        .catch((error) => {
+          console.error(error);
+        });
+
+      state.quizId = quizIdJson.quizId;
+
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz/" + state.quizId, {
+        method: "GET",
+        headers: {
+          Authorization: state.token,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const quiz = data;
+          const msg = {
+            type : "quiz",
+            content: quiz,
+          };
+          state.socket.sendMessage(msg);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    })();
+  };
+
+   const submitHandler = (e) => {
     e.preventDefault();
 
     if (question !== "") {
-      const newQuestion = state.stage === "designer" ? {content: question} : { question: question };
+      const newQuestion = {content: question};
+      newQuestion.open = !abcd;
       if (answer !== "") {
-        newQuestion.answers = state.stage === "designer" ? [{ text: answer, correct: true }] : { answers : [answer] };
-      } else if (
-        answers.length === 4 &&
-        answers[0] !== "" &&
-        answers[1] !== "" &&
-        answers[2] !== "" &&
-        answers[3] !== ""
-      ) {
-        newQuestion.answers = state.stage === "designer" ? answers.map((answer, index) => {
+        newQuestion.answers = [{ text: answer, correct: true }];
+      } else if (!newQuestion.open) {
+        newQuestion.answers = answers.map((answer, index) => {
           return {
             text: answer,
             correct: corrects[index],
           };
-        }) : { answers : answers };
-      }
-      if (state.stage !== "designer") {
-        const msg = {
-          type : "quiz",
-          content: newQuestion, 
-        };
-        state.socket.sendMessage(msg);
+        });
       }
 
-      if (state.stage === "designer") {
+      if (state.stage !== "designer") {
+        state.designerQuestions = [newQuestion];
+        state.quizName = question;
+        oneQuestionQuizHandler();
+      }
+      else {
         if (state.pickedQuestion < 0) {
           dispatch({ type: "ADD_DESIGNER_QUESTION", payload: newQuestion });
         } else {
@@ -75,7 +109,7 @@ const Creator = ({ state, dispatch, close }) => {
           setAnswers(["", "", "", ""]);
           setCorrects([false, false, false, false]);
         } else if (
-          state.designerQuestions[state.pickedQuestion].answers.length > 1
+          !state.designerQuestions[state.pickedQuestion].open
         ) {
           setAbcd(true);
           setAnswers([

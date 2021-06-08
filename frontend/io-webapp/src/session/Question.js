@@ -2,13 +2,12 @@ import React from "react";
 
 const Question = ({ state, dispatch }) => { 
   const [questions, setQuestions] = React.useState([]);
-  const [current, setCurrent] = React.useState(questions[0]);
+  const [current, setCurrent] = React.useState(undefined);
 
   const [answer, setAnswer] = React.useState("");
 
   const updateQuestions = () => {
-    let shift = true;
-    if (questions.length == 0) shift = false;
+    let shift = questions.length !== 0;
     let newQuestions = questions;
     if (state.socket) {
       console.log(state)
@@ -58,17 +57,17 @@ const Question = ({ state, dispatch }) => {
     <div className="question" style={{ width: state.questionWidth }}>
       {state.awaitsApproval ? (
         <h1>Waiting for permission from room owner</h1>
-      ) : questions.length ? (
-        current.answers.length > 1 ? (
+      ) : current ? (
+        !current.open ? (
           <div key={current.id} className="specificQuestion">
-            <h1 className="questionProper">{current.question}</h1>
+            <h1 className="questionProper">{current.content}</h1>
             <div className="questionRow">
               <div
                 className="answer"
                 onClick={(e) => submitHandler(current.id, 0)}
               >
                 <h4>A:</h4>
-                <p style={{ textIndent: "3px" }}>{current.answers[0]}</p>
+                <p style={{ textIndent: "3px" }}>{current.answers[0].text}</p>
               </div>
             </div>
             <div className="questionRow">
@@ -77,7 +76,7 @@ const Question = ({ state, dispatch }) => {
                 onClick={(e) => submitHandler(current.id, 1)}
               >
                 <h4>B:</h4>
-                <p style={{ textIndent: "3px" }}>{current.answers[1]}</p>
+                <p style={{ textIndent: "3px" }}>{current.answers[1].text}</p>
               </div>
             </div>
             <div className="questionRow">
@@ -86,7 +85,7 @@ const Question = ({ state, dispatch }) => {
                 onClick={(e) => submitHandler(current.id, 2)}
               >
                 <h4>C:</h4>
-                <p style={{ textIndent: "3px" }}>{current.answers[2]}</p>
+                <p style={{ textIndent: "3px" }}>{current.answers[2].text}</p>
               </div>
             </div>
             <div className="questionRow">
@@ -95,13 +94,13 @@ const Question = ({ state, dispatch }) => {
                 onClick={(e) => submitHandler(current.id, 3)}
               >
                 <h4>D:</h4>
-                <p style={{ textIndent: "3px" }}>{current.answers[3]}</p>
+                <p style={{ textIndent: "3px" }}>{current.answers[3].text}</p>
               </div>
             </div>
           </div>
         ) : (
           <div key={current.id} className="specificQuestion">
-            <h1 className="questionProper">{current.question}</h1>
+            <h1 className="questionProper">{current.content}</h1>
             <div className="questionRow">
               <form
                 className="answer"
