@@ -10,6 +10,7 @@ import Stats from "./Stats";
 
 import "./Session.css";
 import Sessionbar from "./Sessionbar";
+import QuestionPicker from "./QuestionPicker";
 
 const Session = ({ state, dispatch }) => {
   React.useEffect(() => {
@@ -21,7 +22,7 @@ const Session = ({ state, dispatch }) => {
     }
   }, []);
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
     if (state.stage === "lecturer") {
       dispatch({
         type: "SET_SOCKET",
@@ -32,29 +33,31 @@ const Session = ({ state, dispatch }) => {
         type: "SET_SOCKET",
         payload: Socket.connect(state, dispatch, "approval"),
       });
-    } else {
+    } else { 
+      const socket = Socket.connect(state, dispatch, "session");
       dispatch({
         type: "SET_SOCKET",
-        payload: Socket.connect(state, dispatch, "session"),
+        payload: socket,
       });
     }
   }, [state.sessionId, state.awaitsApproval, state.approvalRoomId]);
 
   return (
     <section className="fullsession">
-      <Sessionbar state={state} dispatch={dispatch} />
+      {/* <Sessionbar state={state} dispatch={dispatch} /> */}
       <div className="session">
         {state.stage === "lecturer" ? (
-          state.isStatsVisible ? (
+          <>
+            <QuestionPicker state={state} dispatch={dispatch} />
             <Stats state={state} dispatch={dispatch} />
-          ) : (
-            <Creator state={state} dispatch={dispatch} />
-          )
+          </>
         ) : (
           <Question state={state} dispatch={dispatch} />
         )}
-        {<Chat state={state} dispatch={dispatch} />}
-        {<Participants state={state} dispatch={dispatch} />}
+        <div className="sessionRightSidebar">
+          <Participants state={state} dispatch={dispatch} />
+          <Chat state={state} dispatch={dispatch} />
+        </div>
       </div>
     </section>
   );

@@ -1,0 +1,70 @@
+.quizListView {
+    display: flex;
+    flex-direction: column;
+    width: 97vw;
+    height: 91vh;
+    padding: 9vh 1.5vw 0vh 1.5vw;
+}
+
+.quizListContent {
+    background-color: white;
+    box-shadow: 0.2rem 0.2rem 0.4rem #999999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    height: 85%;
+    width: 100%;
+}
+
+.quizListElement {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 10%;
+    width: 95%;
+    border-style: hidden hidden solid hidden;
+    border-width: 0px 0px 1px 0px;
+}
+
+.quizListElementInfo {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: space-between;
+}
+
+.quizListElementInfo div {
+    overflow-x: hidden;
+    text-align: left;
+}
+
+.quizListHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 5%;
+    margin-bottom: 3vh;
+    width: 100%;
+}
+
+.quizListHeaderButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 12%;
+}
+
+.quizListHeaderButtons button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 45%;
+    height: 100%;
+}

@@ -56,10 +56,10 @@ const Account = ({ state, dispatch }) => {
         await fetch(process.env.REACT_APP_BACKEND_URL + "/session/create", {
             method: "POST",
             headers: {
+                Authorization: state.token,
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                username: state.username,
                 sessionTitle: title,
                 guestApproval: needsApproval,
             }),
@@ -91,7 +91,7 @@ const Account = ({ state, dispatch }) => {
   return (
     <div className="account">
       <div className="login">
-        <h2>If you are a lecturer...</h2>
+        <h2>Create a session</h2>
         <label htmlFor="sessionTitle">Session Title: </label>
         <input
           type="input"
@@ -102,14 +102,14 @@ const Account = ({ state, dispatch }) => {
         ></input>
         <label htmlFor="sessionTitle">
           Do you want students to be manually approved before joining?
+          <input
+            type="checkbox"
+            id="needsApproval"
+            name="needsApproval"
+            value={needsApproval}
+            onChange={(e) => setNeedsApproval(e.target.checked)}
+          ></input>
         </label>
-        <input
-          type="checkbox"
-          id="needsApproval"
-          name="needsApproval"
-          value={needsApproval}
-          onChange={(e) => setNeedsApproval(e.target.checked)}
-        ></input>
         <button type="button" className="submit" onClick={handleCreate}>
           Create new session
         </button>
@@ -124,7 +124,7 @@ const Account = ({ state, dispatch }) => {
       </div>
       {!isOwner && (
         <div className="login">
-          <h2>If you are a student...</h2>
+          <h2>Join a session</h2>
           <label htmlFor="sessionPasscode">Session Passcode: </label>
           <input
             type="input"

@@ -10,7 +10,7 @@ export const initialState = {
   sessionId: "",
   sessionTitle: "",
   guestId: "",
-  socket: undefined,
+  socket: new Socket(),
   approvalSocket: undefined,
   approvalRoomId: "",
   message: "",
@@ -25,6 +25,9 @@ export const initialState = {
   designerQuestions: [],
   pickedQuestion: -1,
   quizList: [],
+  quizName: "",
+  quizId: "",
+  editMode: false,
   pickedSession: -1
 };
 
@@ -113,18 +116,10 @@ export const reducer = (state, action) => {
         isSessionTimelineVisible: false,
         questionWidth: "75%",
       };
-    case "PARTICIPANTS_VISIBLE": {
-      getParticipantsHandler(
-        action.payload.e,
-        action.payload.state,
-        action.payload.dispatch
-      );
+    case "TOGGLE_PARTICIPANTS_VISIBLE": {
       return {
         ...state,
-        isChatVisible: false,
-        isParticipantsVisible: true,
-        isSessionTimelineVisible: false,
-        questionWidth: "75%",
+        isParticipantsVisible: !state.isParticipantsVisible,
       };
     }
     case "SESSION_HISTORY_VISIBLE": {
@@ -162,6 +157,10 @@ export const reducer = (state, action) => {
       };
     case "SET_DESIGNER_QUESTIONS":
       return { ...state, designerQuestions: action.payload };
+    case "SET_QUIZ_ID":
+      return { ...state, quizId: action.payload };
+    case "SET_QUIZ_EDIT_MODE":
+      return { ...state, editMode: action.payload };
     case "UPDATE_DESIGNER_QUESTION":
       return {
         ...state,
@@ -174,6 +173,18 @@ export const reducer = (state, action) => {
           ),
         ],
       };
+      case "DELETE_DESIGNER_QUESTION":
+        return {
+          ...state,
+          designerQuestions: [
+            ...state.designerQuestions.slice(0, action.payload),
+            ...state.designerQuestions.slice(
+              action.payload + 1,
+              state.designerQuestions.length
+            ),
+          ],
+        };
+  
 
     case "SET_PICKED_QUESTION":
       return {
@@ -190,6 +201,9 @@ export const reducer = (state, action) => {
 
     case "SET_QUIZ_LIST":
       return { ...state, quizList: action.payload };
+
+    case "SET_QUIZ_NAME":
+      return { ...state, quizName: action.payload };
 
     default:
       throw new Error();

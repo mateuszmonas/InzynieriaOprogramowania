@@ -1,4 +1,4 @@
-package c.team.timeline;
+package c.team.session.statistics.model.timeline;
 
 import c.team.message.model.Message;
 import lombok.AllArgsConstructor;

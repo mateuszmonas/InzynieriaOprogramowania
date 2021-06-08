@@ -11,7 +11,6 @@ class Socket {
     type,
     isLeader
   ) {
-    console.log(state.sessionId)
     this.socket = socket;
     this.stompClient = stompClient;
     this.state = state;
@@ -19,6 +18,8 @@ class Socket {
     this.type = type;
     this.isLeader = isLeader;
     this.messageListeners = [];
+    this.questions = []
+    this.quizId = ""
   }
 
   addMessageListener(listener) {
@@ -54,7 +55,7 @@ class Socket {
 
   onConnected = () => {
     if (this.type === "session") {
-      this.stompClient.subscribe(
+      this.stompClient.subscribe(    // subscribe chat messages
         `/topic/session/${this.state.sessionId}`,
         this.onMessageReceived
       );
@@ -62,11 +63,18 @@ class Socket {
 
       if (!this.isLeader) {
         this.stompClient.send(
-          `/app/session/${this.state.sessionId}/new-user`,
-          {},
-          JSON.stringify(msg)
+            `/app/socket/session/${this.state.sessionId}/new-user`,
+            {},
+            JSON.stringify(msg)
         );
       }
+
+      let msgType = this.isLeader ? 'quiz-answers' : 'quiz'; 
+      this.stompClient.subscribe(    // subscribe quiz
+        `/topic/session/${this.state.sessionId}/${msgType}`,
+        this.onMessageReceived
+      );
+
     } else if (this.type === "approval") {
       this.stompClient.subscribe(
         `/topic/session/${this.state.approvalRoomId}/guest-approval-response/guest-${this.state.guestId}`,
@@ -87,18 +95,33 @@ class Socket {
     console.log(error);
   };
 
+
+  /*
+    COMMENT
+    REPLY
+    QUIZ
+    QUIZ_ANSWERS
+  */
   sendMessage = (message) => {
+    console.log("content...." + message.content);
+    let types = {
+      "send" : "COMMENT",
+      "quiz-answers" : "QUIZ_ANSWERS",
+      "quiz" : "QUIZ"
+    }
+
     if (message && this.stompClient) {
-      const chatMessage = {
+      const messageToSend = {
         sender: this.state.username,
-        content: message,
-        type: "COMMENT",
+        content: JSON.stringify(message.content),
+        type: types[message.type],
         timestamp: moment().calendar(),
       };
+      console.log(messageToSend);
       this.stompClient.send(
-        `/app/session/${this.state.sessionId}/send`,
-        {},
-        JSON.stringify(chatMessage)
+          `/app/socket/session/${this.state.sessionId}/${message.type}`,
+          {},
+          JSON.stringify(messageToSend)
       );
     }
   };
@@ -111,9 +134,9 @@ class Socket {
         type: "GUEST_APPROVAL",
       };
       this.stompClient.send(
-        `/app/session/${this.state.approvalRoomId}/guest-approval-request`,
-        {},
-        JSON.stringify(chatMessage)
+          `/app/socket/session/${this.state.approvalRoomId}/guest-approval-request`,
+          {},
+          JSON.stringify(chatMessage)
       );
     }
   };
@@ -124,29 +147,31 @@ class Socket {
         content: isApproved,
         type: "GUEST_APPROVAL",
       };
-      console.log(chatMessage);
       this.stompClient.send(
-        `/app/session/${this.state.approvalRoomId}/guest-approval-response/${guestId}`,
-        {},
-        JSON.stringify(chatMessage)
+          `/app/socket/session/${this.state.approvalRoomId}/guest-approval-response/${guestId}`,
+          {},
+          JSON.stringify(chatMessage)
       );
     }
   };
 
   onMessageReceived = (payload) => {
     const message = JSON.parse(payload.body);
-    console.log(this.messageListeners);
-    console.log(message);
 
     if (message.type === "CONNECT") {
-      console.log(message);
+      console.log(message);   // consider deleting
     } else if (message.type === "DISCONNECT") {
-      console.log(message);
+      console.log(message);   // consider deleting
     } else {
-      for (const listener of this.messageListeners) {
-        console.log(listener);
-        console.log(message);
-        listener(message);
+      if(message.type === 'QUIZ'){
+        const quiz = JSON.parse(message.content);
+        this.quizId = quiz.id;
+        this.questions.push.apply(this.questions, quiz.questions);
+      }
+      if(message.type === "COMMENT"){
+        for (const listener of this.messageListeners) {
+          listener(message);
+        }
       }
 
       // messageElement.classList.add('chat-message')
@@ -170,6 +195,8 @@ class Socket {
       // messageElement.appendChild(time)
     }
   };
+
+
 
   onApprovalReceived = (payload) => {
     const message = JSON.parse(payload.body);

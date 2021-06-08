@@ -1,37 +1,80 @@
 import React from "react";
-import "./Session.css";
 
-const Creator = ({ state, dispatch }) => {
+import "./creator.css";
+import { FiCheckSquare } from "react-icons/fi";
+
+const Creator = ({ state, dispatch, close }) => {
   const [abcd, setAbcd] = React.useState(false);
   const [question, setQuestion] = React.useState("");
   const [answer, setAnswer] = React.useState("");
   const [answers, setAnswers] = React.useState(["", "", "", ""]);
   const [corrects, setCorrects] = React.useState([false, false, false, false]);
 
-  const submitHandler = (e) => {
+  const oneQuestionQuizHandler = () => {
+    (async () => {
+      const quizIdJson = await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
+        method: "POST",
+        headers: {
+          Authorization: state.token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: state.quizName,
+          questions: state.designerQuestions,
+        }),
+      })
+        .then((response) => response.json())
+        .catch((error) => {
+          console.error(error);
+        });
+
+      state.quizId = quizIdJson.quizId;
+
+      await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz/" + state.quizId, {
+        method: "GET",
+        headers: {
+          Authorization: state.token,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const quiz = data;
+          const msg = {
+            type : "quiz",
+            content: quiz,
+          };
+          state.socket.sendMessage(msg);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    })();
+  };
+
+   const submitHandler = (e) => {
     e.preventDefault();
 
     if (question !== "") {
-      const newQuestion = { content: question };
+      const newQuestion = {content: question};
+      newQuestion.open = !abcd;
       if (answer !== "") {
         newQuestion.answers = [{ text: answer, correct: true }];
-      } else if (
-        answers.length === 4 &&
-        answers[0] !== "" &&
-        answers[1] !== "" &&
-        answers[2] !== "" &&
-        answers[3] !== ""
-      ) {
+      } else if (!newQuestion.open) {
         newQuestion.answers = answers.map((answer, index) => {
           return {
             text: answer,
             correct: corrects[index],
           };
         });
-      } else {
-        return;
       }
-      if (state.stage === "designer") {
+
+      if (state.stage !== "designer") {
+        state.designerQuestions = [newQuestion];
+        state.quizName = question;
+        oneQuestionQuizHandler();
+      }
+      else {
         if (state.pickedQuestion < 0) {
           dispatch({ type: "ADD_DESIGNER_QUESTION", payload: newQuestion });
         } else {
@@ -66,7 +109,7 @@ const Creator = ({ state, dispatch }) => {
           setAnswers(["", "", "", ""]);
           setCorrects([false, false, false, false]);
         } else if (
-          state.designerQuestions[state.pickedQuestion].answers.length > 1
+          !state.designerQuestions[state.pickedQuestion].open
         ) {
           setAbcd(true);
           setAnswers([
@@ -92,33 +135,59 @@ const Creator = ({ state, dispatch }) => {
   }, [state.pickedQuestion]);
 
   return (
-    <div className="question" style={{ width: state.questionWidth }}>
-      <form className="newquestion" onSubmit={submitHandler}>
-        <div className="newQuestionBox">
-          <label htmlFor="questionText">Question: </label>
+    <div
+      className="questionDesign"
+      style={state.stage === "designer" ? {} : { width: "100%" }}
+    >
+      <form className="newQuestion" onSubmit={submitHandler}>
+        <div className="newQuestionBox" style={{ height: "10%" }}>
+          <div className="questionText">Question </div>
           <input
             type="text"
+            style={{ fontSize: "24px" }}
             id="questionText"
             name="questionText"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
           ></input>
         </div>
-        <button
-          type="button"
-          className="answerButton"
-          onClick={() => setAbcd(!abcd)}
-          style={{ marginBottom: "10vh" }}
-        >
-          {abcd ? "ABCD" : "Open"}
-        </button>
-        <div>
+
+        <div className="newQuestionBox" style={{ height: "15%" }}>
+          <div className="questionText">Question type </div>
+          <div className="creatorRadio">
+            <input
+              type="radio"
+              id="abcd"
+              name="abcd"
+              checked={abcd}
+              onClick={() => setAbcd(true)}
+            />
+            <label for="abcd">ABCD</label>
+          </div>
+          <div className="creatorRadio">
+            <input
+              type="radio"
+              id="open"
+              name="open"
+              checked={!abcd}
+              onClick={() => setAbcd(false)}
+            />
+            <label for="open">Open</label>
+          </div>
+        </div>
+
+        <div className="newQuestionBox" style={{ height: "50%" }}>
+          <div className="creatorAnswersHeader">
+            <div className="questionText">{abcd ? "Answers" : "Answer"} </div>
+            {abcd && <FiCheckSquare />}
+          </div>
           {abcd ? (
             <>
-              <div className="abcdAnswer">
-                <label htmlFor="aText">A: </label>
+              <div className="creatorAnswer">
+                <label htmlFor="aText">A</label>
                 <input
                   type="text"
+                  className="creatorAnswersText"
                   id="aText"
                   name="aText"
                   value={answers[0]}
@@ -131,9 +200,9 @@ const Creator = ({ state, dispatch }) => {
                     ])
                   }
                 ></input>
-                <label htmlFor="aCorrect"> Correct?</label>
                 <input
                   type="checkbox"
+                  className="creatorAnswersCheckbox"
                   id="aCorrect"
                   name="aCorrect"
                   checked={corrects[0]}
@@ -148,10 +217,11 @@ const Creator = ({ state, dispatch }) => {
                 ></input>
               </div>
 
-              <div className="abcdAnswer">
-                <label htmlFor="bText">B: </label>
+              <div className="creatorAnswer">
+                <label htmlFor="bText">B</label>
                 <input
                   type="text"
+                  className="creatorAnswersText"
                   id="bText"
                   name="bText"
                   value={answers[1]}
@@ -164,9 +234,9 @@ const Creator = ({ state, dispatch }) => {
                     ])
                   }
                 ></input>
-                <label htmlFor="bCorrect"> Correct?</label>
                 <input
                   type="checkbox"
+                  className="creatorAnswersCheckbox"
                   id="bCorrect"
                   name="bCorrect"
                   checked={corrects[1]}
@@ -181,10 +251,11 @@ const Creator = ({ state, dispatch }) => {
                 ></input>
               </div>
 
-              <div className="abcdAnswer">
-                <label htmlFor="cText">C: </label>
+              <div className="creatorAnswer">
+                <label htmlFor="cText">C</label>
                 <input
                   type="text"
+                  className="creatorAnswersText"
                   id="cText"
                   name="cText"
                   value={answers[2]}
@@ -197,9 +268,9 @@ const Creator = ({ state, dispatch }) => {
                     ])
                   }
                 ></input>
-                <label htmlFor="cCorrect"> Correct?</label>
                 <input
                   type="checkbox"
+                  className="creatorAnswersCheckbox"
                   id="cCorrect"
                   name="cCorrect"
                   checked={corrects[2]}
@@ -214,10 +285,11 @@ const Creator = ({ state, dispatch }) => {
                 ></input>
               </div>
 
-              <div className="abcdAnswer">
-                <label htmlFor="dText">D: </label>
+              <div className="creatorAnswer">
+                <label htmlFor="dText">D</label>
                 <input
                   type="text"
+                  className="creatorAnswersText"
                   id="dText"
                   name="dText"
                   value={answers[3]}
@@ -230,9 +302,9 @@ const Creator = ({ state, dispatch }) => {
                     ])
                   }
                 ></input>
-                <label htmlFor="dCorrect"> Correct?</label>
                 <input
                   type="checkbox"
+                  className="creatorAnswersCheckbox"
                   id="dCorrect"
                   name="dCorrect"
                   checked={corrects[3]}
@@ -248,27 +320,39 @@ const Creator = ({ state, dispatch }) => {
               </div>
             </>
           ) : (
-            <>
-              <label htmlFor="answerText">Answer: </label>
-              <input
-                type="text"
-                id="answerText"
-                name="answerText"
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              ></input>
-            </>
+            <div style={{ height: "70%", width: "100%" }}>
+              <div className="creatorAnswer">
+                <input
+                  type="text"
+                  className="creatorAnswersText"
+                  id="answerText"
+                  name="answerText"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                ></input>
+              </div>
+            </div>
           )}
         </div>
-        <button
-          type="submit"
-          className="answerButton"
-          style={{ marginBottom: "10vh" }}
-        >
-          {(state.stage === "designer" && state.pickedQuestion) >= 0
-            ? "Edit Question"
-            : "Add Question"}
-        </button>
+        <div className="newQuestionBox" style={{ height: "10%" }}>
+          <div className="creatorBottomButtons">
+            <button
+              type="button"
+              className="cancel"
+              onClick={() => {
+                dispatch({ type: "SET_PICKED_QUESTION", payload: -1 });
+                if (close) close();
+              }}
+            >
+              Cancel
+            </button>
+            <button type="submit" className="submitFlat">
+              {(state.stage === "designer" && state.pickedQuestion >= 0)
+                ? "Edit Question"
+                : "Add Question"}
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );

@@ -7,11 +7,6 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class SessionCreateRequest {
-
-    @NotBlank
-    @Parameter(required = true)
-    private String username;
-
     @NotBlank
     @Parameter(required = true)
     private String sessionTitle;

@@ -76,9 +76,11 @@ const Start = ({ state, dispatch }) => {
               }
             ></input>
           </div>
+          <div>
           <button type="submit" className="submit">
             Join
           </button>
+          </div>
         </form>
         <h1>{state.message}</h1>
       </div>
