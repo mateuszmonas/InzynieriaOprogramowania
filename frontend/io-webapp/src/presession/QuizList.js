@@ -1,5 +1,5 @@
 import React from "react";
-import {FiArrowLeft, FiPlusCircle} from "react-icons/fi";
+import { FiArrowLeft, FiPlusCircle } from "react-icons/fi";
 
 import "./quizList.css";
 import "../common.css";
@@ -7,17 +7,16 @@ import "../common.css";
 const QuizList = ({ state, dispatch }) => {
   const deleteHandler = (quizId) => {
     (async () => {
-        await fetch(process.env.REACT_APP_BACKEND_URL + `/quiz/${quizId}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: state.token,
-                "Content-Type": "application/json",
-            },
-        })
-            .catch((error) => {
-                console.error(error);
-            });
-        downloadQuizzes();
+      await fetch(process.env.REACT_APP_BACKEND_URL + `/quiz/${quizId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: state.token,
+          "Content-Type": "application/json",
+        },
+      }).catch((error) => {
+        console.error(error);
+      });
+      downloadQuizzes();
     })();
   };
 
@@ -46,16 +45,18 @@ const QuizList = ({ state, dispatch }) => {
 
   return (
     <div className="quizListView">
+      <div className="backButtonWrapper">
+        <button
+          type="button"
+          onClick={(e) => dispatch({ type: "SET_STAGE_ACCOUNT" })}
+          className="submit"
+        >
+          Back <FiArrowLeft size={16} />
+        </button>
+      </div>
       <div className="quizListHeader">
         <h3>Quizzes</h3>
         <div className="quizListHeaderButtons">
-          <button
-            type="button"
-            onClick={(e) => dispatch({ type: "SET_STAGE_ACCOUNT" })}
-            className="submit"
-          >
-            Back <FiArrowLeft size={16} />
-          </button>
           <button
             type="button"
             className="submit"
@@ -63,16 +64,16 @@ const QuizList = ({ state, dispatch }) => {
               dispatch({ type: "SET_DESIGNER_QUESTIONS", payload: [] });
               dispatch({
                 type: "SET_QUIZ_EDIT_MODE",
-                payload: false
-              })
+                payload: false,
+              });
               dispatch({
                 type: "SET_QUIZ_ID",
-                payload: ""
-              })
+                payload: "",
+              });
               dispatch({
                 type: "SET_QUIZ_NAME",
-                payload: ""
-              })
+                payload: "",
+              });
               dispatch({ type: "SET_STAGE_DESIGNER" });
             }}
           >
@@ -104,16 +105,16 @@ const QuizList = ({ state, dispatch }) => {
                     });
                     dispatch({
                       type: "SET_QUIZ_EDIT_MODE",
-                      payload: true
-                    })
+                      payload: true,
+                    });
                     dispatch({
                       type: "SET_QUIZ_ID",
-                      payload: quiz.id
-                    })
+                      payload: quiz.id,
+                    });
                     dispatch({
                       type: "SET_QUIZ_NAME",
-                      payload: quiz.name
-                    })
+                      payload: quiz.name,
+                    });
                     dispatch({ type: "SET_STAGE_DESIGNER" });
                   }}
                 >

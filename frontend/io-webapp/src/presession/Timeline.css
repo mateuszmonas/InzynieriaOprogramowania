@@ -1,9 +1,9 @@
 .session-history-view {
     display: flex;
     flex-direction: row;
-    width: 95vw;
-    height: 90vh;
-    padding: 5vh 1.5vw 0vh 1.5vw;
+    width: 95%;
+    height: 85%;
+    padding: 2% 1.5% 0% 1.5%;
 }
 
 .session-history-element {

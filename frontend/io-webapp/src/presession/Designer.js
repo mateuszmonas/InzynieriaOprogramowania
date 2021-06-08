@@ -1,7 +1,7 @@
 import React from "react";
 import Creator from "../session/Creator";
 import QuestionList from "./QuestionList";
-import {FiArrowLeft, FiSave} from "react-icons/fi";
+import { FiArrowLeft, FiSave } from "react-icons/fi";
 
 import "./Account.css";
 import "./designer.css";
@@ -26,8 +26,7 @@ const Designer = ({ state, dispatch }) => {
         .then((data) => {
           if (state.stage === "designer")
             dispatch({ type: "SET_STAGE_QUIZ_LIST" });
-          else
-            state.quizId = data.quizId;
+          else state.quizId = data.quizId;
         })
         .catch((error) => {
           console.error(error);
@@ -50,7 +49,7 @@ const Designer = ({ state, dispatch }) => {
           questions: state.designerQuestions,
         }),
       })
-          .then(() => {
+        .then(() => {
           dispatch({ type: "SET_STAGE_QUIZ_LIST" });
         })
         .catch((error) => {
@@ -61,22 +60,22 @@ const Designer = ({ state, dispatch }) => {
 
   return (
     <div className="designer">
+      <div className="backButtonWrapper">
+        <button
+          type="button"
+          onClick={(e) => dispatch({ type: "SET_STAGE_QUIZ_LIST" })}
+          className="submit"
+        >
+          Back <FiArrowLeft size={16} />
+        </button>
+      </div>
       <div className="designerHeader">
         <h3>Question Designer</h3>
         <div className="designerHeaderButtons">
           <button
             type="button"
-            onClick={(e) => dispatch({ type: "SET_STAGE_QUIZ_LIST" })}
-            className="submit"
-          >
-            Back <FiArrowLeft size={16} />
-          </button>
-          <button
-            type="button"
             onClick={(e) => {
-              state.editMode
-                ? editHandler(e)
-                : createHandler(e);
+              state.editMode ? editHandler(e) : createHandler(e);
             }}
             className="submit"
           >

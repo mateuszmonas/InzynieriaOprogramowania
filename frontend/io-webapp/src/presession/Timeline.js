@@ -67,17 +67,17 @@ const Timeline = ({ state, dispatch }) => {
   }, []);
   return (
     <div className="quizListView">
+      <div className="backButtonWrapper">
+        <button
+          type="button"
+          onClick={(e) => dispatch({type: "SET_STAGE_ACCOUNT"})}
+          className="submit"
+        >
+          Back <FiArrowLeft size={16}/>
+        </button>
+      </div>
       <div className="session-history-header">
         <h3>Session history</h3>
-        <div className="quizListHeaderButtons">
-          <button
-            type="button"
-            onClick={(e) => dispatch({type: "SET_STAGE_ACCOUNT"})}
-            className="submit"
-          >
-            Back <FiArrowLeft size={16}/>
-          </button>
-        </div>
       </div>
       <div className="session-history-view">
         <div className="session-history-content">
