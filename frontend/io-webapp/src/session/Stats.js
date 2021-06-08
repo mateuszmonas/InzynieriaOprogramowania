@@ -11,6 +11,7 @@ import {
   YAxis,
 } from "recharts";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { TagCloud } from "react-tagcloud";
 
 import "./stats.css";
 
@@ -33,7 +34,6 @@ const Stats = ({ state, dispatch }) => {
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           setQuestions(
             data.sessionAnswers.map((q) => {
               const dataReplies = [];
@@ -69,44 +69,6 @@ const Stats = ({ state, dispatch }) => {
     };
   }, []);
 
-  // const sampleHistogram = [
-  //   { students: 0, name: "0-10%" },
-  //   { students: 1, name: "10-20%" },
-  //   { students: 3, name: "20-30%" },
-  //   { students: 5, name: "30-40%" },
-  //   { students: 10, name: "40-50%" },
-  //   { students: 11, name: "50-60%" },
-  //   { students: 7, name: "60-70%" },
-  //   { students: 6, name: "70-80%" },
-  //   { students: 4, name: "80-90%" },
-  //   { students: 3, name: "90-100%" },
-  // ];
-
-  // const sampleQuestions = [
-  //   {
-  //     id: 1,
-  //     question: "What's the first letter of the alphabet?",
-  //     answers: ["A", "D", "F", "P"],
-  //     replies: [
-  //       { answers: 3, name: "A", isCorrect: false },
-  //       { answers: 8, name: "B", isCorrect: true },
-  //       { answers: 2, name: "C", isCorrect: false },
-  //       { answers: 2, name: "D", isCorrect: false },
-  //     ],
-  //   },
-  //   {
-  //     id: 2,
-  //     question: "What colour is the water in Cracow?",
-  //     answers: ["Green", "Blue", "Black", "Brown"],
-  //     replies: [
-  //       { answers: 7, name: "A", isCorrect: true },
-  //       { answers: 6, name: "B", isCorrect: false },
-  //       { answers: 3, name: "C", isCorrect: false },
-  //       { answers: 12, name: "D", isCorrect: true },
-  //     ],
-  //   },
-  // ];
-
   return (
     <div className="statsView">
       <div className="statsGraphPicker">
@@ -132,10 +94,75 @@ const Stats = ({ state, dispatch }) => {
         />
       </div>
 
-      <ResponsiveContainer width="95%" height="90%">
-        {questions.length === 0 ? (
-          <></>
-        ) : (questions[picked].open ? (<></>) : (
+      {questions.length === 0 ? (
+        <></>
+      ) : questions[picked].open ? (
+        <TagCloud
+          style={{
+            height: "100%",
+            width: "95%",
+            alignSelf: "center",
+          }}
+          minSize={12}
+          maxSize={47}
+          colorOptions={{
+            luminosity: "dark",
+            hue: "blue",
+          }}
+          shuffle={false}
+          disableRandomColor={true}
+          tags={questions[picked].replies
+            .map((entry, index) => {
+              let r = 0;
+              let g = 0;
+              let b = 0;
+            
+              for(let i = 0; i < questions[picked].answers[index].length; i++) {
+                if (i % 3 === 0) {
+                  r += questions[picked].answers[index].charCodeAt(i);
+                } else if (i % 3 === 1) {
+                  g += questions[picked].answers[index].charCodeAt(i);
+                } else {
+                  b += questions[picked].answers[index].charCodeAt(i);
+                }
+              }
+
+              if (questions[picked].answers[index].length % 3 == 0) {
+                r = (r % 128);
+                g = 0;
+                b = (b % 128);  
+              } else if (questions[picked].answers[index].length % 3 == 1) {
+                r = 0;
+                g = (g % 128);
+                b = (b % 128);  
+              } else if (questions[picked].answers[index].length % 3 == 2) {
+                r = 0;
+                g = 0;
+                b = (b % 128);  
+              } else if (questions[picked].answers[index].length % 3 == 3) {
+                r = 0;
+                g = (g % 128);
+                b = 0;  
+              } else if (questions[picked].answers[index].length % 3 == 4) {
+                r = (r % 128);
+                g = 0;
+                b = 0;  
+              } else {
+                r = (r % 128);
+                g = (g % 128);
+                b = 0; 
+              }
+
+              return {
+                value: questions[picked].answers[index],
+                count: entry.answers,
+                color: `rgb(${r}, ${g}, ${b})`,
+              };
+            })
+            .filter((entry) => entry.count && entry.count > 0)}
+        />
+      ) : (
+        <ResponsiveContainer width="95%" height="90%">
           <BarChart data={questions[picked].replies}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
@@ -154,8 +181,8 @@ const Stats = ({ state, dispatch }) => {
               ))}
             </Bar>
           </BarChart>
-        ))}
-      </ResponsiveContainer>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };
