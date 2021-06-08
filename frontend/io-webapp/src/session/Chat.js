@@ -12,7 +12,7 @@ const Chat = ({ state, dispatch }) => {
       {
         id: message.id,
         username: message.sender,
-        message: JSON.parse(message.content), 
+        message: JSON.parse(message.content),
         time: message.timestamp,
       },
       ...messages,
@@ -22,7 +22,7 @@ const Chat = ({ state, dispatch }) => {
   const send = async (e) => {
     e.preventDefault();
     const msg = {
-      type : "send",
+      type: "send",
       content: message,
     };
 
@@ -54,9 +54,13 @@ const Chat = ({ state, dispatch }) => {
   }, [state.setChatVisible, send]);
 
   return (
-    <div className="chat">
+    <div
+      className="chat"
+      style={state.isParticipantsVisible ? { maxHeight: "70%", minHeight: "70%" } : {}}
+    >
       <div className="chatFooter">
         <textarea
+          style={{resize: "none"}}
           className="chatText"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
