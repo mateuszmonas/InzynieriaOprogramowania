@@ -16,7 +16,7 @@
     "recharts": "2.0.9",
     "react-icons": "^4.2.0",
     "reactjs-popup": "^2.0.4",
-    "react-chrono": "1.9.2",
+    "react-chrono": "1.9.3",
     "react-tagcloud": "^2.1.1"
   },
   "scripts": {

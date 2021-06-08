@@ -8,13 +8,21 @@ import "./Account.css"
 const Timeline = ({ state, dispatch }) => {
 
   const ParseContent = (type, content) => { // Requires tests
+    console.log(content);
     switch (type) {
       case "COMMENT":
-        return content;
+        return JSON.parse(content);
       case "QUIZ":
+        const quiz = JSON.parse(content);
+        console.log(quiz);
         return content.name;
       case "QUIZ_ANSWERS":
+        const quizAnswers = JSON.parse(content);
+        console.log(quizAnswers);
         return content[0][0];
+      case "EMOTE":
+        // TODO
+        return "abc";
     }
   }
 
