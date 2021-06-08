@@ -14,12 +14,10 @@
     "sockjs-client": "1.5.1",
     "moment": "2.29.1",
     "recharts": "2.0.9",
-<<<<<<< HEAD
-=======
     "react-icons": "^4.2.0",
     "reactjs-popup": "^2.0.4",
->>>>>>> 8b8fa1e8366a11ef04c7bdb9396d61ff28e694e1
-    "react-chrono": "1.9.2"
+    "react-chrono": "1.9.2",
+    "react-tagcloud": "^2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

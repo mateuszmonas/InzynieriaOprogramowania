@@ -57,16 +57,6 @@ const SignUp = ({ state, dispatch }) => {
           ></input>
         </div>
         <div>
-          <label htmlFor="signUpEmail">Email</label>
-          <input
-            type="text"
-            id="signUpEmail"
-            name="signUpEmail"
-            value={creds.email}
-            onChange={(e) => setCreds({ ...creds, email: e.target.value })}
-          ></input>
-        </div>
-        <div>
           <label htmlFor="signUpPassword">Password</label>
           <input
             type="password"
