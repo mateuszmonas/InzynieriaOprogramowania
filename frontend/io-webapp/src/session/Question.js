@@ -22,7 +22,8 @@ const Question = ({ state, dispatch }) => {
 
   const submitHandler = (questionId, answerNumber) => {
     let answers = {}
-    answers[questionId] = [answerNumber]
+    // answers[questionId] = [answerNumber]
+    answers[questionId] = [current.answers[answerNumber].text]
     const msg = {
       type: "quiz-answers",
       content: answers,
