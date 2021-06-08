@@ -52,9 +52,13 @@ public class SessionAnswersService {
                 .forEach(i -> {
                     List<Answer> questionAnswers = question.getAnswers();
                     Answer answer = answers.get(i);
+                    Answer correctAnswer = new Answer(answer.getText());
+                    correctAnswer.setCorrect(true);
 
                     if(questionAnswers.contains(answer))
                         answerIdx.add(questionAnswers.indexOf(answer));
+                    else if (questionAnswers.contains(correctAnswer))
+                        answerIdx.add(questionAnswers.indexOf(correctAnswer));
                     else {
                         answerIdx.add(questionAnswers.size());
                         questionAnswers.add(answer);    // Add new answer to question (for open questions)

@@ -69,6 +69,8 @@ const Creator = ({ state, dispatch, close }) => {
         });
       }
 
+      console.log(newQuestion);
+
       if (state.stage !== "designer") {
         state.designerQuestions = [newQuestion];
         state.quizName = question;

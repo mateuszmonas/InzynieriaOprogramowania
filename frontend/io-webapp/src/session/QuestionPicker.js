@@ -11,6 +11,8 @@ const QuestionPicker = ({ state, dispatch }) => {
   const submitHandler = (e, quiz) => {
     e.preventDefault();
 
+    console.log(quiz);
+
     const msg = {
       type: "quiz",
       content: quiz
