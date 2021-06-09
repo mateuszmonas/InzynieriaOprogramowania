@@ -94,7 +94,7 @@ const Chat = ({ state, dispatch }) => {
           <div className="reactions">
             <Reactions handleEmojiSelect={handleEmojiSelect} />
           </div>
-        )}
+        }
         {!reactionShown && (
           <FiSend
             onClick={(e) => {
