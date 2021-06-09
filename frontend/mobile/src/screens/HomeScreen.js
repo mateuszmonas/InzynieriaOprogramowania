@@ -12,7 +12,7 @@ function HomeScreen({ navigation }) {
     const [username, setUsername] = useState('studenciak');
     const [isUsernameHighlighted, setUserNameHighlighted] = useState(false);
 
-    const [sessionId, setSessionId] = useState('985385f2-6020-4378-b501-bb4fa2a47e0f')
+    const [sessionId, setSessionId] = useState('9a028204-362b-4a6f-836e-c5ed64714328')
     const [isSessionIdHighlighted, setSessionIdHighlighted] = useState(false);
 
     const [isJoinSessionButtonEnabled, setJoinSessionButtonEnabled] = useState(true);
@@ -40,7 +40,10 @@ function HomeScreen({ navigation }) {
             .then((response) => {console.log(response); return response.json();})
             .then((json) => {
                 console.log(json)
-                json.sessionId && navigation.navigate('Session', { sessionId: json.sessionId, username })
+                json.sessionId && navigation.navigate(
+                    'Session',
+                    { sessionId: json.sessionId.trim(), username, guestId: json.guestId }
+                )
             })
             .catch((error) => console.error(error))
             .finally(() => setJoinSessionButtonEnabled(true))
@@ -90,13 +93,10 @@ function HomeScreen({ navigation }) {
                     <Text style={styles.joinByIdText}>Dołącz</Text>
                 </TouchableOpacity>
             </View>
-            <Text style={styles.inputLabel}>Zeskanuj QR kod sesji</Text>
-            <TouchableOpacity style={styles.joinByQrCodeButton} onPress={() => {
-                // Just for testing purposes
-                navigation.navigate('Session', { username })
-            }}>
-                <Text style={styles.joinByQrCodeText}>Skanuj kod QR</Text>
-            </TouchableOpacity>
+            {/*<Text style={styles.inputLabel}>Zeskanuj QR kod sesji</Text>*/}
+            {/*<TouchableOpacity style={styles.joinByQrCodeButton} onPress={() => {} }>*/}
+            {/*    <Text style={styles.joinByQrCodeText}>Skanuj kod QR</Text>*/}
+            {/*</TouchableOpacity>*/}
             <StatusBar style={"auto"} />
         </SafeAreaView>
     );
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginTop: 124,
+        marginTop: 64,
     },
     userNameInput: {
         backgroundColor: 'lightgray',
