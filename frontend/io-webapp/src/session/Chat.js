@@ -14,11 +14,10 @@ const Chat = ({ state, dispatch }) => {
   }
 
   const handleEmojiSelect = (emoji) => {
-    console.log(emoji);
     setReactionShown(!reactionShown);
 
     const msg = {
-      type: "send", // or type reaction 
+      type: "emote", // or type reaction
       content: emoji.native,
     };
 
@@ -72,10 +71,14 @@ const Chat = ({ state, dispatch }) => {
   }, [state.setChatVisible, send]);
 
   return (
-    <div className="chat">
+    <div
+      className="chat"
+      style={state.isParticipantsVisible ? { maxHeight: "70%", minHeight: "70%" } : {}}
+    >
       <div className="chatFooter">
       {!reactionShown &&
         <textarea
+          style={{resize: "none"}}
           className="chatText"
           value={message}
           onChange={(e) => setMessage(e.target.value)}

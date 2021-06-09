@@ -108,7 +108,7 @@ export const reducer = (state, action) => {
       return { ...state, message: action.payload };
 
     case "SET_SESSION_HISTORY":
-      return { ...state, sessionHistory: action.payload };
+      return { ...state, sessionHistory: action.payload.reverse() };
 
     case "CHAT_VISIBLE":
       return {
@@ -186,7 +186,6 @@ export const reducer = (state, action) => {
             ),
           ],
         };
-  
 
     case "SET_PICKED_QUESTION":
       return {
@@ -202,7 +201,7 @@ export const reducer = (state, action) => {
       };
 
     case "SET_QUIZ_LIST":
-      return { ...state, quizList: action.payload };
+      return { ...state, quizList: action.payload.reverse() };
 
     case "SET_QUIZ_NAME":
       return { ...state, quizName: action.payload };
