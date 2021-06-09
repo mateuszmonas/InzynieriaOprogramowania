@@ -71,10 +71,14 @@ const Chat = ({ state, dispatch }) => {
   }, [state.setChatVisible, send]);
 
   return (
-    <div className="chat">
+    <div
+      className="chat"
+      style={state.isParticipantsVisible ? { maxHeight: "70%", minHeight: "70%" } : {}}
+    >
       <div className="chatFooter">
       {!reactionShown &&
         <textarea
+          style={{resize: "none"}}
           className="chatText"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
