@@ -28,7 +28,7 @@ export const initialState = {
   quizName: "",
   quizId: "",
   editMode: false,
-  pickedSession: -1,
+  pickedSession: -1
 };
 
 export const reducer = (state, action) => {

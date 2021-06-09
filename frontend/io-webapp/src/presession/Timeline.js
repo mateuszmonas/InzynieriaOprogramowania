@@ -7,7 +7,6 @@ import "./Account.css"
 
 const Timeline = ({ state, dispatch }) => {
   const FindQuestion = (questionId, timelineQuizzes) => {
-    console.log(timelineQuizzes);
     for (let i = 0; i < timelineQuizzes.length; ++i) {
       const quiz = timelineQuizzes[i];
       for (let j = 0; j < quiz.questions.length; ++j) {
@@ -21,7 +20,6 @@ const Timeline = ({ state, dispatch }) => {
 
   const ParseQuiz = (quiz, timelineQuizzes) => {
     timelineQuizzes.push(quiz);
-    console.log(timelineQuizzes);
     let quizData = [];
 
     quiz.questions.forEach((question, index) => {
@@ -40,13 +38,11 @@ const Timeline = ({ state, dispatch }) => {
   const ParseAnswers = (answers, sender, timelineQuizzes, timelineAnswerSets) => {
     const questionId = Object.keys(answers)[0];
     const metadata = FindQuestion(questionId, timelineQuizzes);
-    console.log(metadata);
     const quizIdx = metadata[0];
     const questionTitle = metadata[1];
     const isLast = metadata[2];
     let idx = -1;
 
-    console.log(timelineAnswerSets);
     for (let i = 0; i < timelineAnswerSets.length; ++i) {
       const answerSet = timelineAnswerSets[i];
       if (answerSet.sender === sender && answerSet.quizIdx === quizIdx) {
@@ -55,9 +51,7 @@ const Timeline = ({ state, dispatch }) => {
       }
     }
 
-    console.log(idx);
     let answerInfo;
-
     if (idx === -1) {
       idx = timelineAnswerSets.length;
       answerInfo = {
@@ -76,8 +70,6 @@ const Timeline = ({ state, dispatch }) => {
       };
     }
 
-    console.log(answerInfo);
-
     if (idx === -1)
       timelineAnswerSets.push(answerInfo);
     else
@@ -85,7 +77,6 @@ const Timeline = ({ state, dispatch }) => {
 
     if (isLast) {
       let text = [];
-      console.log(answerInfo);
       for (let i = 0; i < answerInfo.questionTitles.length; ++i) {
         const title = answerInfo.questionTitles[i];
         const questionAnswers = answerInfo.answers[i];
@@ -96,8 +87,6 @@ const Timeline = ({ state, dispatch }) => {
         }
       }
 
-      console.log(text);
-
       const answerTimelineInfo = {
         title: "ANSWERS",
         cardTitle: sender,
@@ -106,7 +95,6 @@ const Timeline = ({ state, dispatch }) => {
       };
 
       timelineAnswerSets.splice(idx, 1);
-
       return answerTimelineInfo;
     }
   };
@@ -114,6 +102,7 @@ const Timeline = ({ state, dispatch }) => {
   const CountEmotes = (emote, timestamp, timelineEmoteInfo) => {
     if (timelineEmoteInfo.emotes.length === 0)
       timelineEmoteInfo.firstTimestamp = timestamp;
+    timelineEmoteInfo.lastTimestamp = timestamp;
 
     const idx = timelineEmoteInfo.emotes.indexOf(emote);
     if (idx === -1) {
@@ -133,13 +122,10 @@ const Timeline = ({ state, dispatch }) => {
       cardSubtitle: timelineEmoteInfo.firstTimestamp + " - " + timelineEmoteInfo.lastTimestamp,
       cardDetailedText: text
     };
-
     return emoteInfo;
   }
 
   const ParseMessage = (message, timelineQuizzes, timelineAnswerSets, timelineEmoteInfo) => {
-    console.log(message.content);
-    console.log(timelineEmoteInfo);
     const contentJSON = JSON.parse(message.content);
     if (message.type !== "EMOTE" && timelineEmoteInfo.emotes.length > 0) {
       const res = FlushEmotes(timelineEmoteInfo);
@@ -183,10 +169,8 @@ const Timeline = ({ state, dispatch }) => {
       lastTimestamp: ""
     };
 
-    console.log(messageLog);
     for (let i = 0; i < messageLog.length; ++i){
       const message = messageLog[i];
-      console.log(message);
       const parsedMessage = ParseMessage(message, timelineQuizzes, timelineAnswerSets, timelineEmoteInfo);
       if (parsedMessage && Array.isArray(parsedMessage))
         items.push.apply(items, parsedMessage);
