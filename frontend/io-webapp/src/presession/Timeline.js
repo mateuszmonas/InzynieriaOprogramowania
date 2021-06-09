@@ -6,22 +6,24 @@ import "./Timeline.css";
 import "./Account.css"
 
 const Timeline = ({ state, dispatch }) => {
-  const FindQuestion = (questionId) => {
+  const FindQuestion = (questionId, timelineQuizzes) => {
     console.log(timelineQuizzes);
-    for (let i = 0; i < state.timelineQuizzes.length; ++i) {
-      const quiz = state.timelineQuizzes[i];
+    for (let i = 0; i < timelineQuizzes.length; ++i) {
+      const quiz = timelineQuizzes[i];
       for (let j = 0; j < quiz.questions.length; ++j) {
         const question = quiz.questions[j];
         if (question.id === questionId)
-          return [j, question.content, j === quiz.questions.length - 1];
+          return [i, question.content, j === quiz.questions.length - 1];
       }
     }
     return [-1, "Unknown", false];
   }
 
-  const ParseQuiz = (quiz) => {
-    state.timelineQuizzes = [...state.timelineQuizzes, quiz];
+  const ParseQuiz = (quiz, timelineQuizzes) => {
+    timelineQuizzes.push(quiz);
+    console.log(timelineQuizzes);
     let quizData = [];
+
     quiz.questions.forEach((question, index) => {
       if (!question.open) {
         quizData.push("Question " + (index + 1) + ": " + question.content);
@@ -32,21 +34,21 @@ const Timeline = ({ state, dispatch }) => {
       else
         quizData.push("Question " + (index + 1) + ": " + question.content + " (open question)")
     });
-    console.log(quizData);
     return quizData;
   }
 
-  const ParseAnswers = (answers, sender) => {
+  const ParseAnswers = (answers, sender, timelineQuizzes, timelineAnswerSets) => {
     const questionId = Object.keys(answers)[0];
-    const metadata = FindQuestion(questionId);
+    const metadata = FindQuestion(questionId, timelineQuizzes);
     console.log(metadata);
     const quizIdx = metadata[0];
     const questionTitle = metadata[1];
     const isLast = metadata[2];
     let idx = -1;
 
-    for (let i = 0; i < state.timelineAnswerSets.length; ++i) {
-      const answerSet = state.timelineAnswerSets[i];
+    console.log(timelineAnswerSets);
+    for (let i = 0; i < timelineAnswerSets.length; ++i) {
+      const answerSet = timelineAnswerSets[i];
       if (answerSet.sender === sender && answerSet.quizIdx === quizIdx) {
         idx = i;
         break;
@@ -54,99 +56,102 @@ const Timeline = ({ state, dispatch }) => {
     }
 
     console.log(idx);
+    let answerInfo;
 
     if (idx === -1) {
-      idx = state.timelineAnswerSets.length;
-      console.log(questionTitle);
-      console.log(answers[questionId]);
-
-      const answerInfo = {
+      idx = timelineAnswerSets.length;
+      answerInfo = {
         sender: sender,
         quizIdx: quizIdx,
         questionTitles: [questionTitle],
         answers: [answers[questionId]]
-      }
-      state.timelineAnswerSets = [...state.timelineAnswerSets, answerInfo];
-
-      console.log(state.timelineAnswerSets);
+      };
     }
     else {
-      state.timelineAnswerSets[idx].questionTitles =
-        [...state.timelineAnswerSets.questionTitles, questionTitle];
-      state.timelineAnswerSets[idx].answers =
-        [...state.timelineAnswerSets[idx].answers, answers];
+      answerInfo = {
+        sender: sender,
+        quizIdx: quizIdx,
+        questionTitles: [...timelineAnswerSets[idx].questionTitles, questionTitle],
+        answers: [...timelineAnswerSets[idx].answers, answers[questionId]]
+      };
     }
 
-    console.log(state.timelineAnswerSets);
+    console.log(answerInfo);
+
+    if (idx === -1)
+      timelineAnswerSets.push(answerInfo);
+    else
+      timelineAnswerSets[idx] = answerInfo;
 
     if (isLast) {
       let text = [];
-      for (let i = 0; i < state.timelineAnswerSets[idx].questionTitles; ++i) {
-        const title = state.timelineAnswerSets[idx].questionTitles[i];
-        const questionAnswers = state.timelineAnswerSets[idx].answers[i];
+      console.log(answerInfo);
+      for (let i = 0; i < answerInfo.questionTitles.length; ++i) {
+        const title = answerInfo.questionTitles[i];
+        const questionAnswers = answerInfo.answers[i];
         text.push("Question " + (i + 1) + ": " + title);
         for (let j = 0; j < questionAnswers.length; ++j) {
           const answer = questionAnswers[j];
-          text.push("    -> " + answer)
+          text.push("-> " + answer)
         }
       }
 
-      console.log(text)
+      console.log(text);
 
-      const answerInfo = {
+      const answerTimelineInfo = {
         title: "ANSWERS",
-        cardTitle: state.timelineQuizzes[quizIdx].name,
-        cardSubtitle: sender,
+        cardTitle: sender,
+        cardSubtitle: timelineQuizzes[quizIdx].name,
         cardDetailedText: text
       };
-      state.timelineAnswerSets.splice(idx, 1);
 
-      return answerInfo;
+      timelineAnswerSets.splice(idx, 1);
+
+      return answerTimelineInfo;
     }
-
   };
 
-  const CountEmotes = (emote, timestamp) => {
-    if (state.timelineEmoteInfo.counts.length === 0)
-      state.timelineEmoteInfo.firstTimestamp = timestamp;
+  const CountEmotes = (emote, timestamp, timelineEmoteInfo) => {
+    if (timelineEmoteInfo.length === 0)
+      timelineEmoteInfo.firstTimestamp = timestamp;
 
-    const idx = state.timelineEmoteInfo.emotes.indexOf(emote);
+    const idx = timelineEmoteInfo.emotes.indexOf(emote);
     if (idx === -1) {
-      state.timelineEmoteInfo.emotes = [...state.timelineEmoteInfo.emotes, emote];
-      state.timelineEmoteInfo.counts = [...state.timelineEmoteInfo.counts, 0];
-      state.timelineEmoteInfo.lastTimestamp = timestamp;
+      timelineEmoteInfo.emotes.push(emote);
+      timelineEmoteInfo.counts.push(1);
     }
-    else state.timelineEmoteInfo.counts[idx]++;
+    else timelineEmoteInfo.counts[idx]++;
   }
 
-  const ResetEmoteInfo = () => {
-    state.timelineEmoteInfo = {
+  const FlushEmotes = (timelineEmoteInfo) => {
+    let text = [];
+    for(let i = 0; i < timelineEmoteInfo.emotes.length; ++i)
+      text.push(timelineEmoteInfo.emotes[i] + " x" + timelineEmoteInfo.counts[i]);
+    const emoteInfo = {
+      title: "EMOTES",
+      cardTitle: "EMOTES",
+      cardSubtitle: timelineEmoteInfo.firstTimestamp + " - " + timelineEmoteInfo.lastTimestamp,
+      cardDetailedText: text
+    };
+    timelineEmoteInfo = {
       emotes: [],
       counts: [],
       firstTimestamp: "",
       lastTimestamp: ""
     };
-  };
-
-  const FlushEmotes = () => {
-    let text = [];
-    for(let i = 0; i < state.timelineEmoteInfo.emotes.length; ++i)
-      text.push(state.timelineEmoteInfo.emotes[i] + " x" + state.timelineEmoteInfo.counts[i]);
-    const emoteInfo = {
-      title: "EMOTES",
-      cardTitle: "EMOTES",
-      cardSubtitle: state.timelineEmoteInfo.firstTimestamp + " - " + state.timelineEmoteInfo.lastTimestamp,
-      cardDetailedText: text
-    };
-    ResetEmoteInfo();
-    return emoteInfo;
+    return [emoteInfo, timelineEmoteInfo];
   }
 
-  const ParseMessage = (message) => {
+  const ParseMessage = (message, timelineQuizzes, timelineAnswerSets, timelineEmoteInfo) => {
     console.log(message.content);
+    console.log(timelineAnswerSets);
+    console.log(timelineEmoteInfo);
     const contentJSON = JSON.parse(message.content);
-    if (message.type !== "EMOTE" && state.timelineEmoteInfo.length > 0)
-        return [FlushEmotes(), ParseMessage(message)];
+    if (message.type !== "EMOTE" && timelineEmoteInfo.emotes.length > 0) {
+      const res = FlushEmotes(timelineEmoteInfo);
+      timelineEmoteInfo = res[1];
+      return [res[0], timelineQuizzes, timelineAnswerSets, timelineEmoteInfo];
+    }
 
     switch (message.type){
       case "COMMENT":
@@ -161,37 +166,43 @@ const Timeline = ({ state, dispatch }) => {
           title: "QUIZ",
           cardTitle: contentJSON.name,
           cardSubtitle: message.timestamp,
-          cardDetailedText: ParseQuiz(contentJSON)
+          cardDetailedText: ParseQuiz(contentJSON, timelineQuizzes)
         };
       case "QUIZ_ANSWERS":
-        return ParseAnswers(contentJSON, message.sender);
+        return ParseAnswers(contentJSON, message.sender, timelineQuizzes, timelineAnswerSets);
       case "EMOTE":
-        CountEmotes(contentJSON, message.timestamp);
+        CountEmotes(contentJSON, message.timestamp, timelineEmoteInfo);
     }
   };
 
   const CreateTimelineItems = (messageLog) => {
     let items = [];
+    let timelineQuizzes = [];
+    let timelineAnswerSets = [];
+    let timelineEmoteInfo = {
+      emotes: [],
+      counts: [],
+      firstTimestamp: "",
+      lastTimestamp: ""
+    };
+
     console.log(messageLog);
     for (let i = 0; i < messageLog.length; ++i){
       const message = messageLog[i];
       console.log(message);
-      const parsedMessage = ParseMessage(message);
+      const parsedMessage = ParseMessage(message, timelineQuizzes, timelineAnswerSets, timelineEmoteInfo);
       if (parsedMessage && Array.isArray(parsedMessage))
         items.push.apply(items, parsedMessage);
       else if (parsedMessage)
         items.push(parsedMessage);
     }
-    if (state.timelineEmoteInfo.emotes.length > 0)
-      items.push(FlushEmotes());
+    if (timelineEmoteInfo.emotes.length > 0)
+      items.push(FlushEmotes(timelineEmoteInfo)[0]);
 
     return items;
   }
 
   const ParseSessions = () => {
-    state.timelineQuizzes = [];
-    ResetEmoteInfo();
-    state.timelineAnswerSets = [];
     return (
       <Chrono
         items={

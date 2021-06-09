@@ -29,15 +29,6 @@ export const initialState = {
   quizId: "",
   editMode: false,
   pickedSession: -1,
-  timelineQuizzes: [],
-  timelineAnswerSets: [],
-  timelineEmoteInfo: {
-    emotes: [],
-    counts: [],
-    firstTimestamp: "",
-    lastTimestamp: ""
-  }   // { emotes: [emote1, emote2,...], counts: [count1, count2, ...]
-                          // , firstTimestamp: timestamp, lastTimestamp; timestamp }
 };
 
 export const reducer = (state, action) => {
@@ -193,7 +184,6 @@ export const reducer = (state, action) => {
             ),
           ],
         };
-  
 
     case "SET_PICKED_QUESTION":
       return {
