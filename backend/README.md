@@ -28,6 +28,7 @@ Swagger api documentation can be accessed on url `/swagger-ui.html`
   session
 * **Getting whole session history for leader account:** /session/history -> returns list of all sessions organized by
   user
+
 #### Websocket communication in one session:
 * **Creating websocket:** /session-handling (websocket connection address)
 * **Subscribtion:** /topic/session/{sessionId} (receiving all messages, requires getting session ID from connect

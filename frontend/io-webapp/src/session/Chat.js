@@ -1,11 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { FiSend } from "react-icons/fi";
-
+import Reactions from "./Reactions";
 import "./chat.css";
+
 
 const Chat = ({ state, dispatch }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+
+  const [reactionShown, setReactionShown] = useState(false);
+  const onReactionClick = () => {
+      setReactionShown(!reactionShown);
+  }
+
+  const handleEmojiSelect = (emoji) => {
+    setReactionShown(!reactionShown);
+
+    const msg = {
+      type: "emote", // or type reaction
+      content: emoji.native,
+    };
+
+    state.socket.sendMessage(msg);
+  }
 
   const parseMessage = (message) => {
     setMessages((messages) => [
@@ -59,18 +76,34 @@ const Chat = ({ state, dispatch }) => {
       style={state.isParticipantsVisible ? { maxHeight: "70%", minHeight: "70%" } : {}}
     >
       <div className="chatFooter">
+      {!reactionShown &&
         <textarea
           style={{resize: "none"}}
           className="chatText"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         ></textarea>
-        <FiSend
-          onClick={(e) => {
-            send(e);
-          }}
-          size={40}
-        />
+      }
+      {!reactionShown &&
+        <div onClick={onReactionClick}>
+          <span className="reactionIcon">😀</span>
+        </div>
+      }
+        {reactionShown &&
+          <div className="reactions">
+            <Reactions
+              handleEmojiSelect={handleEmojiSelect}
+            />
+          </div>
+        }
+        {!reactionShown &&
+          <FiSend
+            onClick={(e) => {
+              send(e);
+            }}
+            size={40}
+          />
+        }
       </div>
       <div className="chatContent">
         {messages.map((msg) => {
