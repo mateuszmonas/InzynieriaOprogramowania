@@ -13,7 +13,7 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
-    height: 90%;
+    height: 85%;
     width: 100%;
   }
 
@@ -45,8 +45,8 @@
 .designerHeaderButtons {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-end;
+    align-items: flex-end;
     height: 100%;
     width: 12%;
 }
@@ -58,5 +58,23 @@
     align-items: center;
     width: 45%;
     height: 100%;
-    /* padding: 8% 10% 8% 10%; */
+}
+
+.backButtonWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 5%;
+    margin-bottom: 0.5rem;
+    width: 12%;
+}
+
+.backButtonWrapper button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 45%;
+    height: 100%;
 }

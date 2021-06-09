@@ -116,7 +116,7 @@ const Stats = ({ state, dispatch }) => {
               let r = 0;
               let g = 0;
               let b = 0;
-
+            
               for(let i = 0; i < questions[picked].answers[index].length; i++) {
                 if (i % 3 === 0) {
                   r += questions[picked].answers[index].charCodeAt(i);
