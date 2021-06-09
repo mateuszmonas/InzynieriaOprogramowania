@@ -6,13 +6,16 @@ import "../common.css";
 
 const Participants = ({ state, dispatch }) => {
   const [waiting, setWaiting] = React.useState([]);
+  const [thisInterval, setThisInterval] = React.useState(null);
 
   const addWaiting = (newWaiting) => {
     setWaiting((waiting) => [...waiting, newWaiting]);
   };
 
-  const getParticipantsHandler = () =>
-    (async () => {
+  const getParticipantsHandler = async () => {
+      console.log(state.sessionId);
+      console.log(state.guestId);
+      console.log(state.token);
       await fetch(
           process.env.REACT_APP_BACKEND_URL + `/session/${state.sessionId}/participant/list`,
           {
@@ -22,7 +25,7 @@ const Participants = ({ state, dispatch }) => {
             },
             body: JSON.stringify({
               identification:
-                  state.stage === "lecturer" ? state.username : state.guestId,
+              state.stage === "lecturer" ? state.username : state.guestId,
             }),
           }
       )
@@ -43,7 +46,7 @@ const Participants = ({ state, dispatch }) => {
         .catch((error) => {
           console.error(error);
         });
-    })();
+    };
 
   React.useEffect(() => {
     if (
@@ -75,11 +78,12 @@ const Participants = ({ state, dispatch }) => {
   };
 
   React.useEffect(() => {
-    const interval = setInterval(() => getParticipantsHandler(), 5000);
+    console.log(state.sessionId)
+    setThisInterval(setInterval(() => getParticipantsHandler(), 5000));
     return () => {
-      clearInterval(interval);
+      clearInterval(thisInterval);
     };
-  }, []);
+  }, [state.sessionId]);
 
   return (
     <div

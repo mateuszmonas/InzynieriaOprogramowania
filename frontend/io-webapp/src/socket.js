@@ -101,6 +101,7 @@ class Socket {
     REPLY
     QUIZ
     QUIZ_ANSWERS
+    EMOTE
   */
   sendMessage = (message) => {
     console.log("content...." + message.content);
@@ -108,7 +109,7 @@ class Socket {
       "send" : "COMMENT",
       "quiz-answers" : "QUIZ_ANSWERS",
       "quiz" : "QUIZ",
-      "" : "EMOTE"
+      "emote" : "EMOTE"
     }
 
     if (message && this.stompClient) {
@@ -118,6 +119,10 @@ class Socket {
         type: types[message.type],
         timestamp: moment().calendar(),
       };
+
+      if (message.type === "emote")
+        message.type = "send";
+
       console.log(messageToSend);
       this.stompClient.send(
           `/app/socket/session/${this.state.sessionId}/${message.type}`,
@@ -169,7 +174,7 @@ class Socket {
         this.quizId = quiz.id;
         this.questions.push.apply(this.questions, quiz.questions);
       }
-      if(message.type === "COMMENT"){
+      if(message.type === "COMMENT" || message.type === "EMOTE"){
         for (const listener of this.messageListeners) {
           listener(message);
         }
@@ -201,33 +206,28 @@ class Socket {
 
   onApprovalReceived = (payload) => {
     const message = JSON.parse(payload.body);
+    console.log(message.content);
 
-    // if (message.type === "GUEST_APPROVAL") {
-    if (message.content === true) {
-      // const newSocket = Socket.connect(
-      //   this.state,
-      //   this.dispatch,
-      //   "session",
-      //   this.isLeader,
-      // );
+    if (message.content === "true") {
+      const sessionId = message.sessionId;
+      console.log(message.sessionId);
+      console.log(this.state.stage);
+      
       if (this.state.stage === "guest") {
-        this.dispatch({type: "SET_STAGE_GUEST"})
+        console.log(this.state.awaitsApproval)
+        this.dispatch({type: "SET_STAGE_GUEST"});
+        console.log(this.state.awaitsApproval)
       } else {
-        this.dispatch({type: "SET_STAGE_STUDENT"})
+        this.dispatch({type: "SET_STAGE_STUDENT"});
       }
-      this.dispatch({type: "SET_SESSION_ID", payload: message.sessionId})
-      // this.setSocket(newSocket);
-      // this.setStage("student");
-      // this.setSessionID(message.sessionId);
+      this.dispatch({type: "SET_SESSION_ID", payload: sessionId});
     } else {
       if (this.state.stage === "guest") {
-        this.dispatch({type: "SET_STAGE_START"})
+        this.dispatch({type: "SET_STAGE_START"});
       } else {
-        this.dispatch({type: "SET_STAGE_ACCOUNT"})
+        this.dispatch({type: "SET_STAGE_ACCOUNT"});
       }
-      // this.setSocket(new Socket("","","",""));
     }
-    // }
   };
   
   onRequestReceived = (payload) => {
