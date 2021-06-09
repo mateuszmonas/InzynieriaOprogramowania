@@ -112,7 +112,7 @@ const Timeline = ({ state, dispatch }) => {
   };
 
   const CountEmotes = (emote, timestamp, timelineEmoteInfo) => {
-    if (timelineEmoteInfo.length === 0)
+    if (timelineEmoteInfo.emotes.length === 0)
       timelineEmoteInfo.firstTimestamp = timestamp;
 
     const idx = timelineEmoteInfo.emotes.indexOf(emote);
@@ -133,24 +133,21 @@ const Timeline = ({ state, dispatch }) => {
       cardSubtitle: timelineEmoteInfo.firstTimestamp + " - " + timelineEmoteInfo.lastTimestamp,
       cardDetailedText: text
     };
-    timelineEmoteInfo = {
-      emotes: [],
-      counts: [],
-      firstTimestamp: "",
-      lastTimestamp: ""
-    };
-    return [emoteInfo, timelineEmoteInfo];
+
+    return emoteInfo;
   }
 
   const ParseMessage = (message, timelineQuizzes, timelineAnswerSets, timelineEmoteInfo) => {
     console.log(message.content);
-    console.log(timelineAnswerSets);
     console.log(timelineEmoteInfo);
     const contentJSON = JSON.parse(message.content);
     if (message.type !== "EMOTE" && timelineEmoteInfo.emotes.length > 0) {
       const res = FlushEmotes(timelineEmoteInfo);
-      timelineEmoteInfo = res[1];
-      return [res[0], timelineQuizzes, timelineAnswerSets, timelineEmoteInfo];
+      timelineEmoteInfo.emotes = [];
+      timelineEmoteInfo.counts = [];
+      timelineEmoteInfo.firstTimestamp = "";
+      timelineEmoteInfo.lastTimestamp = "";
+      return [res, ParseMessage(message, timelineQuizzes, timelineAnswerSets, timelineEmoteInfo)];
     }
 
     switch (message.type){
@@ -197,7 +194,7 @@ const Timeline = ({ state, dispatch }) => {
         items.push(parsedMessage);
     }
     if (timelineEmoteInfo.emotes.length > 0)
-      items.push(FlushEmotes(timelineEmoteInfo)[0]);
+      items.push(FlushEmotes(timelineEmoteInfo));
 
     return items;
   }

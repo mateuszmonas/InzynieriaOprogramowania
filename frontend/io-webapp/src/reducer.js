@@ -199,7 +199,7 @@ export const reducer = (state, action) => {
       };
 
     case "SET_QUIZ_LIST":
-      return { ...state, quizList: action.payload };
+      return { ...state, quizList: action.payload.reverse() };
 
     case "SET_QUIZ_NAME":
       return { ...state, quizName: action.payload };
