@@ -26,6 +26,7 @@ const Account = ({ state, dispatch }) => {
               const gotPermission = !data.guestApproval;
           if (data.sessionId && !isOwner) {
             dispatch({ type: "SET_SESSION_ID", payload: data.sessionId });
+            console.log("HANDLEJOIN: " + state.sessionId)
           }
           dispatch({ type: "SET_APPROVAL_ROOM_ID", payload: data.guestApprovalRoomId });
           dispatch({ type: "SET_SESSION_TITLE", payload: data.sessionTitle });

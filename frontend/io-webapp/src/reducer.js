@@ -84,8 +84,10 @@ export const reducer = (state, action) => {
     case "SET_TOKEN":
       return { ...state, token: action.payload };
 
-    case "SET_SESSION_ID":
+    case "SET_SESSION_ID": {
+      console.log(action.payload);
       return { ...state, sessionId: action.payload };
+    }
 
     case "SET_SESSION_TITLE":
       return { ...state, sessionTitle: action.payload };

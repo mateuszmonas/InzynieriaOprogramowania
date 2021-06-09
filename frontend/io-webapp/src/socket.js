@@ -200,33 +200,28 @@ class Socket {
 
   onApprovalReceived = (payload) => {
     const message = JSON.parse(payload.body);
+    console.log(message.content);
 
-    // if (message.type === "GUEST_APPROVAL") {
-    if (message.content === true) {
-      // const newSocket = Socket.connect(
-      //   this.state,
-      //   this.dispatch,
-      //   "session",
-      //   this.isLeader,
-      // );
+    if (message.content === "true") {
+      const sessionId = message.sessionId;
+      console.log(message.sessionId);
+      console.log(this.state.stage);
+      
       if (this.state.stage === "guest") {
-        this.dispatch({type: "SET_STAGE_GUEST"})
+        console.log(this.state.awaitsApproval)
+        this.dispatch({type: "SET_STAGE_GUEST"});
+        console.log(this.state.awaitsApproval)
       } else {
-        this.dispatch({type: "SET_STAGE_STUDENT"})
+        this.dispatch({type: "SET_STAGE_STUDENT"});
       }
-      this.dispatch({type: "SET_SESSION_ID", payload: message.sessionId})
-      // this.setSocket(newSocket);
-      // this.setStage("student");
-      // this.setSessionID(message.sessionId);
+      this.dispatch({type: "SET_SESSION_ID", payload: sessionId});
     } else {
       if (this.state.stage === "guest") {
-        this.dispatch({type: "SET_STAGE_START"})
+        this.dispatch({type: "SET_STAGE_START"});
       } else {
-        this.dispatch({type: "SET_STAGE_ACCOUNT"})
+        this.dispatch({type: "SET_STAGE_ACCOUNT"});
       }
-      // this.setSocket(new Socket("","","",""));
     }
-    // }
   };
   
   onRequestReceived = (payload) => {
