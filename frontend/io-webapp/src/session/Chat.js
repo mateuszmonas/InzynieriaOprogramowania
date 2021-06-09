@@ -14,11 +14,10 @@ const Chat = ({ state, dispatch }) => {
   }
 
   const handleEmojiSelect = (emoji) => {
-    console.log(emoji);
     setReactionShown(!reactionShown);
 
     const msg = {
-      type: "send", // or type reaction 
+      type: "emote", // or type reaction
       content: emoji.native,
     };
 
