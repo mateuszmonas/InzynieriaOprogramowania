@@ -13,7 +13,7 @@
     flex-direction: column;
     align-items: center;
     overflow-y: scroll;
-    height: 85%;
+    height: 80%;
     width: 100%;
 }
 
@@ -54,13 +54,32 @@
 .quizListHeaderButtons {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-end;
+    align-items: flex-end;
     height: 100%;
     width: 12%;
 }
 
 .quizListHeaderButtons button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 45%;
+    height: 100%;
+}
+
+.backButtonWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 5%;
+    margin-bottom: 0.5rem;
+    width: 12%;
+}
+
+.backButtonWrapper button {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
