@@ -101,13 +101,15 @@ class Socket {
     REPLY
     QUIZ
     QUIZ_ANSWERS
+    EMOTE
   */
   sendMessage = (message) => {
     console.log("content...." + message.content);
     let types = {
       "send" : "COMMENT",
       "quiz-answers" : "QUIZ_ANSWERS",
-      "quiz" : "QUIZ"
+      "quiz" : "QUIZ",
+      "emote" : "EMOTE"
     }
 
     if (message && this.stompClient) {
@@ -117,6 +119,10 @@ class Socket {
         type: types[message.type],
         timestamp: moment().calendar(),
       };
+
+      if (message.type === "emote")
+        message.type = "send";
+
       console.log(messageToSend);
       this.stompClient.send(
           `/app/socket/session/${this.state.sessionId}/${message.type}`,
@@ -168,7 +174,7 @@ class Socket {
         this.quizId = quiz.id;
         this.questions.push.apply(this.questions, quiz.questions);
       }
-      if(message.type === "COMMENT"){
+      if(message.type === "COMMENT" || message.type === "EMOTE"){
         for (const listener of this.messageListeners) {
           listener(message);
         }

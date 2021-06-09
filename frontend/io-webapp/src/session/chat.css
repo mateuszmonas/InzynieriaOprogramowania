@@ -70,6 +70,10 @@
     right: 0; */
   }
 
+  .reactionIcon{
+    font-size: 200%;
+  }
+
   .chatText {
     width: 80%;
     height: 80%;
