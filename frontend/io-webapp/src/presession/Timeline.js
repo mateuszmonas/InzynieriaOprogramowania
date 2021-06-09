@@ -227,7 +227,10 @@ const Timeline = ({ state, dispatch }) => {
       <div className="backButtonWrapper">
         <button
           type="button"
-          onClick={(e) => dispatch({type: "SET_STAGE_ACCOUNT"})}
+            onClick={(e) => {
+              dispatch({ type: "SET_MESSAGE", payload: "" })
+              dispatch({ type: "SET_STAGE_ACCOUNT" })
+            }}
           className="submit"
         >
           Back <FiArrowLeft size={16}/>

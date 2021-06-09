@@ -3,15 +3,14 @@ import { FiSend } from "react-icons/fi";
 import Reactions from "./Reactions";
 import "./chat.css";
 
-
 const Chat = ({ state, dispatch }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
   const [reactionShown, setReactionShown] = useState(false);
   const onReactionClick = () => {
-      setReactionShown(!reactionShown);
-  }
+    setReactionShown(!reactionShown);
+  };
 
   const handleEmojiSelect = (emoji) => {
     setReactionShown(!reactionShown);
@@ -22,7 +21,7 @@ const Chat = ({ state, dispatch }) => {
     };
 
     state.socket.sendMessage(msg);
-  }
+  };
 
   const parseMessage = (message) => {
     setMessages((messages) => [
@@ -38,12 +37,14 @@ const Chat = ({ state, dispatch }) => {
 
   const send = async (e) => {
     e.preventDefault();
-    const msg = {
-      type: "send",
-      content: message,
-    };
+    if (message.trim().length > 0) {
+      const msg = {
+        type: "send",
+        content: message,
+      };
 
-    state.socket.sendMessage(msg);
+      state.socket.sendMessage(msg);
+    }
     setMessage("");
   };
 
@@ -91,19 +92,17 @@ const Chat = ({ state, dispatch }) => {
       }
         {reactionShown &&
           <div className="reactions">
-            <Reactions
-              handleEmojiSelect={handleEmojiSelect}
-            />
+            <Reactions handleEmojiSelect={handleEmojiSelect} />
           </div>
-        }
-        {!reactionShown &&
+        )}
+        {!reactionShown && (
           <FiSend
             onClick={(e) => {
               send(e);
             }}
             size={40}
           />
-        }
+        )}
       </div>
       <div className="chatContent">
         {messages.map((msg) => {

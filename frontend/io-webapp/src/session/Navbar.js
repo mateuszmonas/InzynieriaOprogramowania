@@ -61,7 +61,8 @@ const Navbar = ({ state, dispatch }) => {
             fontWeight: "bold",
           }}
           className="navbarButton"
-          onClick={() => dispatch({ type: "SET_STAGE_ACCOUNT" })}
+          onClick={() => {dispatch({type: "SET_MESSAGE", payload: ""});
+            dispatch({ type: "SET_STAGE_ACCOUNT" })}}
         >
           {state.username}
         </div>

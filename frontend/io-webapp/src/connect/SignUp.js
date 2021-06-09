@@ -11,7 +11,7 @@ const SignUp = ({ state, dispatch }) => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (creds.password === passwordCheck) {
+    if (creds.password === passwordCheck && creds.password.length > 0 && creds.username.length > 0) {
       (async () => {
         await fetch(process.env.REACT_APP_BACKEND_URL + "/register", {
           method: "POST",
