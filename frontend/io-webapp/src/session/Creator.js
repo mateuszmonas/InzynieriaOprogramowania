@@ -12,17 +12,20 @@ const Creator = ({ state, dispatch, close }) => {
 
   const oneQuestionQuizHandler = () => {
     (async () => {
-      const quizIdJson = await fetch(process.env.REACT_APP_BACKEND_URL + "/quiz", {
-        method: "POST",
-        headers: {
-          Authorization: state.token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: state.quizName,
-          questions: state.designerQuestions,
-        }),
-      })
+      const quizIdJson = await fetch(
+        process.env.REACT_APP_BACKEND_URL + "/quiz",
+        {
+          method: "POST",
+          headers: {
+            Authorization: state.token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: state.quizName,
+            questions: state.designerQuestions,
+          }),
+        }
+      )
         .then((response) => response.json())
         .catch((error) => {
           console.error(error);
@@ -41,7 +44,7 @@ const Creator = ({ state, dispatch, close }) => {
         .then((data) => {
           const quiz = data;
           const msg = {
-            type : "quiz",
+            type: "quiz",
             content: quiz,
           };
           state.socket.sendMessage(msg);
@@ -52,21 +55,29 @@ const Creator = ({ state, dispatch, close }) => {
     })();
   };
 
-   const submitHandler = (e) => {
+  const submitHandler = (e) => {
     e.preventDefault();
 
-    if (question !== "") {
-      const newQuestion = {content: question};
+    if (question.trim().length > 0) {
+      const newQuestion = { content: question };
       newQuestion.open = !abcd;
-      if (answer !== "") {
+      if (newQuestion.open && answer.trim().length > 0) {
         newQuestion.answers = [{ text: answer, correct: true }];
-      } else if (!newQuestion.open) {
+      } else if (
+        !newQuestion.open &&
+        answers[0].trim().length > 0 &&
+        answers[1].trim().length > 0 &&
+        answers[2].trim().length > 0 &&
+        answers[3].trim().length > 0
+      ) {
         newQuestion.answers = answers.map((answer, index) => {
           return {
             text: answer,
             correct: corrects[index],
           };
         });
+      } else {
+        return;
       }
 
       console.log(newQuestion);
@@ -75,8 +86,7 @@ const Creator = ({ state, dispatch, close }) => {
         state.designerQuestions = [newQuestion];
         state.quizName = question;
         oneQuestionQuizHandler();
-      }
-      else {
+      } else {
         if (state.pickedQuestion < 0) {
           dispatch({ type: "ADD_DESIGNER_QUESTION", payload: newQuestion });
         } else {
@@ -110,9 +120,7 @@ const Creator = ({ state, dispatch, close }) => {
           setAnswer("");
           setAnswers(["", "", "", ""]);
           setCorrects([false, false, false, false]);
-        } else if (
-          !state.designerQuestions[state.pickedQuestion].open
-        ) {
+        } else if (!state.designerQuestions[state.pickedQuestion].open) {
           setAbcd(true);
           setAnswers([
             state.designerQuestions[state.pickedQuestion].answers[0].text,
@@ -349,7 +357,7 @@ const Creator = ({ state, dispatch, close }) => {
               Cancel
             </button>
             <button type="submit" className="submitFlat">
-              {(state.stage === "designer" && state.pickedQuestion >= 0)
+              {state.stage === "designer" && state.pickedQuestion >= 0
                 ? "Edit Question"
                 : "Add Question"}
             </button>

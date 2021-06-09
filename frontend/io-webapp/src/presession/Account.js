@@ -52,40 +52,42 @@ const Account = ({ state, dispatch }) => {
   const handleCreate = (e) => {
     e.preventDefault();
 
-    (async () => {
-        await fetch(process.env.REACT_APP_BACKEND_URL + "/session/create", {
-            method: "POST",
-            headers: {
-                Authorization: state.token,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                sessionTitle: title,
-                guestApproval: needsApproval,
-            }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-          setIsOwner(true);
-          setPasscode(data.passcode);
-          dispatch({ type: "SET_SESSION_ID", payload: data.sessionId });
-          dispatch({
-            type: "SET_APPROVAL_ROOM_ID",
-            payload: data.approvalRoomId,
+    if (title.trim().length > 0) {
+      (async () => {
+          await fetch(process.env.REACT_APP_BACKEND_URL + "/session/create", {
+              method: "POST",
+              headers: {
+                  Authorization: state.token,
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                  sessionTitle: title,
+                  guestApproval: needsApproval,
+              }),
+          })
+          .then((response) => response.json())
+          .then((data) => {
+            setIsOwner(true);
+            setPasscode(data.passcode);
+            dispatch({ type: "SET_SESSION_ID", payload: data.sessionId });
+            dispatch({
+              type: "SET_APPROVAL_ROOM_ID",
+              payload: data.approvalRoomId,
+            });
+            dispatch({
+              type: "SET_MESSAGE",
+              payload: "Your session passcode is:\n" + data.passcode,
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+            dispatch({
+              type: "SET_MESSAGE",
+              payload: "Failed to create session",
+            });
           });
-          dispatch({
-            type: "SET_MESSAGE",
-            payload: "Your session passcode is:\n" + data.passcode,
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-          dispatch({
-            type: "SET_MESSAGE",
-            payload: "Failed to create session",
-          });
-        });
-    })();
+      })();
+    }
   };
 
   return (

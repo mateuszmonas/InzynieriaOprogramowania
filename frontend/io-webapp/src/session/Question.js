@@ -33,15 +33,17 @@ const Question = ({ state, dispatch }) => {
   };
 
   const submitHandler2 = (e, questionId) => {
-    let answers = {}
-    answers[questionId] = [answer]
     e.preventDefault();
-    const msg = {
-      type: "quiz-answers",
-      content: answers,
-    };
-    state.socket.sendMessage(msg);
-    updateQuestions();
+    if (answer.trim().length > 0) {
+      let answers = {}
+      answers[questionId] = [answer]
+      const msg = {
+        type: "quiz-answers",
+        content: answers,
+      };
+      state.socket.sendMessage(msg);
+      updateQuestions();
+    }
     setAnswer("");
   };
 

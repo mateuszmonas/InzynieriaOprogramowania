@@ -3,27 +3,26 @@ import { FiSend } from "react-icons/fi";
 import Reactions from "./Reactions";
 import "./chat.css";
 
-
 const Chat = ({ state, dispatch }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
   const [reactionShown, setReactionShown] = useState(false);
   const onReactionClick = () => {
-      setReactionShown(!reactionShown);
-  }
+    setReactionShown(!reactionShown);
+  };
 
   const handleEmojiSelect = (emoji) => {
     console.log(emoji);
     setReactionShown(!reactionShown);
 
     const msg = {
-      type: "send", // or type reaction 
+      type: "send", // or type reaction
       content: emoji.native,
     };
 
     state.socket.sendMessage(msg);
-  }
+  };
 
   const parseMessage = (message) => {
     setMessages((messages) => [
@@ -39,12 +38,14 @@ const Chat = ({ state, dispatch }) => {
 
   const send = async (e) => {
     e.preventDefault();
-    const msg = {
-      type: "send",
-      content: message,
-    };
+    if (message.trim().length > 0) {
+      const msg = {
+        type: "send",
+        content: message,
+      };
 
-    state.socket.sendMessage(msg);
+      state.socket.sendMessage(msg);
+    }
     setMessage("");
   };
 
@@ -74,33 +75,31 @@ const Chat = ({ state, dispatch }) => {
   return (
     <div className="chat">
       <div className="chatFooter">
-      {!reactionShown &&
-        <textarea
-          className="chatText"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        ></textarea>
-      }
-      {!reactionShown &&
-        <div onClick={onReactionClick}>
-          <span className="reactionIcon">😀</span>
-        </div>
-      }
-        {reactionShown &&
-          <div className="reactions">
-            <Reactions
-              handleEmojiSelect={handleEmojiSelect}
-            />
+        {!reactionShown && (
+          <textarea
+            className="chatText"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          ></textarea>
+        )}
+        {!reactionShown && (
+          <div onClick={onReactionClick}>
+            <span className="reactionIcon">😀</span>
           </div>
-        }
-        {!reactionShown &&
+        )}
+        {reactionShown && (
+          <div className="reactions">
+            <Reactions handleEmojiSelect={handleEmojiSelect} />
+          </div>
+        )}
+        {!reactionShown && (
           <FiSend
             onClick={(e) => {
               send(e);
             }}
             size={40}
           />
-        }
+        )}
       </div>
       <div className="chatContent">
         {messages.map((msg) => {
