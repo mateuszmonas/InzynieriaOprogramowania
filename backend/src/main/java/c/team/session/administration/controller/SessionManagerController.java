@@ -86,7 +86,7 @@ public class SessionManagerController {
         );
         return ResponseEntity.ok(response);
     }
-    
+
     // Every exception that goes back to frontend requires such handler
     @ExceptionHandler(SessionClosedException.class)
     public final ResponseEntity<Error> handleException(SessionClosedException ex){

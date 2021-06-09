@@ -28,7 +28,16 @@ export const initialState = {
   quizName: "",
   quizId: "",
   editMode: false,
-  pickedSession: -1
+  pickedSession: -1,
+  timelineQuizzes: [],
+  timelineAnswerSets: [],
+  timelineEmoteInfo: {
+    emotes: [],
+    counts: [],
+    firstTimestamp: "",
+    lastTimestamp: ""
+  }   // { emotes: [emote1, emote2,...], counts: [count1, count2, ...]
+                          // , firstTimestamp: timestamp, lastTimestamp; timestamp }
 };
 
 export const reducer = (state, action) => {
@@ -106,7 +115,7 @@ export const reducer = (state, action) => {
       return { ...state, message: action.payload };
 
     case "SET_SESSION_HISTORY":
-      return { ...state, sessionHistory: action.payload };
+      return { ...state, sessionHistory: action.payload.reverse() };
 
     case "CHAT_VISIBLE":
       return {
