@@ -107,7 +107,8 @@ class Socket {
     let types = {
       "send" : "COMMENT",
       "quiz-answers" : "QUIZ_ANSWERS",
-      "quiz" : "QUIZ"
+      "quiz" : "QUIZ",
+      "" : "EMOTE"
     }
 
     if (message && this.stompClient) {
