@@ -75,7 +75,7 @@ const Stats = ({ state, dispatch }) => {
         <FiChevronLeft
           size={32}
           onClick={() =>
-            setPicked((picked + questions.length) % questions.length)
+            setPicked((picked + questions.length - 1) % (questions.length))
           }
         />
         {questions.map((question, index) => {
