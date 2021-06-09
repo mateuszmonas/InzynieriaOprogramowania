@@ -5,12 +5,11 @@ import {Stomp} from "@stomp/stompjs";
 import {SafeAreaView} from "react-native-safe-area-context";
 import {BASE_URL} from "../networking/config";
 
+const reactions = ['👍', '👏', '📣', '⚡', '🚀', '🔥', '🛠️']
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 8,
-        paddingBottom: 4,
         backgroundColor: '#ffdab3',
     },
     messageInput: {
@@ -223,7 +222,8 @@ const SessionScreen = ({ route }) => {
     const chatView = useMemo(() => (
         <>
             <FlatList
-                style={{flex: 1, paddingHorizontal: 8, paddingBottom: 8 }}
+                style={{flex: 1, paddingHorizontal: 8 }}
+                contentContainerStyle={{ paddingTop: 16 }}
                 data={messages}
                 inverted
                 renderItem={({item}) => (
@@ -247,7 +247,7 @@ const SessionScreen = ({ route }) => {
                                 { (item.type === 'incoming') && (
                                     <Text style={{fontWeight: 'bold'}}>{item.sender}</Text>
                                 )}
-                                <Text>{item.content}</Text>
+                                <Text style={{ fontSize: reactions.includes(item.content) ? 24 : 16 }}>{item.content}</Text>
                             </View>
                         </View>
                         <View style={{flex: 3}} />
@@ -255,30 +255,52 @@ const SessionScreen = ({ route }) => {
                 )}
                 keyExtractor={(item, index) => index.toString()}
             />
-            <View style={styles.messageInputContainer}>
-                <TextInput
-                    style={styles.messageInput}
-                    defaultValue={messageText}
-                    onChangeText={(text) => setMessageText(text)}
-                    placeholder="Wpisz swój komentarz tutaj..."
-                />
-                <TouchableOpacity
-                    style={styles.sendButton}
-                    onPress={() => {
-                        setNewMessage({
-                            type: 'outgoing',
-                            content: messageText,
-                            sender: ':)',
-                        })
-                        setMessageText('');
-                        stomp?.send(`/app/socket/session/${sessionNumber}/send`,
-                            {},
-                            JSON.stringify({sender: route.params.username, type: 'COMMENT', content: `"${messageText}"`})
-                        )
-                    }}
-                >
-                    <Text style={styles.sendText}>Wyślij</Text>
-                </TouchableOpacity>
+            <View style={{ borderTopLeftRadius: 14, borderTopRightRadius: 14, backgroundColor: 'white', paddingBottom: 4, paddingHorizontal: 8 }}>
+                <View style={{ flexDirection: 'row', height: 42, alignItems: 'center', marginVertical: 8 }}>
+                    {reactions.map((reaction, i) => (
+                        <TouchableOpacity style={{ flex: 1, flexDirection: 'row',  }}
+                                          key={i.toString()}
+                            onPress={() => {
+                                setNewMessage({
+                                    type: 'outgoing',
+                                    content: reaction,
+                                    sender: ':)',
+                                })
+                                stomp?.send(`/app/socket/session/${sessionNumber}/send`,
+                                    {},
+                                    JSON.stringify({sender: route.params.username, type: 'COMMENT', content: `"${reaction}"`})
+                                )
+                            }}
+                        >
+                            <Text style={{ fontSize: 28, flex: 1, textAlign: 'center' }}>{ reaction }</Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+                <View style={styles.messageInputContainer}>
+                    <TextInput
+                        style={styles.messageInput}
+                        defaultValue={messageText}
+                        onChangeText={(text) => setMessageText(text)}
+                        placeholder="Wpisz swój komentarz tutaj..."
+                    />
+                    <TouchableOpacity
+                        style={styles.sendButton}
+                        onPress={() => {
+                            setNewMessage({
+                                type: 'outgoing',
+                                content: messageText,
+                                sender: ':)',
+                            })
+                            setMessageText('');
+                            stomp?.send(`/app/socket/session/${sessionNumber}/send`,
+                                {},
+                                JSON.stringify({sender: route.params.username, type: 'COMMENT', content: `"${messageText}"`})
+                            )
+                        }}
+                    >
+                        <Text style={styles.sendText}>Wyślij</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </>
     ), [messages, messageText, sessionNumber])

@@ -7,7 +7,6 @@ import {StatusBar} from "expo-status-bar";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {BASE_URL} from "../networking/config";
 
-const reactions = []
 
 function HomeScreen({ navigation }) {
     const [username, setUsername] = useState('studenciak');
