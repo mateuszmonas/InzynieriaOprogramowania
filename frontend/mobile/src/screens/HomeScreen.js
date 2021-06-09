@@ -7,12 +7,13 @@ import {StatusBar} from "expo-status-bar";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {BASE_URL} from "../networking/config";
 
+const reactions = []
 
 function HomeScreen({ navigation }) {
     const [username, setUsername] = useState('studenciak');
     const [isUsernameHighlighted, setUserNameHighlighted] = useState(false);
 
-    const [sessionId, setSessionId] = useState('b498e050-20ee-485f-932e-d3a95c1fa53d')
+    const [sessionId, setSessionId] = useState('9a028204-362b-4a6f-836e-c5ed64714328')
     const [isSessionIdHighlighted, setSessionIdHighlighted] = useState(false);
 
     const [isJoinSessionButtonEnabled, setJoinSessionButtonEnabled] = useState(true);
@@ -93,10 +94,10 @@ function HomeScreen({ navigation }) {
                     <Text style={styles.joinByIdText}>Dołącz</Text>
                 </TouchableOpacity>
             </View>
-            <Text style={styles.inputLabel}>Zeskanuj QR kod sesji</Text>
-            <TouchableOpacity style={styles.joinByQrCodeButton} onPress={() => {} }>
-                <Text style={styles.joinByQrCodeText}>Skanuj kod QR</Text>
-            </TouchableOpacity>
+            {/*<Text style={styles.inputLabel}>Zeskanuj QR kod sesji</Text>*/}
+            {/*<TouchableOpacity style={styles.joinByQrCodeButton} onPress={() => {} }>*/}
+            {/*    <Text style={styles.joinByQrCodeText}>Skanuj kod QR</Text>*/}
+            {/*</TouchableOpacity>*/}
             <StatusBar style={"auto"} />
         </SafeAreaView>
     );
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginTop: 124,
+        marginTop: 64,
     },
     userNameInput: {
         backgroundColor: 'lightgray',

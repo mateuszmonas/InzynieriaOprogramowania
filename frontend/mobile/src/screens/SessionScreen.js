@@ -78,6 +78,8 @@ const SessionScreen = ({ route }) => {
         console.log('new messages');
     }, [newMessage])
 
+    useEffect(() => () => stomp?.deactivate(), [stomp]);
+
     const onMessageReceived = (payload) => {
         console.log('received message')
         // console.log(payload)
@@ -98,11 +100,16 @@ const SessionScreen = ({ route }) => {
     const onQuizReceived = (payload) => {
         console.log('received quiz')
         const message = JSON.parse(payload.body);
-        const rawQuestion = JSON.parse(message.content);
-        const question = { question: rawQuestion.question, id: message.id, answers: rawQuestion.answers.answers }
-        console.log(question);
-        setQuestions((oldQuestions) => [...oldQuestions, question])
-        setActiveQuestion((currentQuestion) => currentQuestion ?? question)
+        const rawQuiz = JSON.parse(message.content);
+        console.log(rawQuiz)
+        const questions = rawQuiz.questions.map((rawQuestion) => ({
+            question: rawQuestion.content,
+            id: rawQuestion.id,
+            answers: rawQuestion.open ? [] : rawQuestion.answers.map((a) => a.text)
+        }))
+        console.log(questions);
+        setQuestions((oldQuestions) => [...oldQuestions, ...questions])
+        setActiveQuestion((currentQuestion) => currentQuestion ?? questions[0])
     };
 
     const onError = (error) => {
@@ -155,7 +162,7 @@ const SessionScreen = ({ route }) => {
                                 key={i.toString()}
                                 style={{flexDirection: 'row', paddingVertical: 6}}
                                 onPress={() =>{
-                                    setAnswer(i);
+                                    setAnswer(answerText);
                                 }}
                             >
                                 <View style={{
@@ -166,7 +173,7 @@ const SessionScreen = ({ route }) => {
                                     alignItems: 'center',
                                     justifyContent: 'center'
                                 }}>
-                                    {answer === i && (
+                                    {answer === answerText && (
                                         <View
                                             style={{height: 14, width: 14, borderRadius: 7, backgroundColor: 'black'}}/>
                                     )}
@@ -179,6 +186,7 @@ const SessionScreen = ({ route }) => {
                     <View>
                         <TextInput
                             style={styles.questionInput}
+                            defaultValue={answer}
                             onChangeText={(text) => {
                                 setAnswer(text)
                             }}
@@ -188,8 +196,9 @@ const SessionScreen = ({ route }) => {
                 <TouchableOpacity style={styles.nextQuestionButton} onPress={() => {
                     const indexOfActiveQuestion = questions.indexOf(activeQuestion)
                     const content = {}
-                    content[activeQuestion.id] = isABCDQuestion ? [answer] : answer;
-                    const answerMessage = JSON.stringify({sender: route.params.username, type: 'QUIZ_ANSWERS', content})
+                    content[activeQuestion.id] = [answer];
+                    const answerMessage = JSON.stringify({sender: route.params.username, type: 'QUIZ_ANSWERS', content: JSON.stringify(content) })
+                    console.log('Sending answer')
                     console.log(content)
                     console.log(answerMessage)
                     stomp?.send(`/app/socket/session/${sessionNumber}/quiz-answers`,
